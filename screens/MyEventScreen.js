@@ -10,8 +10,6 @@ import {
 import React, {useEffect, useState} from "react";
 
 import Modal from "react-native-modal";
-import BottomModal from "../components/BottomModal";
-import {TextInput} from "react-native-gesture-handler";
 
 export default function MyEventScreen() {
   return (
