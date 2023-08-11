@@ -15,7 +15,7 @@ export default function ContactService() {
     
             if (data.length > 0) {
               const contact = data;
-              console.log(contact);
+              // console.log(contact);
             }
           }
         })();
