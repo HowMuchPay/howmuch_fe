@@ -40,18 +40,18 @@ export default function LoginScreen() {
         style={styles.logo}
         source={require(".././../assets/images/logo1.png")}
       />
-      {/* <TouchableOpacity
+      <TouchableOpacity
         style={styles.buttonContainer}
         onPress={() => {
           navigation.navigate("Drawer");
         }}
-      > */}
-      <TouchableOpacity
+      >
+      {/* <TouchableOpacity
         style={styles.buttonContainer}
         onPress={() => {
           navigation.navigate("KakaoLogin");
         }}
-      >
+      > */}
         <Image
           style={styles.kakao}
           source={require(".././../assets/images/kakaotalk.png")}

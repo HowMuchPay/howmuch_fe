@@ -149,7 +149,7 @@ function TotalPage() {
   return (
     <TopTab.Navigator
       initialRouteName="Calendar"
-      style={{marginTop: 80, backgroundColor: "#F3F3FF"}}
+      style={{paddingTop: 80, backgroundColor: "#F3F3FF"}}
       screenOptions={{
         tabBarPressOpacity: 1, // 탭을 터치했을 때 그림자 효과 없애기
         tabBarPressColor: "transparent", // 탭을 터치했을 때 효과 없애기
