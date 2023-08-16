@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet } from 'react-native'
 import React, { useState } from 'react';
 import { Calendar, LocaleConfig } from 'react-native-calendars';
+import { ScrollView } from 'react-native-gesture-handler';
 
 LocaleConfig.locales['fr'] = {
     monthNames: ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'],
@@ -12,18 +13,21 @@ LocaleConfig.locales['fr'] = {
   LocaleConfig.defaultLocale = 'fr';
 
 export default function CalendarScreen() {
-    const today = new Date();
-    todayFormat = today.toISOString().split('T')[0];
-
-    const [selectedDay, setSelectedDay] = useState({  
-    "dateString": todayFormat,
-    "day": todayFormat.split('-')[2],
-    "month": todayFormat.split('-')[1],
-    "timestamp": 1688428800000,
-    "year": todayFormat.split('-')[0],
+  const offset = 1000 * 60 * 60 * 9
+  //한국 시간 계산
+  const today = new Date((new Date()).getTime() + offset);  
+    
+  todayFormat = today.toISOString().split('T')[0];
+  console.log(today)
+  const [selectedDay, setSelectedDay] = useState({  
+  "dateString": todayFormat,
+  "day": todayFormat.split('-')[2],
+  "month": todayFormat.split('-')[1],
+  "timestamp": 1688428800000,
+  "year": todayFormat.split('-')[0],
     });
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
         <View style={styles.inner}>
             <Calendar style={styles.calendar}
              monthFormat = { 'yyyy년 MM월' } 
@@ -41,7 +45,7 @@ export default function CalendarScreen() {
 
             <CalendarEventCard selectedDay={selectedDay}/>
         </View>
-    </View>
+    </ScrollView>
   )
 }
 
@@ -49,7 +53,7 @@ function CalendarEventCard(props){
     return(
         <View style={styles.dayEventContainer}>
             <View style={styles.dayEventBox}>
-                <Text style={{fontSize:16,fontFamily:"font-B",color:"#1f1f1f"}}>{props.selectedDay.dateString.split('-')[0]}년 {props.selectedDay.dateString.split('-')[1]}월 {props.selectedDay.dateString.split('-')[2]}일</Text>
+                <Text style={{fontSize:16,fontFamily:"font-B",color:"#1f1f1f"}}>{props.selectedDay.dateString.split('-')[1]}월 {props.selectedDay.dateString.split('-')[2]}일</Text>
             </View>
         </View>
     )
@@ -58,7 +62,7 @@ function CalendarEventCard(props){
 
 const styles = StyleSheet.create({
     container :{
-    //   flex: 1,
+      // flex: 1,
       backgroundColor: "#F3F3FF",
     },
     inner :{
