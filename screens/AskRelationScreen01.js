@@ -1,5 +1,5 @@
-import {View, Text, StyleSheet} from "react-native";
-import React, {useState} from "react";
+import { View, Text, StyleSheet } from "react-native";
+import React, { useState } from "react";
 import * as Progress from "react-native-progress";
 import CalendarSelectComponent from "../components/CalendarSelectComponent";
 import NameInputComponent from "../components/NameInputComponent";
@@ -19,39 +19,22 @@ export default function AskRelationScreen01() {
   };
 
   // count가 3일 때의 스타일
-  const changeBackground =
-    countUp === 3 || countUp === 4 || countUp === 7 ? styles.changeColor : null;
+  const changeBackground = countUp === 3 || countUp === 4 || countUp === 7 ? styles.changeColor : null;
 
   return (
     <View style={[styles.container, changeBackground]}>
       <View style={styles.inner}>
-        <Progress.Bar
-          progress={progress}
-          width={null}
-          height={4}
-          color={"#6D61FF"}
-          unfilledColor={"#E7E7FF"}
-          borderWidth={0}
-          style={{marginTop: 50, marginBottom: 75}}
-        />
-        <ComponentBasedOnCount
-          countUp={countUp}
-          handleButtonClick={handleButtonClick}
-        />
+        <Progress.Bar progress={progress} width={null} height={4} color={"#6D61FF"} unfilledColor={"#E7E7FF"} borderWidth={0} style={{ marginTop: 50, marginBottom: 75 }} />
+        <ComponentBasedOnCount countUp={countUp} handleButtonClick={handleButtonClick} />
       </View>
     </View>
   );
 }
 
-const ComponentBasedOnCount = ({countUp, handleButtonClick}) => {
+const ComponentBasedOnCount = ({ countUp, handleButtonClick }) => {
   switch (countUp) {
     case 3:
-      return (
-        <NameInputComponent
-          handleButtonClick={handleButtonClick}
-          eventType={"friend"}
-        />
-      );
+      return <NameInputComponent handleButtonClick={handleButtonClick} eventType={"friend"} />;
     case 4:
       return <CalendarSelectComponent handleButtonClick={handleButtonClick} />;
     case 5:
@@ -62,12 +45,7 @@ const ComponentBasedOnCount = ({countUp, handleButtonClick}) => {
       return <MoneyInputComponent handleButtonClick={handleButtonClick} />;
 
     default:
-      return (
-        <AskSelectComponent
-          handleButtonClick={handleButtonClick}
-          countUp={countUp}
-        />
-      );
+      return <AskSelectComponent handleButtonClick={handleButtonClick} countUp={countUp} />;
   }
 };
 

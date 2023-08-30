@@ -1,10 +1,11 @@
-import {View, Text, StyleSheet, ScrollView} from "react-native";
-import React from "react";
-import {createDrawerNavigator} from "@react-navigation/drawer";
-import {NavigationContainer} from "@react-navigation/native";
-import {SafeAreaView} from "react-native-safe-area-context";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
+import React, { useEffect } from "react";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import { NavigationContainer } from "@react-navigation/native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import MainScreen from "../screens/MainScreen";
-import {heightPercentageToDP as hp} from "react-native-responsive-screen";
+import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+import { API } from "../stores/api";
 
 const Drawer = createDrawerNavigator();
 
@@ -54,13 +55,21 @@ function FooterArea() {
 }
 
 export default function HandleDrawer() {
+  useEffect(() => {
+    API.get(`/home`, {
+      method: "GET",
+    })
+      .then((results) => {
+        const data = results.data;
+        console.log(results);
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
   return (
-    <Drawer.Navigator
-      initialRouteName="Main"
-      useLegacyImplementation={true}
-      screenOptions={{drawerPosition: "left", headerShown: false}}
-      drawerContent={() => <SideScreen />}
-    >
+    <Drawer.Navigator initialRouteName="Main" useLegacyImplementation={true} screenOptions={{ drawerPosition: "left", headerShown: false }} drawerContent={() => <SideScreen />}>
       <Drawer.Screen name="SideScreen" component={SideScreen} />
       <Drawer.Screen name="Main" component={MainScreen} />
     </Drawer.Navigator>
