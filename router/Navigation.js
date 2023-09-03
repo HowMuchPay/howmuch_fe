@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import HandleDrawer from "./HandleDrawer";
@@ -21,6 +21,7 @@ import AddMyEventScreen from "../screens/AddMyEventScreen";
 import ContactSelectScreen from "../screens/ContactSelectScreen";
 import LoginScreen from "../screens/auth/LoginScreen";
 import { useAppStore } from "../stores/store";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function HeaderTitle(props) {
   return (
@@ -135,9 +136,20 @@ function TotalPage() {
 
 export default function Navigation() {
   const Stack = createNativeStackNavigator();
+  const [token, setToken] = useAppStore((state) => [state.token, state.setToken]);
+  const navigation = useNavigation();
+
+  // useEffect(() => {
+  //   if (token) navigation.navigate("Drawer");
+  // }, [token]);
+
+  useEffect(() => {
+    const accessToken = AsyncStorage.getItem("accessToken");
+
+    setToken(accessToken);
+  }, []);
+
   StatusBar.setBarStyle("dark-content");
-  const store = useAppStore();
-  const token = store.token;
 
   return (
     <Stack.Navigator initialRouteName={token ? "Drawer" : "Login"} screenOptions={{ headerTransparent: true }}>

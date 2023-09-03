@@ -6,6 +6,7 @@ import { login, getProfile } from "@react-native-seoul/kakao-login";
 
 import { useAppStore } from "../../stores/store";
 import { API } from "../../stores/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const signInWithKakao = async () => {
   const token = await login();
@@ -58,6 +59,7 @@ export default function LoginScreen() {
         console.log("data", data);
         if (data["accessToken"]) {
           setToken(data["accessToken"]);
+          AsyncStorage.setItem("accessToken", data["accessToken"]);
         }
       }
     })()
