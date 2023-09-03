@@ -4,13 +4,15 @@ import React, { useEffect, useState } from "react";
 import Modal from "react-native-modal";
 import { useAppStore } from "../stores/store";
 import { API } from "../stores/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function MyEventScreen() {
   const store = useAppStore();
   const token = store.token;
 
   useEffect(() => {
-    console.log(token);
+    const accessToken = AsyncStorage.getItem("accessToken");
+    console.log(accessToken);
     //   API.get(`/event/my`, {
     //     headers: {
     //       Authorization: token,
@@ -26,20 +28,20 @@ export default function MyEventScreen() {
     //       console.log(err);
     //     });
     // }, []);
-    API.get(`/event/my/9/details/filter?name=윈터`, {
-      headers: {
-        Authorization: token,
-        "Content-Type": "application/json",
-      },
-    })
-      .then((results) => {
-        const data = results.data;
-        console.log(results);
-        console.log(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    // API.get(`/event/my`, {
+    //   headers: {
+    //     Authorization: token,
+    //     "Content-Type": "application/json",
+    //   },
+    // })
+    //   .then((results) => {
+    //     const data = results.data;
+    //     console.log(results);
+    //     console.log(data);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
   }, []);
 
   return (

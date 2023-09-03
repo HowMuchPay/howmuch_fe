@@ -7,12 +7,29 @@ import { NavigationContainer, useNavigation } from "@react-navigation/native";
 
 import Navigation from "./router/Navigation";
 import { useAppStore } from "./stores/store";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
+  const setToken = useAppStore((state) => state.setToken);
+
+  useEffect(() => {
+    const restoreToken = async () => {
+      try {
+        const token = await AsyncStorage.getItem("authToken");
+        if (token) {
+          setToken(token);
+        }
+      } catch (error) {
+        console.error("Error restoring token:", error);
+      }
+    };
+
+    restoreToken();
+  }, [setToken]);
 
   let [fontsLoaded] = useFonts({
     "font-L": require("./assets/fonts/Pretendard-Light.ttf"),

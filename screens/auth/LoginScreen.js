@@ -59,7 +59,7 @@ export default function LoginScreen() {
         console.log("data", data);
         if (data["accessToken"]) {
           setToken(data["accessToken"]);
-          AsyncStorage.setItem("accessToken", data["accessToken"]);
+          AsyncStorage.setItem("authToken", data["accessToken"]);
         }
       }
     })()

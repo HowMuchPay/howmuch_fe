@@ -5,6 +5,7 @@ import moment from "moment";
 export const useAppStore = create(
   persist(
     (set, get) => ({
+      token: "",
       setToken: (token) => set({ ...get(), token: token }),
     }),
     {

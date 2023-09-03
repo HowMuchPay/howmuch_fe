@@ -61,20 +61,20 @@ export default function HandleDrawer() {
 
   useEffect(() => {
     console.log(token);
-    API.get(`/home`, {
-      headers: {
-        Authorization: token,
-        "Content-Type": "application/json",
-      },
-    })
-      .then((results) => {
-        const data = results.data;
-        console.log(results);
-        console.log(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    // API.get(`/home`, {
+    //   headers: {
+    //     Authorization: token,
+    //     "Content-Type": "application/json",
+    //   },
+    // })
+    //   .then((results) => {
+    //     const data = results.data;
+    //     console.log(results);
+    //     console.log(data);
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
   }, []);
   return (
     <Drawer.Navigator initialRouteName="Main" useLegacyImplementation={true} screenOptions={{ drawerPosition: "left", headerShown: false }} drawerContent={() => <SideScreen />}>

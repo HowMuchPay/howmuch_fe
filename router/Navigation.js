@@ -144,9 +144,7 @@ export default function Navigation() {
   // }, [token]);
 
   useEffect(() => {
-    const accessToken = AsyncStorage.getItem("accessToken");
-
-    setToken(accessToken);
+    console.log(token);
   }, []);
 
   StatusBar.setBarStyle("dark-content");
