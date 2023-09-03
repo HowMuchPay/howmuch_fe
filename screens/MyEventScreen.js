@@ -1,17 +1,47 @@
-import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  Button,
-} from "react-native";
-import React, {useEffect, useState} from "react";
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image, Button } from "react-native";
+import React, { useEffect, useState } from "react";
 
 import Modal from "react-native-modal";
+import { useAppStore } from "../stores/store";
+import { API } from "../stores/api";
 
 export default function MyEventScreen() {
+  const store = useAppStore();
+  const token = store.token;
+
+  useEffect(() => {
+    console.log(token);
+    //   API.get(`/event/my`, {
+    //     headers: {
+    //       Authorization: token,
+    //       "Content-Type": "application/json",
+    //     },
+    //   })
+    //     .then((results) => {
+    //       const data = results.data;
+    //       console.log(results);
+    //       console.log(data);
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // }, []);
+    API.get(`/event/my/9/details/filter?name=윈터`, {
+      headers: {
+        Authorization: token,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((results) => {
+        const data = results.data;
+        console.log(results);
+        console.log(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.inner}>
@@ -27,9 +57,7 @@ function NowGetMoneyBox() {
     <View style={styles.nowGetMoneyBox}>
       <Text style={styles.nowGetMoneyTitle}>현재까지</Text>
       <View style={styles.nowGetMoneyTitleFlex}>
-        <Text style={[styles.nowGetMoneyTitle, styles.accentColor]}>
-          총 19,100,000원
-        </Text>
+        <Text style={[styles.nowGetMoneyTitle, styles.accentColor]}>총 19,100,000원</Text>
         <Text style={styles.nowGetMoneyTitle}>을</Text>
       </View>
       <Text style={styles.nowGetMoneyTitle}>받았어요.</Text>
@@ -45,34 +73,28 @@ function PayListBox() {
   };
 
   let groupList = [
-    {id: "all", title: "전체", pressed: true},
-    {id: "family", title: "가족", pressed: false},
-    {id: "friend", title: "친구", pressed: false},
-    {id: "work", title: "직장", pressed: false},
-    {id: "etc", title: "기타", pressed: false},
+    { id: "all", title: "전체", pressed: true },
+    { id: "family", title: "가족", pressed: false },
+    { id: "friend", title: "친구", pressed: false },
+    { id: "work", title: "직장", pressed: false },
+    { id: "etc", title: "기타", pressed: false },
   ];
 
   let eventList = [
-    {id: "all", title: "전체", pressed: true},
-    {id: "marry", title: "결혼", pressed: false},
-    {id: "firstBirth", title: "돌잔치", pressed: false},
-    {id: "worthy", title: "상", pressed: false},
-    {id: "birthday", title: "생일", pressed: false},
-    {id: "etc", title: "기타", pressed: false},
+    { id: "all", title: "전체", pressed: true },
+    { id: "marry", title: "결혼", pressed: false },
+    { id: "firstBirth", title: "돌잔치", pressed: false },
+    { id: "worthy", title: "상", pressed: false },
+    { id: "birthday", title: "생일", pressed: false },
+    { id: "etc", title: "기타", pressed: false },
   ];
 
   return (
     <View style={styles.filterContainer}>
       <View style={styles.filterFlex}>
-        <TouchableOpacity
-          style={styles.filterSelectBox}
-          onPress={() => handleButtonPress(1)}
-        >
+        <TouchableOpacity style={styles.filterSelectBox} onPress={() => handleButtonPress(1)}>
           <Text style={styles.filterSelectTitle}>전체 내역</Text>
-          <Image
-            style={{width: 12, height: 12}}
-            source={require("../assets/images/icon_arrow.png")}
-          />
+          <Image style={{ width: 12, height: 12 }} source={require("../assets/images/icon_arrow.png")} />
         </TouchableOpacity>
         <View>
           <Modal
@@ -95,10 +117,7 @@ function PayListBox() {
                 }}
                 onPress={() => setModalVisible(null)}
               >
-                <Image
-                  style={{width: 37, height: 2}}
-                  source={require("../assets/images/icon_close_bar.png")}
-                />
+                <Image style={{ width: 37, height: 2 }} source={require("../assets/images/icon_close_bar.png")} />
               </TouchableOpacity>
 
               <SelectBtnBox title={"그룹별"} btnArr={groupList} />
@@ -108,30 +127,12 @@ function PayListBox() {
         </View>
 
         <View style={styles.filterSearchBox}>
-          {/* <TouchableOpacity style={styles.filterSearchIcon} onPress={() => handleButtonPress(2)}>
-            <Image style={{width:24,height:24}}source={require('../assets/images/icon_search_black.png')}/>
+          <TouchableOpacity style={styles.filterSearchIcon} onPress={() => handleButtonPress(2)}>
+            <Image style={{ width: 24, height: 24 }} source={require("../assets/images/icon_search_black.png")} />
           </TouchableOpacity>
-          
-          <Modal
-              isVisible={modalVisible === 2}
-              transparent={true}
-              onBackdropPress = {()  =>  setModalVisible (null)} 
-              >
-                
-                <View style={styles.searchModalBox}>
-                  <Text style={styles.searchModalTitle}>검색하기</Text>
-                  <View style={styles.searchModalInputFlex}>
-                    <Image style={{width:18,height:18}}source={require('../assets/images/icon_search.png')}/>
-                    <TextInput style={styles.searchModalInput} placeholder='검색어를 입력해주세요'/>
-                  </View>
-                </View>
-            </Modal> */}
 
           <TouchableOpacity style={styles.filterRefreshIcon}>
-            <Image
-              style={{width: 24, height: 24}}
-              source={require("../assets/images/icon_rotate_right.png")}
-            />
+            <Image style={{ width: 24, height: 24 }} source={require("../assets/images/icon_rotate_right.png")} />
           </TouchableOpacity>
         </View>
       </View>
@@ -145,11 +146,7 @@ function SelectBtnBox(props) {
   const [buttons, setButtons] = useState(props.btnArr);
 
   const handleButtonPress = (buttonId) => {
-    setButtons((prevButtons) =>
-      prevButtons.map((button) =>
-        button.id === buttonId ? {...button, pressed: !button.pressed} : button
-      )
-    );
+    setButtons((prevButtons) => prevButtons.map((button) => (button.id === buttonId ? { ...button, pressed: !button.pressed } : button)));
   };
 
   return (
@@ -158,22 +155,8 @@ function SelectBtnBox(props) {
       <View style={styles.modalBtnFlex}>
         {buttons.map((button, idx) => {
           return (
-            <TouchableOpacity
-              style={[
-                styles.modalSelectBtn,
-                {backgroundColor: button.pressed ? "#6D61FF" : "#F3F3FF"},
-              ]}
-              key={button.id}
-              onPress={() => handleButtonPress(button.id)}
-            >
-              <Text
-                style={[
-                  styles.modalBtnTitle,
-                  {color: button.pressed ? "#fff" : "#1F1F1F"},
-                ]}
-              >
-                {button.title}
-              </Text>
+            <TouchableOpacity style={[styles.modalSelectBtn, { backgroundColor: button.pressed ? "#6D61FF" : "#F3F3FF" }]} key={button.id} onPress={() => handleButtonPress(button.id)}>
+              <Text style={[styles.modalBtnTitle, { color: button.pressed ? "#fff" : "#1F1F1F" }]}>{button.title}</Text>
             </TouchableOpacity>
           );
         })}

@@ -1,61 +1,95 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  Button,
-  TouchableOpacity,
-} from "react-native";
-import React, {useEffect, useState} from "react";
-import {useNavigation} from "@react-navigation/native";
-import * as KakaoLogins from "@react-native-seoul/kakao-login";
+import { View, Text, StyleSheet, Image, Button, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+import * as KakaoLogin from "@react-native-seoul/kakao-login";
+import { login, getProfile } from "@react-native-seoul/kakao-login";
+
+import { useAppStore } from "../../stores/store";
+import { API } from "../../stores/api";
+
+const signInWithKakao = async () => {
+  const token = await login();
+  return token;
+};
 
 export default function LoginScreen() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [token, setToken] = useAppStore((state) => [state.token, state.setToken]);
+  const [errorMsg, setErrorMsg] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
 
-  // const [request, response, promptAsync] = useAuthRequest(
-  //   {
-  //     clientId: 'edb8647a8a046e4f9c835ca0036fba22',
-  //     redirectUri: 'http://localhost:19000',
-  //     scopes: ['profile_nickname', 'profile_image'],
-  //   },
-  //   { authorizationEndpoint: 'https://kauth.kakao.com/oauth/authorize' }
-  // );
+  const handleKakaoLogin = () => {
+    setIsLoading(true);
+    (async () => {
+      setErrorMsg(null);
+      const kakaotoken = await signInWithKakao();
+      console.log("kakaotoken", kakaotoken);
 
-  // const handleKakaoLogin = () => {
-  //   promptAsync();
-  // };
+      const kakaoProfile = await getProfile();
+      console.log("kakaoProfile", kakaoProfile);
 
-  // useEffect(() => {
-  //   if (response !== null) {
-  //     console.log(response);
-  //   }
-  // }, [response]);
+      let phone_num = kakaoProfile.phoneNumber;
+      // 예를 들어 phone_num가 +82 10-3433-5673 일때 이걸 01034335673 이렇게 만들기
+      if (phone_num) {
+        // phone_num 빈 칸 지우기
+        phone_num = phone_num.replace(/ /g, "");
+        // phone_num에 -가 있으면 지우기
+        phone_num = phone_num.replace(/-/g, "");
+        // if phone_num starts with +82, remove it
+        if (phone_num.startsWith("+82")) {
+          phone_num = phone_num.slice(3);
+        }
+        // 10 로 시작하면 010으로 바꾸기
+        if (phone_num.startsWith("10")) {
+          phone_num = "0" + phone_num;
+        }
+      }
+
+      if (kakaotoken && kakaotoken.accessToken) {
+        const body = {
+          oauthId: kakaoProfile.id,
+          nickname: kakaoProfile.nickname,
+          profileImage: kakaoProfile.profileImageUrl,
+        };
+        const response = await API.post(`/login/kakao`, body);
+
+        const data = response.data;
+
+        console.log("data", data);
+        if (data["accessToken"]) {
+          setToken(data["accessToken"]);
+        }
+      }
+    })()
+      .catch((err) => {
+        console.log(err);
+        setErrorMsg("로그인에 실패했습니다. " + err.message);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    if (token) navigation.navigate("Drawer");
+  }, [token]);
 
   return (
     <View style={styles.container}>
-      <Image
-        style={styles.logo}
-        source={require(".././../assets/images/logo1.png")}
-      />
-      <TouchableOpacity
+      <Image style={styles.logo} source={require(".././../assets/images/logo1.png")} />
+      {/* <TouchableOpacity
         style={styles.buttonContainer}
         onPress={() => {
           navigation.navigate("Drawer");
         }}
-      >
-      {/* <TouchableOpacity
+      > */}
+      <TouchableOpacity
         style={styles.buttonContainer}
         onPress={() => {
-          navigation.navigate("KakaoLogin");
+          if (!isLoading) handleKakaoLogin();
         }}
-      > */}
-        <Image
-          style={styles.kakao}
-          source={require(".././../assets/images/kakaotalk.png")}
-        />
+      >
+        <Image style={styles.kakao} source={require(".././../assets/images/kakaotalk.png")} />
         <Text style={styles.kakaoText}>카카오톡으로 시작하기</Text>
       </TouchableOpacity>
       {/* <View style={styles.joinContainer}>

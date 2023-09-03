@@ -1,5 +1,5 @@
-import React, {useEffect} from "react";
-import {Text, TouchableOpacity, View} from "react-native";
+import React, { useEffect } from "react";
+import { Text, TouchableOpacity, View } from "react-native";
 // import WebView from "react-native-webview";
 import axios from "axios";
 // import * as KakaoLogins from "@react-native-seoul/kakao-login";
@@ -10,7 +10,7 @@ import * as KakaoLogin from "@react-native-seoul/kakao-login";
 // const REDIRECT_URI = 'http://localhost:8080/login/callback/kakao'
 // const REDIRECT_URI = "http://localhost:19000";
 
-const KakaoLoginExample = ({navigation}) => {
+const KakaoLoginExample = ({ navigation }) => {
   // function LogInProgress(data) {
 
   //     // access code는 url에 붙어 장황하게 날아온다.
@@ -77,7 +77,7 @@ const KakaoLoginExample = ({navigation}) => {
   };
 
   return (
-    <View style={{flex: 1, justifyContent: "center"}}>
+    <View style={{ flex: 1, justifyContent: "center" }}>
       <TouchableOpacity
         onPress={() => {
           exampleKakaoLogin();
