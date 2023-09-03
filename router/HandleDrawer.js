@@ -6,6 +6,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import MainScreen from "../screens/MainScreen";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { API } from "../stores/api";
+import { useAppStore } from "../stores/store";
 
 const Drawer = createDrawerNavigator();
 
@@ -55,9 +56,16 @@ function FooterArea() {
 }
 
 export default function HandleDrawer() {
+  const store = useAppStore();
+  const token = store.token;
+
   useEffect(() => {
+    console.log(token);
     API.get(`/home`, {
-      method: "GET",
+      headers: {
+        Authorization: token,
+        "Content-Type": "application/json",
+      },
     })
       .then((results) => {
         const data = results.data;

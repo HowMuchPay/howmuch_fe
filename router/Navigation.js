@@ -20,6 +20,7 @@ import NotAskRelationScreen from "../screens/NotAskRelationScreen";
 import AddMyEventScreen from "../screens/AddMyEventScreen";
 import ContactSelectScreen from "../screens/ContactSelectScreen";
 import LoginScreen from "../screens/auth/LoginScreen";
+import { useAppStore } from "../stores/store";
 
 function HeaderTitle(props) {
   return (
@@ -135,11 +136,13 @@ function TotalPage() {
 export default function Navigation() {
   const Stack = createNativeStackNavigator();
   StatusBar.setBarStyle("dark-content");
+  const store = useAppStore();
+  const token = store.token;
 
   return (
-    <Stack.Navigator initialRouteName="Login" screenOptions={{ headerTransparent: true }}>
+    <Stack.Navigator initialRouteName={token ? "Drawer" : "Login"} screenOptions={{ headerTransparent: true }}>
       {/* <Stack.Screen name="Boarding" component={Boarding}/> */}
-      <Stack.Screen name="KakaoLogin" component={KakaoLogin} options={{ headerShown: false }} />
+      {/* <Stack.Screen name="KakaoLogin" component={KakaoLogin} options={{ headerShown: false }} /> */}
 
       <Stack.Screen name="Drawer" component={HandleDrawer} options={{ headerShown: false }} />
       <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />

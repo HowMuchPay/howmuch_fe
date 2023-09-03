@@ -47,32 +47,22 @@ export default function LoginScreen() {
 
       if (kakaotoken && kakaotoken.accessToken) {
         const body = {
-          phone_num: phone_num,
+          oauthId: kakaoProfile.id,
+          nickname: kakaoProfile.nickname,
+          profileImage: kakaoProfile.profileImageUrl,
         };
-        const response = await API.get(`/login/callback/kakao?code=`)
-          .then((res) => {
-            console.log(res);
-          })
-          .catch((err) => console.log(err));
-        // const response = await API.post(`/user/reissue`, body, {
-        //   headers: {
-        //     Authorization: kakaotoken.accessToken,
-        //   },
-        // });
+        const response = await API.post(`/login/kakao`, body);
+
         const data = response.data;
 
-        // console.log("data", data)
-        if (data["has_user"]) {
-          setToken(data["token"]["access_token"]);
-        } else if (data["access_token"]) {
-          setToken(data["access_token"]);
-        } else {
-          throw setErrorMsg("로그인에 실패했습니다. " + JSON.stringify(data));
+        console.log("data", data);
+        if (data["accessToken"]) {
+          setToken(data["accessToken"]);
         }
-      } else setErrorMsg("로그인에 실패했습니다. 정보를 가져올 수 없습니다.");
+      }
     })()
       .catch((err) => {
-        // console.log(err);
+        console.log(err);
         setErrorMsg("로그인에 실패했습니다. " + err.message);
       })
       .finally(() => {
@@ -87,18 +77,18 @@ export default function LoginScreen() {
   return (
     <View style={styles.container}>
       <Image style={styles.logo} source={require(".././../assets/images/logo1.png")} />
-      <TouchableOpacity
+      {/* <TouchableOpacity
         style={styles.buttonContainer}
         onPress={() => {
           navigation.navigate("Drawer");
         }}
-      >
-        {/* <TouchableOpacity
+      > */}
+      <TouchableOpacity
         style={styles.buttonContainer}
         onPress={() => {
           if (!isLoading) handleKakaoLogin();
         }}
-      > */}
+      >
         <Image style={styles.kakao} source={require(".././../assets/images/kakaotalk.png")} />
         <Text style={styles.kakaoText}>카카오톡으로 시작하기</Text>
       </TouchableOpacity>
