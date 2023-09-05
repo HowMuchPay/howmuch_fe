@@ -5,61 +5,84 @@ import Modal from "react-native-modal";
 import { useAppStore } from "../stores/store";
 import { API } from "../stores/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SwipeListView } from "react-native-swipe-list-view";
 
 export default function MyEventScreen() {
   const store = useAppStore();
   const token = store.token;
 
+  const [data, setData] = useState(null);
+
   useEffect(() => {
-    const accessToken = AsyncStorage.getItem("accessToken");
-    console.log(accessToken);
-    //   API.get(`/event/my`, {
-    //     headers: {
-    //       Authorization: token,
-    //       "Content-Type": "application/json",
-    //     },
-    //   })
-    //     .then((results) => {
-    //       const data = results.data;
-    //       console.log(results);
-    //       console.log(data);
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //     });
-    // }, []);
-    // API.get(`/event/my`, {
-    //   headers: {
-    //     Authorization: token,
-    //     "Content-Type": "application/json",
-    //   },
-    // })
-    //   .then((results) => {
-    //     const data = results.data;
-    //     console.log(results);
-    //     console.log(data);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
+    API.get(`/event/my`, {
+      headers: {
+        Authorization: token,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((results) => {
+        const data = results.data;
+        // console.log(results);
+        // console.log(data);
+        setData(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
+
+  // useEffect(() => {
+  //   data.allMyEvents &&
+  //     data.allMyEvents.map((event) => {
+  //       // console.log(event);
+  //       const eventDate = new Date(event.eventAt);
+  //       const year = eventDate.getFullYear();
+  //       const month = eventDate.getMonth() + 1; // 월은 0부터 시작하므로 +1 해줍니다.
+
+  //       if (!groupedEvents[year]) {
+  //         groupedEvents[year] = {};
+  //       }
+  //       if (!groupedEvents[year][month]) {
+  //         groupedEvents[year][month] = [];
+  //       }
+
+  //       groupedEvents[year][month].push(event);
+  //     });
+
+  //   // 결과 출력
+  //   for (const year in groupedEvents) {
+  //     for (const month in groupedEvents[year]) {
+  //       console.log(`${year}년 ${month}월 이벤트:`);
+  //       console.log(groupedEvents[year][month]);
+  //     }
+  //   }
+  // }, [data]);
+
+  // console.log(groupedEvents);
+  // console.log(data.allMyEvents);
 
   return (
     <ScrollView style={styles.container}>
       <View style={styles.inner}>
-        <NowGetMoneyBox />
-        <PayListBox />
+        {data ? (
+          <>
+            <NowGetMoneyBox data={data} />
+            <PayListBox />
+            <PayList data={data} />
+          </>
+        ) : null}
       </View>
     </ScrollView>
   );
 }
 
-function NowGetMoneyBox() {
+function NowGetMoneyBox({ data }) {
+  // console.log("re", data);
   return (
     <View style={styles.nowGetMoneyBox}>
       <Text style={styles.nowGetMoneyTitle}>현재까지</Text>
       <View style={styles.nowGetMoneyTitleFlex}>
-        <Text style={[styles.nowGetMoneyTitle, styles.accentColor]}>총 19,100,000원</Text>
+        <Text style={[styles.nowGetMoneyTitle, styles.accentColor]}>총 {data.totalReceiveAmount}원</Text>
         <Text style={styles.nowGetMoneyTitle}>을</Text>
       </View>
       <Text style={styles.nowGetMoneyTitle}>받았어요.</Text>
@@ -67,7 +90,7 @@ function NowGetMoneyBox() {
   );
 }
 
-function PayListBox() {
+function PayListBox({ data }) {
   const [modalVisible, setModalVisible] = useState(null);
 
   const handleButtonPress = (number) => {
@@ -138,8 +161,6 @@ function PayListBox() {
           </TouchableOpacity>
         </View>
       </View>
-
-      <PayList />
     </View>
   );
 }
@@ -167,8 +188,95 @@ function SelectBtnBox(props) {
   );
 }
 
-function PayList() {
-  return <View style={styles.payListBox}></View>;
+function PayList({ data }) {
+  console.log("pay", data.allMyEvents);
+  const [myEvents, setMyEvents] = useState([]);
+
+  // useEffect(() => {
+  //   if (data && data.allMyEvents) {
+  //     setMyEvents(data.allMyEvents);
+
+  //   }
+  // }, [data]);
+  const sortedKeys = Object.keys(data.allMyEvents).sort((a, b) => {
+    const dateA = new Date(a);
+    const dateB = new Date(b);
+    return dateB - dateA; // 내림차순 정렬
+  });
+
+  return (
+    <ScrollView style={styles.payListBox}>
+      {sortedKeys.map((key) => {
+        const events = data.allMyEvents[key]; // 특정 키에 해당하는 배열
+        return (
+          <View key={key}>
+            <Text>{key}</Text>
+            {/* {events.map((event, index) => (
+              <View key={index}>
+                <Text>{event.myEventDisplayName}</Text>
+                <Text>{event.eventAt}</Text>
+                <Text>{event.receiveAmount}</Text>
+              </View>
+            ))} */}
+
+            <SwipeListView
+              data={events}
+              renderItem={(data, rowMap) => {
+                return (
+                  <View style={styles.rowFront}>
+                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                      <View style={{ width: 40, height: 40, backgroundColor: "blue", borderRadius: 50, marginRight: 10 }}></View>
+                      <View style={{}}>
+                        <Text>{data.item.myEventDisplayName}</Text>
+                        <Text>{data.item.eventAt}</Text>
+                      </View>
+                    </View>
+                    <Text>{data.item.receiveAmount}</Text>
+                  </View>
+                );
+              }}
+              renderHiddenItem={(data, rowMap) => (
+                <View style={styles.rowBack}>
+                  <TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnLeft]}>
+                    <Text style={styles.backTextWhite}>Close</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+              rightOpenValue={-70}
+              disableRightSwipe
+            />
+          </View>
+        );
+      })}
+
+      {/* <SwipeListView
+        data={data.allMyEvents}
+        renderItem={(data, rowMap) => {
+          return (
+            <View style={styles.rowFront}>
+              <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                <View style={{ width: 40, height: 40, backgroundColor: "blue", borderRadius: 50, marginRight: 10 }}></View>
+                <View style={{}}>
+                  <Text>{data.item.myEventDisplayName}</Text>
+                  <Text>{data.item.eventAt}</Text>
+                </View>
+              </View>
+              <Text>{data.item.receiveAmount}</Text>
+            </View>
+          );
+        }}
+        renderHiddenItem={(data, rowMap) => (
+          <View style={styles.rowBack}>
+            <TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnLeft]}>
+              <Text style={styles.backTextWhite}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        rightOpenValue={-70}
+        disableRightSwipe
+      /> */}
+    </ScrollView>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -232,8 +340,45 @@ const styles = StyleSheet.create({
   payListBox: {
     backgroundColor: "#fff",
     borderRadius: 20,
-    height: 520,
+    paddingTop: 30,
+    paddingBottom: 40,
     marginBottom: 40,
+  },
+
+  rowFront: {
+    // width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#CCC",
+    justifyContent: "space-between",
+    // height: 60,
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+    // borderWidth: 1,
+  },
+
+  rowBack: {
+    alignItems: "center",
+    backgroundColor: "#DDD",
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    // paddingLeft: 15,
+  },
+
+  backRightBtn: {
+    alignItems: "center",
+    bottom: 0,
+    justifyContent: "center",
+    position: "absolute",
+    top: 0,
+    width: 75,
+    height: "100%",
+  },
+  backRightBtnLeft: {
+    backgroundColor: "blue",
+    right: 0,
+    height: "100%",
   },
 
   //모달창

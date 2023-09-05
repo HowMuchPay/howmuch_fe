@@ -1,6 +1,7 @@
 import { create, GetState } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import moment from "moment";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const useAppStore = create(
   persist(
