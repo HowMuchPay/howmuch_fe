@@ -1,11 +1,13 @@
 import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, TextInput, ScrollView, Pressable } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import * as Contacts from "expo-contacts";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import CircularProgress from "react-native-circular-progress-indicator";
+import { useAppStore } from "../stores/store";
+import { API } from "../stores/api";
 
 export default function MainScreen({}) {
   const navigation = useNavigation();
@@ -14,6 +16,11 @@ export default function MainScreen({}) {
 
   const sendMoneyImg = require("../assets/images/icon_send_money.png");
   const getMoneyImg = require("../assets/images/icon_get_money.png");
+
+  const store = useAppStore();
+  const token = store.token;
+
+  const [data, setData] = useState(null);
 
   useEffect(() => {
     (async () => {
@@ -30,6 +37,22 @@ export default function MainScreen({}) {
         }
       }
     })();
+
+    API.get(`/home`, {
+      headers: {
+        Authorization: token,
+        "Content-Type": "application/json",
+      },
+    })
+      .then((results) => {
+        const data = results.data;
+        // console.log(results);
+        console.log(data);
+        setData(data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, []);
 
   return (
@@ -48,7 +71,7 @@ export default function MainScreen({}) {
         <View style={styles.payBoxContainer}>
           <PayShowBox
             title={"나의 경조사"}
-            money={"3,400,000원"}
+            money={data ? `${data.userTotalReceiveAmount.toLocaleString()}원` : "0원"}
             iconImg={getMoneyImg}
             navigate={() => {
               navigation.navigate("MyEvent");
@@ -56,7 +79,7 @@ export default function MainScreen({}) {
           />
           <PayShowBox
             title={"지인의 경조사"}
-            money={"2,400,000원"}
+            money={data ? `${data.userTotalPayAmount.toLocaleString()}원` : "0원"}
             iconImg={sendMoneyImg}
             navigate={() => {
               navigation.navigate("FriendEvent");
@@ -64,8 +87,9 @@ export default function MainScreen({}) {
           />
         </View>
 
-        <StatisticsBox />
-        <ComingEventBox />
+        {data ? <StatisticsBox percentage={data.payPercentage} /> : null}
+
+        {data ? <ComingEventBox /> : null}
 
         <View style={styles.payBoxContainer}>
           <CalendarBox />
@@ -98,13 +122,43 @@ function PayShowBox(props) {
   );
 }
 
-function StatisticsBox() {
+function StatisticsBox({ percentage }) {
+  const percentageTextFormat = (percentage) => {
+    if (percentage > 50) {
+      return (
+        <>
+          <Text style={styles.totalTitle}>받은 경조사비보다</Text>
+          <Text style={styles.totalTitle}>낸 경조사비가 더 많아요!</Text>
+        </>
+      );
+    } else if (percentage == 50) {
+      return (
+        <>
+          <Text style={styles.totalTitle}>적당하게</Text>
+          <Text style={styles.totalTitle}>반반 내셨어요!</Text>
+        </>
+      );
+    } else if (percentage < 50 && percentage !== 0) {
+      return (
+        <>
+          <Text style={styles.totalTitle}>낸 경조사비보다</Text>
+          <Text style={styles.totalTitle}>받은 경조사비가 더 많아요!</Text>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <Text style={styles.totalTitle}>아직 경조사비를</Text>
+          <Text style={styles.totalTitle}>주고받지 않았어요.</Text>
+        </>
+      );
+    }
+  };
   return (
     <>
       <View style={styles.totalBox}>
         <View style={styles.totalTextBox}>
-          <Text style={styles.totalTitle}>낸 경조사비보다</Text>
-          <Text style={styles.totalTitle}>받은 경조사비가 더 많아요!</Text>
+          <View>{percentageTextFormat(percentage)}</View>
           <Pressable style={{ marginTop: 10 }}>
             <Text style={{ fontFamily: "font-M", color: "#8E8E8E" }}>자세히 보기 {">"}</Text>
           </Pressable>
@@ -112,7 +166,7 @@ function StatisticsBox() {
 
         <View style={styles.circleBox}>
           <CircularProgress
-            value={40}
+            value={percentage}
             radius={55}
             progressValueColor={"#000"}
             activeStrokeColor={"#978EFF"}
@@ -139,7 +193,7 @@ function ComingEventBox() {
       <View style={styles.comingBox}>
         <View style={styles.comingInner}>
           <View style={styles.comingInfo}>
-            <Image style={{ width: 24, height: 24, marginRight: 10 }} source={require("../assets/images/icon_congrats.png")} />
+            {/* <Image style={{ width: 24, height: 24, marginRight: 10 }} source={require("../assets/images/icon_congrats.png")} /> */}
             <Text style={styles.comingText}>박지영님 결혼식</Text>
           </View>
 
@@ -238,6 +292,7 @@ const styles = StyleSheet.create({
     width: 80,
     backgroundColor: "#F3F3FF",
     alignItems: "center",
+    borderRadius: 5,
   },
   payTitle: {
     color: "#978EFF",
@@ -245,7 +300,8 @@ const styles = StyleSheet.create({
     fontFamily: "font-B",
     borderRadius: 5,
     lineHeight: 19,
-    paddingLeft: 5,
+    // paddingLeft: 5,
+    textAlign: "left",
   },
   payMoney: {
     color: "#1f1f1f",
@@ -344,21 +400,23 @@ const styles = StyleSheet.create({
   },
   comingText: {
     fontFamily: "font-B",
-    fontSize: 16,
+    fontSize: 14,
     color: "#1F1F1F",
   },
   comingDateBox: {
-    width: 82,
+    // width: 82,
     height: 32,
     borderRadius: 16,
     backgroundColor: "#F3F3FF",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingHorizontal: 18,
   },
   comingDate: {
     fontSize: 14,
     color: "#6D61FF",
     fontFamily: "font-B",
     textAlign: "center",
-    lineHeight: 34,
   },
 
   // 캘린더박스

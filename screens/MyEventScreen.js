@@ -23,43 +23,13 @@ export default function MyEventScreen() {
       .then((results) => {
         const data = results.data;
         // console.log(results);
-        // console.log(data);
+        console.log(data);
         setData(data);
       })
       .catch((err) => {
         console.log(err);
       });
   }, []);
-
-  // useEffect(() => {
-  //   data.allMyEvents &&
-  //     data.allMyEvents.map((event) => {
-  //       // console.log(event);
-  //       const eventDate = new Date(event.eventAt);
-  //       const year = eventDate.getFullYear();
-  //       const month = eventDate.getMonth() + 1; // 월은 0부터 시작하므로 +1 해줍니다.
-
-  //       if (!groupedEvents[year]) {
-  //         groupedEvents[year] = {};
-  //       }
-  //       if (!groupedEvents[year][month]) {
-  //         groupedEvents[year][month] = [];
-  //       }
-
-  //       groupedEvents[year][month].push(event);
-  //     });
-
-  //   // 결과 출력
-  //   for (const year in groupedEvents) {
-  //     for (const month in groupedEvents[year]) {
-  //       console.log(`${year}년 ${month}월 이벤트:`);
-  //       console.log(groupedEvents[year][month]);
-  //     }
-  //   }
-  // }, [data]);
-
-  // console.log(groupedEvents);
-  // console.log(data.allMyEvents);
 
   return (
     <ScrollView style={styles.container}>
@@ -68,7 +38,13 @@ export default function MyEventScreen() {
           <>
             <NowGetMoneyBox data={data} />
             <PayListBox />
-            <PayList data={data} />
+            {Object.keys(data.allMyEvents).length === 0 ? (
+              <View style={[styles.payListBox, { height: 460, alignItems: "center", justifyContent: "center" }]}>
+                <Text style={{ fontSize: 16, fontFamily: "font-B", color: "#cccccc" }}>이벤트 목록이 없습니다.</Text>
+              </View>
+            ) : (
+              <PayList data={data} />
+            )}
           </>
         ) : null}
       </View>
@@ -190,91 +166,71 @@ function SelectBtnBox(props) {
 
 function PayList({ data }) {
   console.log("pay", data.allMyEvents);
-  const [myEvents, setMyEvents] = useState([]);
 
-  // useEffect(() => {
-  //   if (data && data.allMyEvents) {
-  //     setMyEvents(data.allMyEvents);
+  // const sortedKeys = Object.keys(data.allMyEvents).sort((a, b) => {
+  //   const dateA = new Date(a);
+  //   const dateB = new Date(b);
+  //   return dateB - dateA; // 내림차순 정렬
+  // });
 
-  //   }
-  // }, [data]);
-  const sortedKeys = Object.keys(data.allMyEvents).sort((a, b) => {
-    const dateA = new Date(a);
-    const dateB = new Date(b);
-    return dateB - dateA; // 내림차순 정렬
-  });
+  function formatKey(key) {
+    const [year, month] = key.split("-");
+    return `${year}년 ${parseInt(month, 10)}월`;
+  }
+
+  function formatDate(date) {
+    const [year, month, day] = date.split("-");
+    return `${month}월 ${day}일`;
+  }
 
   return (
     <ScrollView style={styles.payListBox}>
-      {sortedKeys.map((key) => {
+      {Object.keys(data.allMyEvents).map((key, index) => {
         const events = data.allMyEvents[key]; // 특정 키에 해당하는 배열
+        const formattedKey = formatKey(key); // 키를 변환하여 형식화
         return (
-          <View key={key}>
-            <Text>{key}</Text>
-            {/* {events.map((event, index) => (
-              <View key={index}>
-                <Text>{event.myEventDisplayName}</Text>
-                <Text>{event.eventAt}</Text>
-                <Text>{event.receiveAmount}</Text>
-              </View>
-            ))} */}
+          <View key={key} style={{ paddingHorizontal: 20 }}>
+            {index !== 0 ? <View style={{ height: 0.3, backgroundColor: "#ccc", marginVertical: 30 }}></View> : null}
 
-            <SwipeListView
-              data={events}
-              renderItem={(data, rowMap) => {
-                return (
-                  <View style={styles.rowFront}>
-                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                      <View style={{ width: 40, height: 40, backgroundColor: "blue", borderRadius: 50, marginRight: 10 }}></View>
-                      <View style={{}}>
-                        <Text>{data.item.myEventDisplayName}</Text>
-                        <Text>{data.item.eventAt}</Text>
+            <View style={{}}>
+              <Text style={{ fontFamily: "font-B", fontSize: 14, color: "#1f1f1f", marginBottom: 10 }}>{formattedKey}</Text>
+
+              <SwipeListView
+                data={events}
+                renderItem={(data, rowMap) => {
+                  const eventNameParts = data.item.myEventDisplayName.split("의");
+                  const modifiedString = eventNameParts[0] + "님의" + eventNameParts[1];
+
+                  return (
+                    <View style={styles.rowFront}>
+                      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                        <View style={{ width: 40, height: 40, backgroundColor: "blue", borderRadius: 50, marginRight: 10 }}></View>
+                        <View style={{}}>
+                          <Text style={{ fontSize: 14, fontFamily: "font-M", color: "#1f1f1f" }}>{modifiedString}</Text>
+                          <Text style={{ fontSize: 13, fontFamily: "font-R", color: "#5f5f5f" }}>{formatDate(data.item.eventAt)}</Text>
+                        </View>
                       </View>
+                      {data.item.receiveAmount === 0}
+                      <Text style={{ fontSize: 15, color: "#1f1f1f", fontFamily: "font-B" }}>{data.item.receiveAmount !== 0 ? `+${data.item.receiveAmount.toLocaleString()}원` : `0원`}</Text>
                     </View>
-                    <Text>{data.item.receiveAmount}</Text>
+                  );
+                }}
+                renderHiddenItem={(data, rowMap) => (
+                  <View style={styles.rowBack}>
+                    <TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnLeft]}>
+                      <Text style={styles.backTextWhite}>Close</Text>
+                    </TouchableOpacity>
                   </View>
-                );
-              }}
-              renderHiddenItem={(data, rowMap) => (
-                <View style={styles.rowBack}>
-                  <TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnLeft]}>
-                    <Text style={styles.backTextWhite}>Close</Text>
-                  </TouchableOpacity>
-                </View>
-              )}
-              rightOpenValue={-70}
-              disableRightSwipe
-            />
+                )}
+                rightOpenValue={-70}
+                disableRightSwipe
+              />
+
+              {/* {events.length > 0 && <View style={{ height: 0.3, backgroundColor: "#ccc", marginVertical: 30 }}></View>} */}
+            </View>
           </View>
         );
       })}
-
-      {/* <SwipeListView
-        data={data.allMyEvents}
-        renderItem={(data, rowMap) => {
-          return (
-            <View style={styles.rowFront}>
-              <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                <View style={{ width: 40, height: 40, backgroundColor: "blue", borderRadius: 50, marginRight: 10 }}></View>
-                <View style={{}}>
-                  <Text>{data.item.myEventDisplayName}</Text>
-                  <Text>{data.item.eventAt}</Text>
-                </View>
-              </View>
-              <Text>{data.item.receiveAmount}</Text>
-            </View>
-          );
-        }}
-        renderHiddenItem={(data, rowMap) => (
-          <View style={styles.rowBack}>
-            <TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnLeft]}>
-              <Text style={styles.backTextWhite}>Close</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-        rightOpenValue={-70}
-        disableRightSwipe
-      /> */}
     </ScrollView>
   );
 }
@@ -349,17 +305,16 @@ const styles = StyleSheet.create({
     // width: "100%",
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#CCC",
+    backgroundColor: "#fff",
     justifyContent: "space-between",
     // height: 60,
-    paddingHorizontal: 20,
-    paddingVertical: 15,
+    paddingVertical: 20,
     // borderWidth: 1,
   },
 
   rowBack: {
     alignItems: "center",
-    backgroundColor: "#DDD",
+    // backgroundColor: "#DDD",
     flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
