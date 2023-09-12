@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Text, View, StyleSheet } from "react-native";
+import { Text, View, StyleSheet, StatusBar } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -65,6 +65,7 @@ export default function App() {
 
   return (
     <NavigationContainer style={styles.container} onReady={onLayoutRootView}>
+      <StatusBar backgroundColor="#F3F3FF" barStyle="dark-content" />
       <Navigation />
     </NavigationContainer>
   );

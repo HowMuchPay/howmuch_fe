@@ -7,6 +7,8 @@ export const useAppStore = create(
   persist(
     (set, get) => ({
       token: "",
+      refreshToken: "",
+      setRefreshToken: (token) => set({ ...get(), refreshToken: refreshToken }),
       setToken: (token) => set({ ...get(), token: token }),
     }),
     {

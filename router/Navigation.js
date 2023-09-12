@@ -22,6 +22,7 @@ import ContactSelectScreen from "../screens/ContactSelectScreen";
 import LoginScreen from "../screens/auth/LoginScreen";
 import { useAppStore } from "../stores/store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import MyEventDetailScreen from "../screens/MyEventDetailScreen";
 
 function HeaderTitle(props) {
   return (
@@ -273,6 +274,23 @@ export default function Navigation() {
       <Stack.Screen
         name="AddMyEventScreen"
         component={AddMyEventScreen}
+        options={{
+          title: "",
+          headerStyle: { backgroundColor: "transparent" },
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            fontFamily: "font-B",
+            fontSize: 17,
+            color: "#1f1f1f",
+          },
+          headerLeft: () => <BackBtn />,
+          headerBackTitleVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="MyEventDetailScreen"
+        component={MyEventDetailScreen}
         options={{
           title: "",
           headerStyle: { backgroundColor: "transparent" },
