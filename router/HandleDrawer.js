@@ -59,8 +59,12 @@ export default function HandleDrawer() {
   const store = useAppStore();
   const token = store.token;
 
+  const refreshToken = store.refreshToken;
+
   useEffect(() => {
     console.log(token);
+    console.log("refresh", refreshToken);
+
     API.get(`/home`, {
       headers: {
         Authorization: token,
