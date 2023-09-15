@@ -22,7 +22,9 @@ import ContactSelectScreen from "../screens/ContactSelectScreen";
 import LoginScreen from "../screens/auth/LoginScreen";
 import { useAppStore } from "../stores/store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import MyEventDetailScreen from "../screens/MyEventDetailScreen";
+import { MyEventDetailScreen, MyEventPersonPlusButton } from "../screens/MyEventDetailScreen";
+import AddDetailPersonScreen from "../screens/AddDetailPersonScreen";
+import { navigationRef } from "../App"; // Navigation Ref 가져오기
 
 function HeaderTitle(props) {
   return (
@@ -101,8 +103,20 @@ function FriendEventPlusButton() {
 
 function BackBtn() {
   const navigation = useNavigation();
+
+  const handleGoBack = async () => {
+    try {
+      // Navigation Ref를 사용하여 fetchData 함수 호출
+      // navigationRef.current?.fetchData();
+      navigation.goBack(); // 화면 뒤로 가기
+    } catch (error) {
+      // 오류 처리
+      console.log(error);
+    }
+  };
+
   return (
-    <TouchableOpacity onPress={navigation.goBack}>
+    <TouchableOpacity onPress={handleGoBack}>
       <Image source={BackIcon} style={{ height: 24, width: 24 }} />
     </TouchableOpacity>
   );
@@ -301,6 +315,25 @@ export default function Navigation() {
             color: "#1f1f1f",
           },
           headerLeft: () => <BackBtn />,
+          headerRight: () => <MyEventPersonPlusButton />,
+          headerBackTitleVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="AddDetailPersonScreen"
+        component={AddDetailPersonScreen}
+        options={{
+          title: "신규인원 추가",
+          headerStyle: { backgroundColor: "transparent" },
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            fontFamily: "font-B",
+            fontSize: 17,
+            color: "#1f1f1f",
+          },
+          headerLeft: () => <BackBtn />,
+
           headerBackTitleVisible: false,
         }}
       />

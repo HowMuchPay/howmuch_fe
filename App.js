@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Text, View, StyleSheet, StatusBar } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
@@ -11,6 +11,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
+
+export const navigationRef = React.createRef();
+
+function navigate(name, params) {
+  navigationRef.current?.navigate(name, params);
+}
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
@@ -64,7 +70,7 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer style={styles.container} onReady={onLayoutRootView}>
+    <NavigationContainer style={styles.container} onReady={onLayoutRootView} ref={navigationRef}>
       <StatusBar backgroundColor="#F3F3FF" barStyle="dark-content" />
       <Navigation />
     </NavigationContainer>

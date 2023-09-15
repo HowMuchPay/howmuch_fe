@@ -44,6 +44,56 @@ export default function MyEventScreen() {
     }
   };
 
+  const handleDelete = async (id) => {
+    // 먼저 확인 대화 상자(alert)를 띄워 사용자에게 물어봅니다.
+    Alert.alert(
+      "삭제 확인",
+      "삭제하시겠습니까?",
+      [
+        {
+          text: "아니오",
+          style: "cancel",
+        },
+        {
+          text: "네",
+          onPress: async () => {
+            try {
+              // 삭제 요청을 보냅니다.
+              const response = await API.delete(`/event/my/${id}`, {
+                headers: {
+                  Authorization: token,
+                  "Content-Type": "application/json",
+                },
+              });
+              console.log("성공적으로 delete 요청을 보냈습니다.", response.data);
+
+              fetchData();
+            } catch (error) {
+              console.log(id);
+              console.error("delete 요청을 보내는 중 오류가 발생했습니다.", error);
+            }
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
+  const handleFilter = (groupNumList, eventNumList) => {
+    API.get(`/event/my/filter?myTypes=${groupNumList}&eventCategories=${eventNumList}`, {
+      headers: {
+        Authorization: token,
+      },
+    })
+      .then((response) => {
+        console.log("성공적으로 get 요청을 보냈습니다.", response.data.allMyEvents);
+        setData(response.data);
+      })
+      .catch((error) => {
+        console.error("get 요청을 보내는 중 오류가 발생했습니다.", error);
+      });
+  };
+
   return (
     <FlatList // ScrollView를 FlatList로 변경
       style={styles.container}
@@ -55,13 +105,13 @@ export default function MyEventScreen() {
             <>
               <NowGetMoneyBox data={item} />
               <View>
-                <PayListBox setData={setData} token={token} />
+                <PayListBox handleFilter={handleFilter} fetchData={fetchData} />
                 {item && item.allMyEvents && Object.keys(item.allMyEvents).length === 0 ? (
                   <View style={[styles.payListBox, { height: 460, alignItems: "center", justifyContent: "center" }]}>
                     <Text style={{ fontSize: 16, fontFamily: "font-B", color: "#cccccc" }}>이벤트 목록이 없습니다.</Text>
                   </View>
                 ) : (
-                  <PayList data={item} setData={setData} />
+                  <PayList data={item} handleDelete={handleDelete} />
                 )}
               </View>
             </>
@@ -86,36 +136,16 @@ function NowGetMoneyBox({ data }) {
   );
 }
 
-function PayListBox({ setData, token }) {
+function PayListBox({ handleFilter, fetchData }) {
   const [modalVisible, setModalVisible] = useState(null);
   const [groupNumList, setGroupNumList] = useState(null);
   const [eventNumList, setEventNumList] = useState(null);
-
-  const fetchData = async () => {
-    try {
-      // 데이터를 가져오는 axios 요청을 보냅니다.
-      const response = await API.get("/event/my", {
-        headers: {
-          Authorization: token,
-          "Content-Type": "application/json",
-        },
-      });
-      const newData = response.data; // 새로운 데이터
-
-      // 상태를 업데이트하고 화면을 다시 렌더링합니다.
-      console.log(newData);
-      setData(newData);
-    } catch (error) {
-      console.error("데이터를 불러오는 중 오류가 발생했습니다.", error);
-    }
-  };
 
   const handleButtonPress = (number) => {
     setModalVisible(number);
   };
 
   const handleModalClose = () => {
-    console.log("gr", groupNumList);
     let groupResult;
     let eventResult;
 
@@ -135,20 +165,7 @@ function PayListBox({ setData, token }) {
       eventResult = eventNumList.sort((a, b) => a - b).join(",");
     }
 
-    console.log("gropu", groupResult);
-    console.log("event", eventNumList);
-    API.get(`/event/my/filter?myTypes=${groupResult}&eventCategories=${eventResult}`, {
-      headers: {
-        Authorization: token,
-      },
-    })
-      .then((response) => {
-        console.log("성공적으로 get 요청을 보냈습니다.", response.data.allMyEvents);
-        setData(response.data);
-      })
-      .catch((error) => {
-        console.error("get 요청을 보내는 중 오류가 발생했습니다.", error);
-      });
+    handleFilter(groupResult, eventResult);
 
     // Modal 닫기
     setModalVisible(null);
@@ -205,7 +222,7 @@ function PayListBox({ setData, token }) {
             <Image style={{ width: 24, height: 24 }} source={require("../assets/images/icon_search_black.png")} />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.filterRefreshIcon} onPress={() => fetchData()}>
+          <TouchableOpacity style={styles.filterRefreshIcon} onPress={fetchData}>
             <Image style={{ width: 24, height: 24 }} source={require("../assets/images/icon_rotate_right.png")} />
           </TouchableOpacity>
         </View>
@@ -241,6 +258,7 @@ function SelectGroupBtnBox(props) {
     </View>
   );
 }
+
 function SelectEventBtnBox(props) {
   const [buttons, setButtons] = useState(props.btnArr);
   const [activeIds, setActiveIds] = useState([]); // 활성화된 ID들을 추적하는 배열
@@ -268,11 +286,7 @@ function SelectEventBtnBox(props) {
   );
 }
 
-function PayList({ data, setData }) {
-  console.log("pay", data.allMyEvents);
-  const store = useAppStore();
-  const token = store.token;
-
+function PayList({ data, handleDelete }) {
   const navigation = useNavigation();
 
   function formatKey(key) {
@@ -284,59 +298,6 @@ function PayList({ data, setData }) {
     const [year, month, day] = date.split("-");
     return `${month}월 ${day}일`;
   }
-
-  const fetchData = async () => {
-    try {
-      // 데이터를 가져오는 axios 요청을 보냅니다.
-      const response = await API.get("/event/my", {
-        headers: {
-          Authorization: token,
-          "Content-Type": "application/json",
-        },
-      });
-      const newData = response.data; // 새로운 데이터
-
-      // 상태를 업데이트하고 화면을 다시 렌더링합니다.
-      setData(newData);
-    } catch (error) {
-      console.error("데이터를 불러오는 중 오류가 발생했습니다.", error);
-    }
-  };
-
-  const handleDelete = async (id) => {
-    // 먼저 확인 대화 상자(alert)를 띄워 사용자에게 물어봅니다.
-    Alert.alert(
-      "삭제 확인",
-      "삭제하시겠습니까?",
-      [
-        {
-          text: "아니오",
-          style: "cancel",
-        },
-        {
-          text: "네",
-          onPress: async () => {
-            try {
-              // 삭제 요청을 보냅니다.
-              const response = await API.delete(`/event/my/${id}`, {
-                headers: {
-                  Authorization: token,
-                  "Content-Type": "application/json",
-                },
-              });
-              console.log("성공적으로 delete 요청을 보냈습니다.", response.data);
-
-              fetchData();
-            } catch (error) {
-              console.log(id);
-              console.error("delete 요청을 보내는 중 오류가 발생했습니다.", error);
-            }
-          },
-        },
-      ],
-      { cancelable: false }
-    );
-  };
 
   return (
     <FlatList
@@ -372,7 +333,7 @@ function PayList({ data, setData }) {
                   }
 
                   return (
-                    <Pressable style={styles.rowFront} onPress={() => navigation.navigate("MyEventDetailScreen")}>
+                    <Pressable style={styles.rowFront} onPress={() => navigation.navigate("MyEventDetailScreen", { id: data.item.id, eventNum: data.item.eventCategory })}>
                       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
                         <View style={{ width: 40, height: 40, borderRadius: 50, marginRight: 10 }}>
                           <WithLocalSvg width={40} height={40} asset={selectedEvent} style={{ marginRight: 15 }} />
