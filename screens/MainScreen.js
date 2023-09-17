@@ -8,7 +8,6 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import CircularProgress from "react-native-circular-progress-indicator";
 import { useAppStore } from "../stores/store";
 import { API } from "../stores/api";
-import { navigationRef } from "../App"; // Navigation Ref 가져오기
 
 export default function MainScreen({}) {
   const navigation = useNavigation();

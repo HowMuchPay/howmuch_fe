@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, Image, FlatList, Pressable, Alert } from "react-native";
+import { View, Text, TouchableOpacity, Image, FlatList, Pressable, Alert, TextInput } from "react-native";
 import React, { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
 import { StatusBar } from "react-native";
@@ -24,7 +24,7 @@ function MyEventDetailScreen({ route }) {
   const token = store.token;
 
   const { id, eventNum } = route.params;
-
+  const [isSearching, setIsSearching] = useState(false);
   eventId = id;
   eventNumber = eventNum;
 
@@ -105,6 +105,36 @@ function MyEventDetailScreen({ route }) {
     );
   };
 
+  const handleSearchClose = (query) => {
+    setIsSearching(!!query);
+
+    const endpoint = query ? `/event/my/${id}/details/filter?name=${query}` : `/event/my/${id}/details?sort=asc`;
+
+    API.get(endpoint, {
+      headers: {
+        Authorization: token,
+      },
+    })
+      .then((response) => {
+        console.log("성공적으로 get 요청을 보냈습니다.", response.data);
+        if (query) {
+          // 검색 결과 데이터에 "myEventInfo" 정보를 추가
+          const searchDataWithEventInfo = {
+            myEventInfo: data ? data.myEventInfo : null, // 이전 데이터의 "myEventInfo"를 유지하거나 초기화
+            myDetails: response.data,
+          };
+
+          setData(searchDataWithEventInfo);
+        } else {
+          // 전체 데이터를 설정
+          setData(response.data);
+        }
+      })
+      .catch((error) => {
+        console.error("get 요청을 보내는 중 오류가 발생했습니다.", error);
+      });
+  };
+
   function formatDate(date) {
     const [year, month, day] = date.split("-");
     return `${year}년 ${month}월 ${day}일`;
@@ -132,7 +162,7 @@ function MyEventDetailScreen({ route }) {
           </View>
 
           <View>
-            <PayFilterBox id={id} fetchData={fetchData} />
+            <PayFilterBox id={id} fetchData={fetchData} handleSearchClose={handleSearchClose} />
             {item && item.myDetails && item.myDetails.length === 0 ? (
               <View style={[styles.payListBox, { height: 460, alignItems: "center", justifyContent: "center" }]}>
                 <Text style={{ fontSize: 16, fontFamily: "font-B", color: "#cccccc" }}>상세 목록이 없습니다.</Text>
@@ -147,8 +177,9 @@ function MyEventDetailScreen({ route }) {
   );
 }
 
-function PayFilterBox({ id, fetchData }) {
+function PayFilterBox({ id, fetchData, handleSearchClose }) {
   const [modalVisible, setModalVisible] = useState(null);
+  const [text, setText] = useState("");
 
   const handleButtonPress = (number) => {
     setModalVisible(number);
@@ -170,6 +201,10 @@ function PayFilterBox({ id, fetchData }) {
 
     // Modal 닫기
     setModalVisible(null);
+  };
+
+  const handleTextChange = (inputText) => {
+    setText(inputText); // 텍스트를 state에 저장
   };
 
   return (
@@ -209,6 +244,23 @@ function PayFilterBox({ id, fetchData }) {
           </TouchableOpacity>
         </View>
       </View>
+
+      <Modal
+        isVisible={modalVisible === 2}
+        transparent={true}
+        onBackdropPress={() => {
+          handleSearchClose(text);
+          setModalVisible(null);
+        }}
+      >
+        <View style={styles.searchModalBox}>
+          <Text style={styles.searchModalTitle}>검색하기</Text>
+          <View style={styles.searchModalInputFlex}>
+            <Image style={{ width: 18, height: 18 }} source={require("../assets/images/icon_search.png")} />
+            <TextInput style={styles.searchModalInput} placeholder="이름을 입력해주세요" value={text} onChangeText={handleTextChange} />
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }

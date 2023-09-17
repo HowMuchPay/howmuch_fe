@@ -10,6 +10,7 @@ export const useAppStore = create(
       refreshToken: "",
       setRefreshToken: (token) => set({ ...get(), refreshToken: refreshToken }),
       setToken: (token) => set({ ...get(), token: token }),
+      clearToken: () => set({ token: null }),
     }),
     {
       name: "howmuch-persist-storage", // unique name

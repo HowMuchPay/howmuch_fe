@@ -1,55 +1,42 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  Image,
-} from "react-native";
-import React, {useState} from "react";
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image } from "react-native";
+import React, { useState } from "react";
 import Modal from "react-native-modal";
-import {useNavigation} from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 
-export default function NameInputComponent({handleButtonClick, eventType}) {
+export default function NameInputComponent({ handleButtonClick, eventType, myType }) {
   const [showButton, setShowButton] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
-  const navigation = useNavigation();
+  const [inputValue, setInputValue] = useState("");
 
   const TextButtonClick = (value) => {
-    setShowButton(true);
+    setShowButton(inputValue.trim() !== "");
   };
 
-  const modalOpenClick = () => {
-    setModalVisible(!modalVisible);
+  const handleConfirmClick = () => {
+    // console.log("TextInput의 값:", inputValue);
+    handleButtonClick(inputValue);
   };
 
   return (
     <>
-      <View style={{flexDirection: "row"}}>
+      <View style={{ flexDirection: "row" }}>
         <Text style={styles.addText}>경조사에 해당하는 분의</Text>
       </View>
-      <View style={{flexDirection: "row"}}>
-        <Text style={[styles.addText, {color: "#6D61FF"}]}>성함(애칭)</Text>
+      <View style={{ flexDirection: "row" }}>
+        <Text style={[styles.addText, { color: "#6D61FF" }]}>성함(애칭)</Text>
         <Text style={styles.addText}>을 입력해주세요</Text>
       </View>
       <View style={styles.nameInputBox}>
-        <TextInput
-          style={styles.nameInput}
-          placeholder="이름을 입력해주세요"
-          onSubmitEditing={TextButtonClick}
-        />
+        <TextInput style={styles.nameInput} placeholder="이름을 입력해주세요" onSubmitEditing={TextButtonClick} value={inputValue} onChangeText={(text) => setInputValue(text)} />
       </View>
 
       {showButton && (
-        <TouchableOpacity
-          onPress={eventType === "friend" ? handleButtonClick : modalOpenClick}
-          style={styles.nextBtn}
-        >
+        // <TouchableOpacity onPress={eventType === "friend" ? handleButtonClick : modalOpenClick} style={styles.nextBtn}>
+        <TouchableOpacity onPress={handleConfirmClick} style={styles.nextBtn}>
           <Text style={styles.nextBtnText}>확인</Text>
         </TouchableOpacity>
       )}
 
-      <Modal
+      {/* <Modal
         isVisible={modalVisible === true}
         transparent={true}
         onBackdropPress={() => setModalVisible(false)}
@@ -69,41 +56,26 @@ export default function NameInputComponent({handleButtonClick, eventType}) {
             }}
             onPress={() => setModalVisible(false)}
           >
-            <Image
-              style={{width: 37, height: 2}}
-              source={require("../assets/images/icon_close_bar.png")}
-            />
+            <Image style={{ width: 37, height: 2 }} source={require("../assets/images/icon_close_bar.png")} />
           </TouchableOpacity>
 
           <View style={styles.bottomModalInner}>
-            <Image
-              style={{width: 40, height: 40}}
-              source={require("../assets/images/icon_bell.png")}
-            />
-            <Text style={styles.bottomModalTitle}>
-              지인에게 나의 경조사를 알리시겠어요?
-            </Text>
-            <Text style={styles.bottomModalText}>
-              나의 경조사를 알리려면 연락처를 연동해야 합니다.
-            </Text>
+            <Image style={{ width: 40, height: 40 }} source={require("../assets/images/icon_bell.png")} />
+            <Text style={styles.bottomModalTitle}>지인에게 나의 경조사를 알리시겠어요?</Text>
+            <Text style={styles.bottomModalText}>나의 경조사를 알리려면 연락처를 연동해야 합니다.</Text>
 
             <View style={styles.bottomModalBtnFlex}>
               <TouchableOpacity style={styles.bottomModalBtn}>
                 <Text style={styles.bottomModalBtnText}>아니요</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity
-                onPress={() => navigation.navigate("ContactSelectScreen")}
-                style={[styles.bottomModalBtn, {backgroundColor: "#6D61FF"}]}
-              >
-                <Text style={[styles.bottomModalBtnText, {color: "#fff"}]}>
-                  네
-                </Text>
+              <TouchableOpacity onPress={() => navigation.navigate("ContactSelectScreen")} style={[styles.bottomModalBtn, { backgroundColor: "#6D61FF" }]}>
+                <Text style={[styles.bottomModalBtnText, { color: "#fff" }]}>네</Text>
               </TouchableOpacity>
             </View>
           </View>
         </View>
-      </Modal>
+      </Modal> */}
     </>
   );
 }

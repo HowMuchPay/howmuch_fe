@@ -11,11 +11,14 @@ import MoneyInputComponent from "../components/MoneyInputComponent";
 export default function AskRelationScreen01() {
   const [countUp, setCountUp] = useState(0);
   const [progress, setProgress] = useState(0.15);
+  const [postData, setPostData] = useState([]);
 
   const handleButtonClick = () => {
+    console.log("dd");
     // 버튼을 클릭할 때마다 텍스트와 프로그레스 바가 변경되도록 설정
     setCountUp(countUp + 1);
     setProgress(progress + 0.13); // 0.1씩 증가시키거나 원하는 값으로 변경 가능
+    console.log("data", data);
   };
 
   // count가 3일 때의 스타일

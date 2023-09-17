@@ -1,40 +1,25 @@
-import {View, Text, StyleSheet, TouchableOpacity} from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
 
-export default function RelationSelectComponent({handleButtonClick}) {
+export default function RelationSelectComponent({ handleButtonClick }) {
   return (
     <>
-      <View style={{flexDirection: "row"}}>
-        <Text style={[styles.addText, {color: "#6D61FF"}]}>관계</Text>
+      <View style={{ flexDirection: "row" }}>
+        <Text style={[styles.addText, { color: "#6D61FF" }]}>관계</Text>
         <Text style={styles.addText}>를</Text>
       </View>
-      <View style={{flexDirection: "row"}}>
+      <View style={{ flexDirection: "row" }}>
         <Text style={styles.addText}>선택해주세요</Text>
       </View>
 
       <View style={styles.relationBtnFlex}>
-        <TouchableOpacity
-          onPress={handleButtonClick}
-          style={styles.relationBtn}
-        >
-          <Text style={styles.relationBtnText}>친척</Text>
+        <TouchableOpacity onPress={() => handleButtonClick(0)} style={styles.relationBtn}>
+          <Text style={styles.relationBtnText}>나</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={handleButtonClick}
-          style={styles.relationBtn}
-        >
-          <Text style={styles.relationBtnText}>친구</Text>
+        <TouchableOpacity onPress={() => handleButtonClick(1)} style={styles.relationBtn}>
+          <Text style={styles.relationBtnText}>가족</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={handleButtonClick}
-          style={styles.relationBtn}
-        >
-          <Text style={styles.relationBtnText}>직장</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={handleButtonClick}
-          style={styles.relationBtn}
-        >
+        <TouchableOpacity onPress={() => handleButtonClick(2)} style={styles.relationBtn}>
           <Text style={styles.relationBtnText}>기타</Text>
         </TouchableOpacity>
       </View>

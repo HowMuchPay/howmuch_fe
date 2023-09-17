@@ -101,6 +101,48 @@ export default function MyEventScreen() {
       keyExtractor={(item, index) => index.toString()} // 간단한 keyExtractor를 사용
       renderItem={({ item }) => (
         <View style={styles.inner}>
+          <TouchableOpacity
+            onPress={() => {
+              API.get("/calendar/statistics?time=2023-12", {
+                headers: {
+                  Authorization: token,
+                  "Content-Type": "application/json",
+                },
+              })
+                .then((response) => {
+                  console.log("성공적으로 get 요청을 보냈습니다.", response.data);
+                  // console.log(response.data.allAcEvents);
+                })
+                .catch((error) => {
+                  console.error("get 요청을 보내는 중 오류가 발생했습니다.", error);
+                });
+            }}
+          >
+            <Text>필터링</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              const postData = {
+                title: "공지사항 제목1",
+                content: "공지사항 내용2",
+              };
+
+              API.put("/admin/notice/1", postData, {
+                headers: {
+                  Authorization: token,
+                },
+              })
+                .then((response) => {
+                  console.log("성공적으로 POST 요청을 보냈습니다.", response.data);
+                })
+                .catch((error) => {
+                  console.error("POST 요청을 보내는 중 오류가 발생했습니다.", error);
+                });
+            }}
+          >
+            <Text>post</Text>
+          </TouchableOpacity>
           {item ? (
             <>
               <NowGetMoneyBox data={item} />
@@ -140,6 +182,8 @@ function PayListBox({ handleFilter, fetchData }) {
   const [modalVisible, setModalVisible] = useState(null);
   const [groupNumList, setGroupNumList] = useState(null);
   const [eventNumList, setEventNumList] = useState(null);
+
+  const navigation = useNavigation();
 
   const handleButtonPress = (number) => {
     setModalVisible(number);
@@ -218,7 +262,7 @@ function PayListBox({ handleFilter, fetchData }) {
         </View>
 
         <View style={styles.filterSearchBox}>
-          <TouchableOpacity style={styles.filterSearchIcon} onPress={() => handleButtonPress(2)}>
+          <TouchableOpacity style={styles.filterSearchIcon} onPress={() => navigation.navigate("SearchEventScreen")}>
             <Image style={{ width: 24, height: 24 }} source={require("../assets/images/icon_search_black.png")} />
           </TouchableOpacity>
 

@@ -12,15 +12,11 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
 
-export const navigationRef = React.createRef();
-
-function navigate(name, params) {
-  navigationRef.current?.navigate(name, params);
-}
-
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
   const setToken = useAppStore((state) => state.setToken);
+  const store = useAppStore();
+  const token = store.token;
 
   useEffect(() => {
     const restoreToken = async () => {
@@ -70,7 +66,7 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer style={styles.container} onReady={onLayoutRootView} ref={navigationRef}>
+    <NavigationContainer style={styles.container} onReady={onLayoutRootView}>
       <StatusBar backgroundColor="#F3F3FF" barStyle="dark-content" />
       <Navigation />
     </NavigationContainer>

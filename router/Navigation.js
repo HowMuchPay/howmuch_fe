@@ -7,7 +7,6 @@ import MyEventScreen from "../screens/MyEventScreen";
 import { Button, Image, Text, TouchableOpacity, View, StyleSheet } from "react-native";
 import { StatusBar } from "react-native";
 import BackIcon from "../assets/images/icon_back.png";
-import KakaoLogin from "../screens/services/KakaoLogin";
 import FriendEventScreen from "../screens/FriendEventScreen";
 import Modal from "react-native-modal";
 import ComingEventScreen from "../screens/ComingEventScreen";
@@ -24,7 +23,7 @@ import { useAppStore } from "../stores/store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MyEventDetailScreen, MyEventPersonPlusButton } from "../screens/MyEventDetailScreen";
 import AddDetailPersonScreen from "../screens/AddDetailPersonScreen";
-import { navigationRef } from "../App"; // Navigation Ref 가져오기
+import SearchEventScreen from "../screens/SearchEventScreen";
 
 function HeaderTitle(props) {
   return (
@@ -104,19 +103,8 @@ function FriendEventPlusButton() {
 function BackBtn() {
   const navigation = useNavigation();
 
-  const handleGoBack = async () => {
-    try {
-      // Navigation Ref를 사용하여 fetchData 함수 호출
-      // navigationRef.current?.fetchData();
-      navigation.goBack(); // 화면 뒤로 가기
-    } catch (error) {
-      // 오류 처리
-      console.log(error);
-    }
-  };
-
   return (
-    <TouchableOpacity onPress={handleGoBack}>
+    <TouchableOpacity onPress={navigation.goBack}>
       <Image source={BackIcon} style={{ height: 24, width: 24 }} />
     </TouchableOpacity>
   );
@@ -152,6 +140,7 @@ function TotalPage() {
 export default function Navigation() {
   const Stack = createNativeStackNavigator();
   const [token, setToken] = useAppStore((state) => [state.token, state.setToken]);
+
   const navigation = useNavigation();
 
   // useEffect(() => {
@@ -159,7 +148,7 @@ export default function Navigation() {
   // }, [token]);
 
   useEffect(() => {
-    console.log(token);
+    // useAppStore.getState().clearToken();
   }, []);
 
   StatusBar.setBarStyle("dark-content");
@@ -253,6 +242,23 @@ export default function Navigation() {
           headerBackTitleVisible: false,
         }}
       />
+      <Stack.Screen
+        name="SearchEventScreen"
+        component={SearchEventScreen}
+        options={{
+          title: "검색",
+          headerStyle: { backgroundColor: "transparent" },
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            fontFamily: "font-B",
+            fontSize: 17,
+            color: "#1f1f1f",
+          },
+          headerLeft: () => <BackBtn />,
+          headerBackTitleVisible: false,
+        }}
+      />
+
       <Stack.Screen
         name="AskRelationScreen01"
         component={AskRelationScreen01}
