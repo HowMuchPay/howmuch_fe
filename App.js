@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Text, View, StyleSheet, StatusBar } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
@@ -15,6 +15,8 @@ SplashScreen.preventAutoHideAsync();
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
   const setToken = useAppStore((state) => state.setToken);
+  const store = useAppStore();
+  const token = store.token;
 
   useEffect(() => {
     const restoreToken = async () => {

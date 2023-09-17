@@ -7,7 +7,6 @@ import MyEventScreen from "../screens/MyEventScreen";
 import { Button, Image, Text, TouchableOpacity, View, StyleSheet } from "react-native";
 import { StatusBar } from "react-native";
 import BackIcon from "../assets/images/icon_back.png";
-import KakaoLogin from "../screens/services/KakaoLogin";
 import FriendEventScreen from "../screens/FriendEventScreen";
 import Modal from "react-native-modal";
 import ComingEventScreen from "../screens/ComingEventScreen";
@@ -22,7 +21,9 @@ import ContactSelectScreen from "../screens/ContactSelectScreen";
 import LoginScreen from "../screens/auth/LoginScreen";
 import { useAppStore } from "../stores/store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import MyEventDetailScreen from "../screens/MyEventDetailScreen";
+import { MyEventDetailScreen, MyEventPersonPlusButton } from "../screens/MyEventDetailScreen";
+import AddDetailPersonScreen from "../screens/AddDetailPersonScreen";
+import SearchEventScreen from "../screens/SearchEventScreen";
 
 function HeaderTitle(props) {
   return (
@@ -101,6 +102,7 @@ function FriendEventPlusButton() {
 
 function BackBtn() {
   const navigation = useNavigation();
+
   return (
     <TouchableOpacity onPress={navigation.goBack}>
       <Image source={BackIcon} style={{ height: 24, width: 24 }} />
@@ -138,6 +140,7 @@ function TotalPage() {
 export default function Navigation() {
   const Stack = createNativeStackNavigator();
   const [token, setToken] = useAppStore((state) => [state.token, state.setToken]);
+
   const navigation = useNavigation();
 
   // useEffect(() => {
@@ -145,7 +148,7 @@ export default function Navigation() {
   // }, [token]);
 
   useEffect(() => {
-    console.log(token);
+    // useAppStore.getState().clearToken();
   }, []);
 
   StatusBar.setBarStyle("dark-content");
@@ -240,6 +243,23 @@ export default function Navigation() {
         }}
       />
       <Stack.Screen
+        name="SearchEventScreen"
+        component={SearchEventScreen}
+        options={{
+          title: "검색",
+          headerStyle: { backgroundColor: "transparent" },
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            fontFamily: "font-B",
+            fontSize: 17,
+            color: "#1f1f1f",
+          },
+          headerLeft: () => <BackBtn />,
+          headerBackTitleVisible: false,
+        }}
+      />
+
+      <Stack.Screen
         name="AskRelationScreen01"
         component={AskRelationScreen01}
         options={{
@@ -301,6 +321,25 @@ export default function Navigation() {
             color: "#1f1f1f",
           },
           headerLeft: () => <BackBtn />,
+          headerRight: () => <MyEventPersonPlusButton />,
+          headerBackTitleVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="AddDetailPersonScreen"
+        component={AddDetailPersonScreen}
+        options={{
+          title: "신규인원 추가",
+          headerStyle: { backgroundColor: "transparent" },
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            fontFamily: "font-B",
+            fontSize: 17,
+            color: "#1f1f1f",
+          },
+          headerLeft: () => <BackBtn />,
+
           headerBackTitleVisible: false,
         }}
       />

@@ -38,22 +38,27 @@ export default function MainScreen({}) {
       }
     })();
 
-    API.get(`/home`, {
-      headers: {
-        Authorization: token,
-        "Content-Type": "application/json",
-      },
-    })
-      .then((results) => {
-        const data = results.data;
-        // console.log(results);
-        console.log(data);
-        setData(data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    fetchData();
   }, []);
+
+  const fetchData = async () => {
+    try {
+      // 데이터를 가져오는 axios 요청을 보냅니다.
+      const response = await API.get("/home", {
+        headers: {
+          Authorization: token,
+          "Content-Type": "application/json",
+        },
+      });
+      const newData = response.data; // 새로운 데이터
+
+      // 상태를 업데이트하고 화면을 다시 렌더링합니다.
+      console.log(newData);
+      setData(newData);
+    } catch (error) {
+      console.error("데이터를 불러오는 중 오류가 발생했습니다.", error);
+    }
+  };
 
   return (
     <ScrollView style={styles.container}>
@@ -89,7 +94,7 @@ export default function MainScreen({}) {
 
         {data ? <StatisticsBox percentage={data.payPercentage} /> : null}
 
-        {data ? <ComingEventBox /> : null}
+        {data ? <ComingEventBox data={data} /> : null}
 
         <View style={styles.payBoxContainer}>
           <CalendarBox />
@@ -182,24 +187,30 @@ function StatisticsBox({ percentage }) {
   );
 }
 
-function ComingEventBox() {
+function ComingEventBox({ data }) {
   const navigation = useNavigation();
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate("ComingEvent");
+        if (data.acEventDisplayName === null) {
+          return null;
+        } else {
+          navigation.navigate("ComingEvent");
+        }
       }}
     >
       <View style={styles.comingBox}>
         <View style={styles.comingInner}>
           <View style={styles.comingInfo}>
             {/* <Image style={{ width: 24, height: 24, marginRight: 10 }} source={require("../assets/images/icon_congrats.png")} /> */}
-            <Text style={styles.comingText}>박지영님 결혼식</Text>
+            <Text style={styles.comingText}>{data.acEventDisplayName === null ? "경조사 디데이를 등록해보세요" : data.acEventDisplayName}</Text>
           </View>
 
-          <View style={styles.comingDateBox}>
-            <Text style={styles.comingDate}>D-14일</Text>
-          </View>
+          {data.acEventDisplayName === null ? null : (
+            <View style={styles.comingDateBox}>
+              <Text style={styles.comingDate}>{data.dday === 0 ? "당일" : `D-${data.dday}일`}</Text>
+            </View>
+          )}
         </View>
       </View>
     </TouchableOpacity>
@@ -400,8 +411,9 @@ const styles = StyleSheet.create({
   },
   comingText: {
     fontFamily: "font-B",
-    fontSize: 14,
+    fontSize: 15,
     color: "#1F1F1F",
+    lineHeight: 30,
   },
   comingDateBox: {
     // width: 82,

@@ -13,8 +13,9 @@ import event2 from "../assets/images/event_icon_2.svg";
 import event3 from "../assets/images/event_icon_3.svg";
 import event4 from "../assets/images/event_icon_4.svg";
 import trashIcon from "../assets/images/trash_icon.svg";
+import { useNavigation } from "@react-navigation/native";
 
-export default function MyEventScreen() {
+export default function FriendEventScreen() {
   const store = useAppStore();
   const token = store.token;
 
@@ -36,180 +37,8 @@ export default function MyEventScreen() {
       const newData = response.data; // 새로운 데이터
 
       // 상태를 업데이트하고 화면을 다시 렌더링합니다.
+      console.log(newData);
       setData(newData);
-    } catch (error) {
-      console.error("데이터를 불러오는 중 오류가 발생했습니다.", error);
-    }
-  };
-
-  return (
-    <FlatList // ScrollView를 FlatList로 변경
-      style={styles.container}
-      data={data ? [data] : []} // FlatList는 배열 데이터를 받으므로 data를 배열로 감싸줍니다.
-      keyExtractor={(item, index) => index.toString()} // 간단한 keyExtractor를 사용
-      renderItem={({ item }) => (
-        <View style={styles.inner}>
-          {item ? (
-            <>
-              <NowGetMoneyBox data={item} />
-              <PayListBox />
-              {item && item.allAcEvents && Object.keys(item.allAcEvents).length === 0 ? (
-                <View style={[styles.payListBox, { height: 460, alignItems: "center", justifyContent: "center" }]}>
-                  <Text style={{ fontSize: 16, fontFamily: "font-B", color: "#cccccc" }}>이벤트 목록이 없습니다.</Text>
-                </View>
-              ) : (
-                <PayList data={item} />
-              )}
-            </>
-          ) : null}
-        </View>
-      )}
-    />
-  );
-}
-
-function NowGetMoneyBox({ data }) {
-  // console.log("re", data);
-  return (
-    <View style={styles.nowGetMoneyBox}>
-      <Text style={styles.nowGetMoneyTitle}>현재까지</Text>
-      <View style={styles.nowGetMoneyTitleFlex}>
-        <Text style={[styles.nowGetMoneyTitle, styles.accentColor]}>총 {data.totalPayAmount.toLocaleString()}원</Text>
-        <Text style={styles.nowGetMoneyTitle}>을</Text>
-      </View>
-      <Text style={styles.nowGetMoneyTitle}>냈어요.</Text>
-    </View>
-  );
-}
-
-function PayListBox({ data }) {
-  const [modalVisible, setModalVisible] = useState(null);
-
-  const handleButtonPress = (number) => {
-    setModalVisible(number);
-  };
-
-  let groupList = [
-    { id: "all", title: "전체", pressed: true },
-    { id: "family", title: "가족", pressed: false },
-    { id: "friend", title: "친구", pressed: false },
-    { id: "work", title: "직장", pressed: false },
-    { id: "etc", title: "기타", pressed: false },
-  ];
-
-  let eventList = [
-    { id: "all", title: "전체", pressed: true },
-    { id: "marry", title: "결혼", pressed: false },
-    { id: "firstBirth", title: "돌잔치", pressed: false },
-    { id: "worthy", title: "상", pressed: false },
-    { id: "birthday", title: "생일", pressed: false },
-    { id: "etc", title: "기타", pressed: false },
-  ];
-
-  return (
-    <View style={styles.filterContainer}>
-      <View style={styles.filterFlex}>
-        <TouchableOpacity style={styles.filterSelectBox} onPress={() => handleButtonPress(1)}>
-          <Text style={styles.filterSelectTitle}>전체 내역</Text>
-          <Image style={{ width: 12, height: 12 }} source={require("../assets/images/icon_arrow.png")} />
-        </TouchableOpacity>
-        <View>
-          <Modal
-            isVisible={modalVisible === 1}
-            transparent={true}
-            onBackdropPress={() => setModalVisible(null)}
-            onSwipeComplete={() => setModalVisible(null)}
-            swipeDirection="down"
-            style={styles.bottomModalFlex}
-          >
-            <View style={styles.bottomModalBox}>
-              <TouchableOpacity
-                style={{
-                  marginLeft: "auto",
-                  marginRight: "auto",
-                  alignItems: "center",
-                  marginBottom: 30,
-                  height: 20,
-                  width: 100,
-                }}
-                onPress={() => setModalVisible(null)}
-              >
-                <Image style={{ width: 37, height: 2 }} source={require("../assets/images/icon_close_bar.png")} />
-              </TouchableOpacity>
-
-              <SelectBtnBox title={"그룹별"} btnArr={groupList} />
-              <SelectBtnBox title={"경조사별"} btnArr={eventList} />
-            </View>
-          </Modal>
-        </View>
-
-        <View style={styles.filterSearchBox}>
-          <TouchableOpacity style={styles.filterSearchIcon} onPress={() => handleButtonPress(2)}>
-            <Image style={{ width: 24, height: 24 }} source={require("../assets/images/icon_search_black.png")} />
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.filterRefreshIcon}>
-            <Image style={{ width: 24, height: 24 }} source={require("../assets/images/icon_rotate_right.png")} />
-          </TouchableOpacity>
-        </View>
-      </View>
-    </View>
-  );
-}
-
-function SelectBtnBox(props) {
-  const [buttons, setButtons] = useState(props.btnArr);
-
-  const handleButtonPress = (buttonId) => {
-    setButtons((prevButtons) => prevButtons.map((button) => (button.id === buttonId ? { ...button, pressed: !button.pressed } : button)));
-  };
-
-  return (
-    <View style={styles.modalGroupSelect}>
-      <Text style={styles.modalTitle}>{props.title}</Text>
-      <View style={styles.modalBtnFlex}>
-        {buttons.map((button, idx) => {
-          return (
-            <TouchableOpacity style={[styles.modalSelectBtn, { backgroundColor: button.pressed ? "#6D61FF" : "#F3F3FF" }]} key={button.id} onPress={() => handleButtonPress(button.id)}>
-              <Text style={[styles.modalBtnTitle, { color: button.pressed ? "#fff" : "#1F1F1F" }]}>{button.title}</Text>
-            </TouchableOpacity>
-          );
-        })}
-      </View>
-    </View>
-  );
-}
-
-function PayList({ data }) {
-  console.log("pay", data.allAcEvents);
-  const store = useAppStore();
-  const token = store.token;
-
-  const [listdata, setListData] = useState(data);
-
-  function formatKey(key) {
-    const [year, month] = key.split("-");
-    return `${year}년 ${parseInt(month, 10)}월`;
-  }
-
-  function formatDate(date) {
-    const [year, month, day] = date.split("-");
-    return `${month}월 ${day}일`;
-  }
-
-  const fetchData = async () => {
-    try {
-      // 데이터를 가져오는 axios 요청을 보냅니다.
-      const response = await API.get("/event/acquaintance", {
-        headers: {
-          Authorization: token,
-          "Content-Type": "application/json",
-        },
-      });
-      const newData = response.data; // 새로운 데이터
-
-      // 상태를 업데이트하고 화면을 다시 렌더링합니다.
-      setListData(newData);
     } catch (error) {
       console.error("데이터를 불러오는 중 오류가 발생했습니다.", error);
     }
@@ -250,14 +79,234 @@ function PayList({ data }) {
     );
   };
 
+  const handleFilter = (groupNumList, eventNumList) => {
+    API.get(`/event/acquaintance/filter?acTypes=${groupNumList}&eventCategories=${eventNumList}`, {
+      headers: {
+        Authorization: token,
+      },
+    })
+      .then((response) => {
+        console.log("성공적으로 get 요청을 보냈습니다.", response.data.allAcEvents);
+        setData(response.data);
+      })
+      .catch((error) => {
+        console.error("get 요청을 보내는 중 오류가 발생했습니다.", error);
+      });
+  };
+
   return (
-    // {listdata && listdata.allAcEvents && Object.keys(listdata.allAcEvents).length > 0  ? (<Text>test</Text>) : (<Text>no</Text>)}
+    <FlatList // ScrollView를 FlatList로 변경
+      style={styles.container}
+      data={data ? [data] : []} // FlatList는 배열 데이터를 받으므로 data를 배열로 감싸줍니다.
+      keyExtractor={(item, index) => index.toString()} // 간단한 keyExtractor를 사용
+      renderItem={({ item }) => (
+        <View style={styles.inner}>
+          {item ? (
+            <>
+              <NowGetMoneyBox data={item} />
+              <View>
+                <PayListBox handleFilter={handleFilter} />
+                {item && item.allAcEvents && Object.keys(item.allAcEvents).length === 0 ? (
+                  <View style={[styles.payListBox, { height: 460, alignItems: "center", justifyContent: "center" }]}>
+                    <Text style={{ fontSize: 16, fontFamily: "font-B", color: "#cccccc" }}>이벤트 목록이 없습니다.</Text>
+                  </View>
+                ) : (
+                  <PayList data={item} handleDelete={handleDelete} />
+                )}
+              </View>
+            </>
+          ) : null}
+        </View>
+      )}
+    />
+  );
+}
+
+function NowGetMoneyBox({ data }) {
+  // console.log("re", data);
+  return (
+    <View style={styles.nowGetMoneyBox}>
+      <Text style={styles.nowGetMoneyTitle}>현재까지</Text>
+      <View style={styles.nowGetMoneyTitleFlex}>
+        <Text style={[styles.nowGetMoneyTitle, styles.accentColor]}>총 {data.totalPayAmount.toLocaleString()}원</Text>
+        <Text style={styles.nowGetMoneyTitle}>을</Text>
+      </View>
+      <Text style={styles.nowGetMoneyTitle}>냈어요.</Text>
+    </View>
+  );
+}
+
+function PayListBox({ handleFilter }) {
+  const [modalVisible, setModalVisible] = useState(null);
+  const [groupNumList, setGroupNumList] = useState(null);
+  const [eventNumList, setEventNumList] = useState(null);
+
+  const handleButtonPress = (number) => {
+    setModalVisible(number);
+  };
+
+  const handleModalClose = () => {
+    let groupResult;
+    let eventResult;
+
+    if (groupNumList.includes(5)) {
+      groupResult = "0,1,2,3,4";
+    } else if (groupNumList.length === 0) {
+      groupResult = "0,1,2,3,4";
+    } else {
+      groupResult = groupNumList.sort((a, b) => a - b).join(",");
+    }
+
+    if (eventNumList.includes(5)) {
+      eventResult = "0,1,2,3,4";
+    } else if (eventNumList.length === 0) {
+      eventResult = "0,1,2,3,4";
+    } else {
+      eventResult = eventNumList.sort((a, b) => a - b).join(",");
+    }
+
+    handleFilter(groupResult, eventResult);
+
+    // Modal 닫기
+    setModalVisible(null);
+  };
+
+  let groupList = [
+    { id: 5, title: "전체", pressed: false },
+    { id: 0, title: "가족", pressed: false },
+    { id: 1, title: "친구", pressed: false },
+    { id: 2, title: "동료", pressed: false },
+    { id: 3, title: "친척", pressed: false },
+    { id: 4, title: "기타", pressed: false },
+  ];
+
+  let eventList = [
+    { id: 5, title: "전체", pressed: false },
+    { id: 0, title: "결혼", pressed: false },
+    { id: 3, title: "돌잔치", pressed: false },
+    { id: 1, title: "상", pressed: false },
+    { id: 2, title: "생일", pressed: false },
+    { id: 4, title: "기타", pressed: false },
+  ];
+
+  return (
+    <View style={styles.filterContainer}>
+      <View style={styles.filterFlex}>
+        <TouchableOpacity style={styles.filterSelectBox} onPress={() => handleButtonPress(1)}>
+          <Text style={styles.filterSelectTitle}>전체 내역</Text>
+          <Image style={{ width: 12, height: 12 }} source={require("../assets/images/icon_arrow.png")} />
+        </TouchableOpacity>
+        <View>
+          <Modal isVisible={modalVisible === 1} transparent={true} onBackdropPress={handleModalClose} onSwipeComplete={handleModalClose} swipeDirection="down" style={styles.bottomModalFlex}>
+            <View style={styles.bottomModalBox}>
+              <TouchableOpacity
+                style={{
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                  alignItems: "center",
+                  marginBottom: 30,
+                  height: 20,
+                  width: 100,
+                }}
+                onPress={() => setModalVisible(null)}
+              >
+                <Image style={{ width: 37, height: 2 }} source={require("../assets/images/icon_close_bar.png")} />
+              </TouchableOpacity>
+
+              <SelectGroupBtnBox title={"그룹별"} btnArr={groupList} setGroupNumList={setGroupNumList} />
+              <SelectEventBtnBox title={"경조사별"} btnArr={eventList} setEventNumList={setEventNumList} />
+            </View>
+          </Modal>
+        </View>
+
+        <View style={styles.filterSearchBox}>
+          <TouchableOpacity style={styles.filterSearchIcon} onPress={() => handleButtonPress(2)}>
+            <Image style={{ width: 24, height: 24 }} source={require("../assets/images/icon_search_black.png")} />
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.filterRefreshIcon} onPress={() => fetchData()}>
+            <Image style={{ width: 24, height: 24 }} source={require("../assets/images/icon_rotate_right.png")} />
+          </TouchableOpacity>
+        </View>
+      </View>
+    </View>
+  );
+}
+
+function SelectGroupBtnBox(props) {
+  const [buttons, setButtons] = useState(props.btnArr);
+  const [activeIds, setActiveIds] = useState([]); // 활성화된 ID들을 추적하는 배열
+
+  const handleButtonPress = (buttonId) => {
+    setButtons((prevButtons) => prevButtons.map((button) => (button.id === buttonId ? { ...button, pressed: !button.pressed } : button)));
+    setActiveIds((prevActiveIds) => (prevActiveIds.includes(buttonId) ? prevActiveIds.filter((id) => id !== buttonId) : [...prevActiveIds, buttonId]));
+  };
+  // console.log("활성화된 ID들:gr", activeIds);
+
+  props.setGroupNumList(activeIds);
+
+  return (
+    <View style={styles.modalGroupSelect}>
+      <Text style={styles.modalTitle}>{props.title}</Text>
+      <View style={styles.modalBtnFlex}>
+        {buttons.map((button, idx) => {
+          return (
+            <TouchableOpacity style={[styles.modalSelectBtn, { backgroundColor: button.pressed ? "#6D61FF" : "#F3F3FF" }]} key={button.id} onPress={() => handleButtonPress(button.id)}>
+              <Text style={[styles.modalBtnTitle, { color: button.pressed ? "#fff" : "#1F1F1F" }]}>{button.title}</Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+    </View>
+  );
+}
+function SelectEventBtnBox(props) {
+  const [buttons, setButtons] = useState(props.btnArr);
+  const [activeIds, setActiveIds] = useState([]); // 활성화된 ID들을 추적하는 배열
+
+  const handleButtonPress = (buttonId) => {
+    setButtons((prevButtons) => prevButtons.map((button) => (button.id === buttonId ? { ...button, pressed: !button.pressed } : button)));
+    setActiveIds((prevActiveIds) => (prevActiveIds.includes(buttonId) ? prevActiveIds.filter((id) => id !== buttonId) : [...prevActiveIds, buttonId]));
+  };
+  // console.log("활성화된 ID들:ev", activeIds);
+
+  props.setEventNumList(activeIds);
+  return (
+    <View style={styles.modalGroupSelect}>
+      <Text style={styles.modalTitle}>{props.title}</Text>
+      <View style={styles.modalBtnFlex}>
+        {buttons.map((button, idx) => {
+          return (
+            <TouchableOpacity style={[styles.modalSelectBtn, { backgroundColor: button.pressed ? "#6D61FF" : "#F3F3FF" }]} key={button.id} onPress={() => handleButtonPress(button.id)}>
+              <Text style={[styles.modalBtnTitle, { color: button.pressed ? "#fff" : "#1F1F1F" }]}>{button.title}</Text>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+    </View>
+  );
+}
+
+function PayList({ data, handleDelete }) {
+  const navigation = useNavigation();
+
+  function formatKey(key) {
+    const [year, month] = key.split("-");
+    return `${year}년 ${parseInt(month, 10)}월`;
+  }
+
+  function formatDate(date) {
+    const [year, month, day] = date.split("-");
+    return `${month}월 ${day}일`;
+  }
+
+  return (
     <FlatList
       style={styles.allContainer}
-      data={Object.keys(listdata.allAcEvents)}
+      data={Object.keys(data.allAcEvents)}
       keyExtractor={(key) => key}
       renderItem={({ item: key, index }) => {
-        const events = listdata.allAcEvents[key];
+        const events = data.allAcEvents[key];
         const formattedKey = formatKey(key);
 
         return (
@@ -285,7 +334,7 @@ function PayList({ data }) {
                   }
 
                   return (
-                    <View style={styles.rowFront}>
+                    <Pressable style={styles.rowFront}>
                       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
                         <View style={{ width: 40, height: 40, borderRadius: 50, marginRight: 10 }}>
                           <WithLocalSvg width={40} height={40} asset={selectedEvent} style={{ marginRight: 15 }} />
@@ -295,14 +344,13 @@ function PayList({ data }) {
                           <Text style={{ fontSize: 13, fontFamily: "font-R", color: "#5f5f5f" }}>{formatDate(data.item.eventAt)}</Text>
                         </View>
                       </View>
-                      {data.item.payAmount === 0}
+                      {data.item.receiveAmount === 0}
                       <Text style={{ fontSize: 15, color: "#1f1f1f", fontFamily: "font-B" }}>{data.item.payAmount !== 0 ? `+${data.item.payAmount.toLocaleString()}원` : `0원`}</Text>
-                    </View>
+                    </Pressable>
                   );
                 }}
                 renderHiddenItem={(data, rowMap) => (
                   <View style={styles.rowBack}>
-                    {console.log(data.item.id)}
                     <TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnLeft]} onPress={() => handleDelete(data.item.id)}>
                       <WithLocalSvg width={24} height={24} asset={trashIcon} />
                     </TouchableOpacity>
@@ -324,6 +372,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     paddingVertical: 30,
     borderRadius: 20,
+    minHeight: 500,
   },
   container: {
     // flex: 1,
