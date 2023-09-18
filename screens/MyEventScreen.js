@@ -13,17 +13,21 @@ import event2 from "../assets/images/event_icon_2.svg";
 import event3 from "../assets/images/event_icon_3.svg";
 import event4 from "../assets/images/event_icon_4.svg";
 import trashIcon from "../assets/images/trash_icon.svg";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 
 export default function MyEventScreen() {
   const store = useAppStore();
   const token = store.token;
-
   const [data, setData] = useState(null);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [isFocused]);
+
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
   const fetchData = async () => {
     try {
@@ -37,7 +41,7 @@ export default function MyEventScreen() {
       const newData = response.data; // 새로운 데이터
 
       // 상태를 업데이트하고 화면을 다시 렌더링합니다.
-      console.log(newData);
+      console.log(newData.allMyEvents);
       setData(newData);
     } catch (error) {
       console.error("데이터를 불러오는 중 오류가 발생했습니다.", error);
@@ -103,7 +107,7 @@ export default function MyEventScreen() {
         <View style={styles.inner}>
           <TouchableOpacity
             onPress={() => {
-              API.get("/calendar/statistics?time=2023-12", {
+              API.get("/calendar/statistics?time=2023-08", {
                 headers: {
                   Authorization: token,
                   "Content-Type": "application/json",
@@ -118,17 +122,20 @@ export default function MyEventScreen() {
                 });
             }}
           >
-            <Text>필터링</Text>
+            <Text>get</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             onPress={() => {
               const postData = {
-                title: "공지사항 제목1",
-                content: "공지사항 내용2",
+                acName: "로컬 테스트",
+                acType: 3,
+                eventCategory: 0,
+                payAmount: 300000,
+                eventAt: "2023-08-30",
               };
 
-              API.put("/admin/notice/1", postData, {
+              API.post("/event/acquaintance", postData, {
                 headers: {
                   Authorization: token,
                 },

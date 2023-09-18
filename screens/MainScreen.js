@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, TextInput, ScrollView, Pressable } from "react-native";
 import React, { useEffect, useState } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import { NavigationContainer, useIsFocused, useNavigation } from "@react-navigation/native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import * as Contacts from "expo-contacts";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
@@ -22,24 +22,30 @@ export default function MainScreen({}) {
 
   const [data, setData] = useState(null);
 
+  const isFocused = useIsFocused();
+
   useEffect(() => {
-    (async () => {
-      const { status } = await Contacts.requestPermissionsAsync();
-      if (status === "granted") {
-        console.log("성공");
-        const { data } = await Contacts.getContactsAsync({
-          fields: [Contacts.Fields.PhoneNumbers],
-        });
-
-        if (data.length > 0) {
-          const contact = data[0];
-          console.log(contact);
-        }
-      }
-    })();
-
     fetchData();
-  }, []);
+  }, [isFocused]);
+
+  // useEffect(() => {
+  //   (async () => {
+  //     const { status } = await Contacts.requestPermissionsAsync();
+  //     if (status === "granted") {
+  //       console.log("성공");
+  //       const { data } = await Contacts.getContactsAsync({
+  //         fields: [Contacts.Fields.PhoneNumbers],
+  //       });
+
+  //       if (data.length > 0) {
+  //         const contact = data[0];
+  //         console.log(contact);
+  //       }
+  //     }
+  //   })();
+
+  //   fetchData();
+  // }, []);
 
   const fetchData = async () => {
     try {

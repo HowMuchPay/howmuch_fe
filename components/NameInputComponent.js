@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/native";
 
-export default function NameInputComponent({ handleButtonClick, eventType, myType }) {
+export default function NameInputComponent({ handleButtonClick, eventType, myType, modalOpenClick, handleAddData }) {
   const [showButton, setShowButton] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
@@ -13,7 +13,12 @@ export default function NameInputComponent({ handleButtonClick, eventType, myTyp
 
   const handleConfirmClick = () => {
     // console.log("TextInput의 값:", inputValue);
-    handleButtonClick(inputValue);
+    if (eventType === 4) {
+      handleButtonClick(inputValue);
+    } else {
+      modalOpenClick();
+      handleAddData(inputValue);
+    }
   };
 
   return (
