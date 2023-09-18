@@ -15,6 +15,7 @@ SplashScreen.preventAutoHideAsync();
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
   const setToken = useAppStore((state) => state.setToken);
+
   const store = useAppStore();
   const token = store.token;
 

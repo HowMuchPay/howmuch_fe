@@ -10,17 +10,25 @@ import EventNameInputComponent from "../components/EventNameInputComponent";
 import Modal from "react-native-modal";
 import TimeSelectComponent from "../components/TimeSelectComponent";
 import { useNavigation } from "@react-navigation/native";
+import { API } from "../stores/api";
+import { useAppStore } from "../stores/store";
 
 export default function AddMyEventScreen() {
   const [countUp, setCountUp] = useState(0);
   const [progress, setProgress] = useState(0.2);
   const [postData, setPostData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+
   const handleButtonClick = (data) => {
-    // 버튼을 클릭할 때마다 텍스트와 프로그레스 바가 변경되도록 설정
-    setCountUp(countUp + 1);
-    setProgress(progress + 0.17); // 0.1씩 증가시키거나 원하는 값으로 변경 가능
     handleAddData(data);
+    // 버튼을 클릭할 때마다 텍스트와 프로그레스 바가 변경되도록 설정
+    if (postData.length > 3 && postData[2] === 0 && postData[3] !== 4) {
+      console.log("tt");
+      return null;
+    } else {
+      setCountUp(countUp + 1);
+      setProgress(progress + 0.17); // 0.1씩 증가시키거나 원하는 값으로 변경 가능
+    }
   };
 
   const handleAddData = (data) => {
@@ -29,7 +37,7 @@ export default function AddMyEventScreen() {
   };
 
   const modalOpenClick = () => {
-    setModalVisible(!modalVisible);
+    setModalVisible((prevVisible) => !prevVisible);
   };
 
   // count가 3일 때의 스타일
@@ -39,14 +47,14 @@ export default function AddMyEventScreen() {
     <View style={[styles.container, changeBackground]}>
       <View style={styles.inner}>
         <Progress.Bar progress={progress} width={null} height={4} color={"#6D61FF"} unfilledColor={"#E7E7FF"} borderWidth={0} style={{ marginTop: 50, marginBottom: 75 }} />
-        <ComponentBasedOnCount countUp={countUp} handleButtonClick={handleButtonClick} handleAddData={handleAddData} postData={postData} modalOpenClick={modalOpenClick} />
+        <ComponentBasedOnCount countUp={countUp} handleButtonClick={handleButtonClick} handleAddData={handleAddData} postData={postData} modalOpenClick={modalOpenClick} modalVisible={modalVisible} />
         <ModalComponent modalOpenClick={modalOpenClick} modalVisible={modalVisible} postData={postData} />
       </View>
     </View>
   );
 }
 
-const ComponentBasedOnCount = ({ countUp, handleButtonClick, postData, modalOpenClick, handleAddData }) => {
+const ComponentBasedOnCount = ({ countUp, handleButtonClick, postData, modalOpenClick, handleAddData, modalVisible }) => {
   switch (countUp) {
     case 1:
       return <TimeSelectComponent handleButtonClick={handleButtonClick} />;
@@ -58,9 +66,14 @@ const ComponentBasedOnCount = ({ countUp, handleButtonClick, postData, modalOpen
       if (postData[2] === 0) {
         if (postData[3] === 4) {
           return <EventNameInputComponent handleAddData={handleAddData} modalOpenClick={modalOpenClick} />;
+        } else {
+          if (modalVisible === false) {
+            modalOpenClick(); // modalOpenClick 함수 호출
+          }
+          return null; // 컴포넌트를 반환하지 않음
         }
       } else {
-        return <NameInputComponent handleButtonClick={handleButtonClick} eventType={"my"} myType={postData[2]} />;
+        return <NameInputComponent handleButtonClick={handleButtonClick} handleAddData={handleAddData} myType={postData[2]} eventType={postData[3]} modalOpenClick={modalOpenClick} />;
       }
     case 5:
       return <EventNameInputComponent handleAddData={handleAddData} modalOpenClick={modalOpenClick} />;
@@ -70,22 +83,69 @@ const ComponentBasedOnCount = ({ countUp, handleButtonClick, postData, modalOpen
 };
 
 const ModalComponent = ({ modalOpenClick, modalVisible, postData }) => {
+  const store = useAppStore();
+  const token = store.token;
   const navigation = useNavigation();
+  let eventData;
+  const handlePostData = () => {
+    // 여기서 데이터를 준비합니다.
+    console.log("post", postData);
+    if (postData.length === 4) {
+      eventData = {
+        eventAt: postData[0],
+        myType: postData[2],
+        eventCategory: postData[3],
+        myEventName: null,
+        myEventCharacterName: null,
+        eventTime: postData[1],
+      };
+    } else if (postData.length === 5) {
+      eventData = {
+        eventAt: postData[0],
+        myType: postData[2],
+        eventCategory: postData[3],
+        myEventName: null,
+        myEventCharacterName: postData[4],
+        eventTime: postData[1],
+      };
+    } else if (postData.length === 6) {
+      eventData = {
+        eventAt: postData[0],
+        myType: postData[2],
+        eventCategory: postData[3],
+        myEventName: postData[5],
+        myEventCharacterName: postData[4],
+        eventTime: postData[1],
+      };
+    }
+    console.log(eventData);
+
+    API.post("/event/my", eventData, {
+      headers: {
+        Authorization: token,
+      },
+    })
+      .then((response) => {
+        console.log("성공적으로 POST 요청을 보냈습니다.", response.data);
+        navigation.navigate("MyEvent");
+      })
+      .catch((error) => {
+        console.error("POST 요청을 보내는 중 오류가 발생했습니다.", error);
+        navigation.navigate("MyEvent");
+      });
+
+    // 모달을 닫습니다.
+    modalOpenClick();
+  };
 
   return (
     <>
-      <Modal isVisible={modalVisible === true} transparent={true} onBackdropPress={modalOpenClick}>
+      <Modal isVisible={modalVisible === true} transparent={true}>
         <View style={styles.modalBox}>
           <Text style={styles.modalTitle}>저장이 완료되었습니다!</Text>
 
           <View style={styles.modalBtnBox}>
-            <TouchableOpacity
-              style={[styles.modalBtn, { backgroundColor: "#6d61ff" }]}
-              onPress={() => {
-                navigation.navigate("MyEvent");
-                console.log(postData);
-              }}
-            >
+            <TouchableOpacity style={[styles.modalBtn, { backgroundColor: "#6d61ff" }]} onPress={handlePostData}>
               <Text style={styles.modalBtnText}>확인</Text>
             </TouchableOpacity>
           </View>
