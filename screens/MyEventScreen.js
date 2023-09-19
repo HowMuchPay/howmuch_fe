@@ -14,12 +14,19 @@ import event3 from "../assets/images/event_icon_3.svg";
 import event4 from "../assets/images/event_icon_4.svg";
 import trashIcon from "../assets/images/trash_icon.svg";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
+import { TextInput } from "react-native-gesture-handler";
 
 export default function MyEventScreen() {
   const store = useAppStore();
   const token = store.token;
   const [data, setData] = useState(null);
   const isFocused = useIsFocused();
+
+  const [searchText, setSearchText] = useState("");
+
+  const handleSearchChange = (text) => {
+    setSearchText(text);
+  };
 
   useEffect(() => {
     fetchData();
@@ -154,13 +161,13 @@ export default function MyEventScreen() {
             <>
               <NowGetMoneyBox data={item} />
               <View>
-                <PayListBox handleFilter={handleFilter} fetchData={fetchData} />
+                <PayListBox handleFilter={handleFilter} fetchData={fetchData} handleSearchChange={handleSearchChange} searchText={searchText} />
                 {item && item.allMyEvents && Object.keys(item.allMyEvents).length === 0 ? (
                   <View style={[styles.payListBox, { height: 460, alignItems: "center", justifyContent: "center" }]}>
                     <Text style={{ fontSize: 16, fontFamily: "font-B", color: "#cccccc" }}>이벤트 목록이 없습니다.</Text>
                   </View>
                 ) : (
-                  <PayList data={item} handleDelete={handleDelete} />
+                  <PayList data={item} handleDelete={handleDelete} searchText={searchText} />
                 )}
               </View>
             </>
@@ -185,7 +192,7 @@ function NowGetMoneyBox({ data }) {
   );
 }
 
-function PayListBox({ handleFilter, fetchData }) {
+function PayListBox({ handleFilter, fetchData, handleSearchChange, searchText }) {
   const [modalVisible, setModalVisible] = useState(null);
   const [groupNumList, setGroupNumList] = useState(null);
   const [eventNumList, setEventNumList] = useState(null);
@@ -269,13 +276,17 @@ function PayListBox({ handleFilter, fetchData }) {
         </View>
 
         <View style={styles.filterSearchBox}>
-          <TouchableOpacity style={styles.filterSearchIcon} onPress={() => navigation.navigate("SearchEventScreen")}>
+          <View>
+            <TextInput style={styles.eventInput} fontSize={15} onChangeText={handleSearchChange} value={searchText} placeholder="이름을 입력해주세요" placeholderTextColor="#ccc" />
+            <Image style={{ width: 22, height: 22, position: "absolute", top: 0, left: 0 }} source={require("../assets/images/icon_search_black.png")} />
+          </View>
+          {/* <TouchableOpacity style={styles.filterSearchIcon} onPress={() => navigation.navigate("SearchEventScreen")}>
             <Image style={{ width: 24, height: 24 }} source={require("../assets/images/icon_search_black.png")} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
-          <TouchableOpacity style={styles.filterRefreshIcon} onPress={fetchData}>
+          {/* <TouchableOpacity style={styles.filterRefreshIcon} onPress={fetchData}>
             <Image style={{ width: 24, height: 24 }} source={require("../assets/images/icon_rotate_right.png")} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
     </View>
@@ -337,9 +348,8 @@ function SelectEventBtnBox(props) {
   );
 }
 
-function PayList({ data, handleDelete }) {
+function PayList({ data, handleDelete, searchText }) {
   const navigation = useNavigation();
-
   function formatKey(key) {
     const [year, month] = key.split("-");
     return `${year}년 ${parseInt(month, 10)}월`;
@@ -359,58 +369,81 @@ function PayList({ data, handleDelete }) {
         const events = data.allMyEvents[key];
         const formattedKey = formatKey(key);
 
+        // 검색어에 따라 이벤트 필터링
+        const filteredEvents = searchText ? events.filter((event) => event.myEventDisplayName.toLowerCase().includes(searchText.toLowerCase())) : events;
+
+        const noEventMessage = (
+          <View style={[styles.payListBox, { height: 480, alignItems: "center", justifyContent: "center" }]}>
+            <Text style={{ fontSize: 16, fontFamily: "font-B", color: "#cccccc" }}>이벤트 목록이 없습니다.</Text>
+          </View>
+        );
+
+        if (filteredEvents.length === 0) {
+          return null;
+        }
+
+        console.log("filter", filteredEvents);
+        console.log("filter", filteredEvents.length);
         return (
           <View key={key} style={{ paddingHorizontal: 20 }}>
             {index !== 0 ? <View style={{ height: 0.3, backgroundColor: "#ccc", marginVertical: 30 }}></View> : null}
+            {/* 
+            {filteredEvents.length === 0 && (
+              <View style={[styles.payListBox, { height: 480, alignItems: "center", justifyContent: "center" }]}>
+                <Text style={{ fontSize: 16, fontFamily: "font-B", color: "#cccccc" }}>이벤트 목록이 없습니다.</Text>
+              </View>
+            )} */}
 
-            <View style={{}}>
-              <Text style={{ fontFamily: "font-B", fontSize: 14, color: "#1f1f1f", marginBottom: 10 }}>{formattedKey}</Text>
+            {filteredEvents.length > 0 && (
+              <View style={{}}>
+                <Text style={{ fontFamily: "font-B", fontSize: 14, color: "#1f1f1f", marginBottom: 10 }}>{formattedKey}</Text>
 
-              <SwipeListView
-                data={events}
-                renderItem={(data, rowMap) => {
-                  let selectedEvent;
+                <SwipeListView
+                  data={filteredEvents.length > 0 ? filteredEvents : events}
+                  renderItem={(data, rowMap) => {
+                    let selectedEvent;
 
-                  if (data.item.eventCategory === 0) {
-                    selectedEvent = event0;
-                  } else if (data.item.eventCategory === 1) {
-                    selectedEvent = event1;
-                  } else if (data.item.eventCategory === 2) {
-                    selectedEvent = event2;
-                  } else if (data.item.eventCategory === 3) {
-                    selectedEvent = event3;
-                  } else if (data.item.eventCategory === 4) {
-                    selectedEvent = event4;
-                  }
+                    if (data.item.eventCategory === 0) {
+                      selectedEvent = event0;
+                    } else if (data.item.eventCategory === 1) {
+                      selectedEvent = event1;
+                    } else if (data.item.eventCategory === 2) {
+                      selectedEvent = event2;
+                    } else if (data.item.eventCategory === 3) {
+                      selectedEvent = event3;
+                    } else if (data.item.eventCategory === 4) {
+                      selectedEvent = event4;
+                    }
 
-                  return (
-                    <Pressable style={styles.rowFront} onPress={() => navigation.navigate("MyEventDetailScreen", { id: data.item.id, eventNum: data.item.eventCategory })}>
-                      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                        <View style={{ width: 40, height: 40, borderRadius: 50, marginRight: 10 }}>
-                          <WithLocalSvg width={40} height={40} asset={selectedEvent} style={{ marginRight: 15 }} />
+                    return (
+                      <Pressable style={styles.rowFront} onPress={() => navigation.navigate("MyEventDetailScreen", { id: data.item.id, eventNum: data.item.eventCategory })}>
+                        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                          <View style={{ width: 40, height: 40, borderRadius: 50, marginRight: 10 }}>
+                            <WithLocalSvg width={40} height={40} asset={selectedEvent} style={{ marginRight: 15 }} />
+                          </View>
+                          <View style={{}}>
+                            <Text style={{ fontSize: 14, fontFamily: "font-M", color: "#1f1f1f" }}>{data.item.myEventDisplayName}</Text>
+                            <Text style={{ fontSize: 13, fontFamily: "font-R", color: "#5f5f5f" }}>{formatDate(data.item.eventAt)}</Text>
+                          </View>
                         </View>
-                        <View style={{}}>
-                          <Text style={{ fontSize: 14, fontFamily: "font-M", color: "#1f1f1f" }}>{data.item.myEventDisplayName}</Text>
-                          <Text style={{ fontSize: 13, fontFamily: "font-R", color: "#5f5f5f" }}>{formatDate(data.item.eventAt)}</Text>
-                        </View>
-                      </View>
-                      {data.item.receiveAmount === 0}
-                      <Text style={{ fontSize: 15, color: "#1f1f1f", fontFamily: "font-B" }}>{data.item.receiveAmount !== 0 ? `+${data.item.receiveAmount.toLocaleString()}원` : `0원`}</Text>
-                    </Pressable>
-                  );
-                }}
-                renderHiddenItem={(data, rowMap) => (
-                  <View style={styles.rowBack}>
-                    {console.log(data.item.id)}
-                    <TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnLeft]} onPress={() => handleDelete(data.item.id)}>
-                      <WithLocalSvg width={24} height={24} asset={trashIcon} />
-                    </TouchableOpacity>
-                  </View>
-                )}
-                rightOpenValue={-70}
-                disableRightSwipe
-              />
-            </View>
+                        {data.item.receiveAmount === 0}
+                        <Text style={{ fontSize: 15, color: "#1f1f1f", fontFamily: "font-B" }}>{data.item.receiveAmount !== 0 ? `+${data.item.receiveAmount.toLocaleString()}원` : `0원`}</Text>
+                      </Pressable>
+                    );
+                  }}
+                  renderHiddenItem={(data, rowMap) => (
+                    <View style={styles.rowBack}>
+                      {console.log(data.item.id)}
+                      <TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnLeft]} onPress={() => handleDelete(data.item.id)}>
+                        <WithLocalSvg width={24} height={24} asset={trashIcon} />
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                  rightOpenValue={-70}
+                  disableRightSwipe
+                />
+              </View>
+            )}
           </View>
         );
       }}
@@ -599,5 +632,20 @@ const styles = StyleSheet.create({
   },
   searchModalInput: {
     marginLeft: 14,
+  },
+
+  //검색
+  eventInput: {
+    borderBottomWidth: 1,
+    borderBottomColor: "#CCC",
+    // backgroundColor: "#fff",
+    color: "#000",
+    // paddingHorizontal: 50,
+    // paddingVertical: 20,
+    height: 30,
+    width: 200,
+    fontFamily: "font-M",
+    paddingHorizontal: 30,
+    paddingBottom: 7,
   },
 });

@@ -153,7 +153,7 @@ function MyEventDetailScreen({ route }) {
               <WithLocalSvg width={22} height={22} asset={selectedEvent} style={{ marginBottom: 15 }} />
               <Text style={styles.eventTitle}>{item.myEventInfo.myEventDisplayName}</Text>
               <Text style={styles.eventDes}>{formatDate(item.myEventInfo.eventAt)}</Text>
-              <Text style={styles.eventDes}>{item.myEventInfo.eventTime}</Text>
+              <Text style={styles.eventDes}>{item.myEventInfo.eventTime === null ? "시간 미정" : item.myEventInfo.eventTime}</Text>
 
               <View style={styles.ddayBtn}>
                 <Text style={styles.dday}>D{item.myEventInfo.remainedDay < 0 ? item.myEventInfo.remainedDay : "+" + item.myEventInfo.remainedDay}일</Text>

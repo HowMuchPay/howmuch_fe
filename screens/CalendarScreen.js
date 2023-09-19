@@ -38,6 +38,16 @@ export default function CalendarScreen() {
     }
   };
 
+  const customMonthTextStyle = {
+    fontFamily: "font-B",
+    fontSize: 16,
+  };
+  const customWeekdayStyle = {
+    color: "black", // 원하는 색상으로 변경
+    marginTop: 20,
+    marginBottom: 5,
+  };
+
   todayFormat = today.toISOString().split("T")[0];
   console.log(today);
   const [selectedDay, setSelectedDay] = useState({
@@ -62,8 +72,14 @@ export default function CalendarScreen() {
             "2023-07-10": { marked: true },
           }}
           theme={{
-            dayWidth: 22, // 날짜 컴포넌트의 너비
-            textMonthFontFamily: "font-B",
+            selectedDayBackgroundColor: "#EB4C60",
+            todayTextColor: "#EB4C60",
+            arrowColor: "#EB4C60",
+            dayWidth: 22,
+            "stylesheet.calendar.header": {
+              monthText: customMonthTextStyle,
+              dayHeader: customWeekdayStyle,
+            },
           }}
         />
 

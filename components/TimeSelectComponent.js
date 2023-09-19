@@ -38,7 +38,7 @@ const TimeSelectComponent = ({ handleButtonClick }) => {
       const amPm = hours >= 12 ? "오후" : "오전";
       const formattedHours = hours % 12 || 12; // 12시간 형식으로 변환
 
-      const timeWithAmPm = `${amPm} ${formattedHours}시 ${minutes}분`;
+      const timeWithAmPm = minutes === 0 ? `${amPm} ${formattedHours}시` : `${amPm} ${formattedHours}시 ${minutes}분`;
 
       console.log(timeWithAmPm);
 

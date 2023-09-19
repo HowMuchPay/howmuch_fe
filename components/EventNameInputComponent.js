@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 
-export default function EventNameInputComponent({ handleAddData, modalOpenClick }) {
+export default function EventNameInputComponent({ handleButtonClick, handleAddData, modalOpenClick, type }) {
   const [showButton, setShowButton] = useState(false);
   const [inputValue, setInputValue] = useState("");
 
@@ -11,8 +11,12 @@ export default function EventNameInputComponent({ handleAddData, modalOpenClick 
 
   const handleConfirmClick = () => {
     // console.log("TextInput의 값:", inputValue);
-    modalOpenClick();
-    handleAddData(inputValue);
+    if (type === "friend") {
+      handleButtonClick(inputValue);
+    } else {
+      modalOpenClick();
+      handleAddData(inputValue);
+    }
   };
 
   return (
