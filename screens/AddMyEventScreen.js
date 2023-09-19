@@ -65,7 +65,7 @@ const ComponentBasedOnCount = ({ countUp, handleButtonClick, postData, modalOpen
     case 4:
       if (postData[2] === 0) {
         if (postData[3] === 4) {
-          return <EventNameInputComponent handleAddData={handleAddData} modalOpenClick={modalOpenClick} />;
+          return <EventNameInputComponent handleAddData={handleAddData} modalOpenClick={modalOpenClick} type="my" />;
         } else {
           if (modalVisible === false) {
             modalOpenClick(); // modalOpenClick 함수 호출
@@ -73,10 +73,10 @@ const ComponentBasedOnCount = ({ countUp, handleButtonClick, postData, modalOpen
           return null; // 컴포넌트를 반환하지 않음
         }
       } else {
-        return <NameInputComponent handleButtonClick={handleButtonClick} handleAddData={handleAddData} myType={postData[2]} eventType={postData[3]} modalOpenClick={modalOpenClick} />;
+        return <NameInputComponent handleButtonClick={handleButtonClick} handleAddData={handleAddData} myType={postData[2]} eventType={postData[3]} modalOpenClick={modalOpenClick} type={"my"} />;
       }
     case 5:
-      return <EventNameInputComponent handleAddData={handleAddData} modalOpenClick={modalOpenClick} />;
+      return <EventNameInputComponent handleAddData={handleAddData} modalOpenClick={modalOpenClick} type="my" />;
     default:
       return <CalendarSelectComponent handleButtonClick={handleButtonClick} />;
   }
@@ -99,7 +99,16 @@ const ModalComponent = ({ modalOpenClick, modalVisible, postData }) => {
         myEventCharacterName: null,
         eventTime: postData[1],
       };
-    } else if (postData.length === 5) {
+    } else if (postData.length === 5 && postData[2] === 0) {
+      eventData = {
+        eventAt: postData[0],
+        myType: postData[2],
+        eventCategory: postData[3],
+        myEventName: postData[4],
+        myEventCharacterName: null,
+        eventTime: postData[1],
+      };
+    } else if (postData.length === 5 && postData[2] !== 0) {
       eventData = {
         eventAt: postData[0],
         myType: postData[2],

@@ -1,33 +1,52 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
-import React, {useState} from "react";
+import { View, Text, StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import React, { useState } from "react";
 import Modal from "react-native-modal";
 
-export default function MoneyInputComponent({handleButtonClick}) {
+export default function MoneyInputComponent({ handleButtonClick }) {
   const [textInputValue, setTextInputValue] = useState("");
   const [showButton, setShowButton] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
 
   const TextButtonClick = (value) => {
-    setTextInputValue(value);
+    if (value === "미정") {
+      setTextInputValue(value);
+    } else {
+      if (/^\d+$/.test(value)) {
+        setTextInputValue(value.toLocaleString());
+      }
+    }
     setShowButton(true);
   };
 
-  const modalOpenClick = () => {
-    setModalVisible(true);
+  const formatNumber = (num) => {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
+
+  const onChangeText = (text) => {
+    const numericValue = parseFloat(text.replace(/,/g, ""));
+
+    if (!isNaN(numericValue)) {
+      // 숫자인 경우에만 포맷팅하여 표시
+      const formattedText = formatNumber(numericValue);
+      setTextInputValue(formattedText);
+      setShowButton(true);
+    } else {
+      // 숫자가 아닌 경우 또는 빈 문자열인 경우 그대로 표시
+      setTextInputValue(text);
+    }
+
+    // textInputValue 값이 빈 문자열인 경우에만 setShowButton(false) 호출
+    if (text === "") {
+      setShowButton(false);
+    }
+  };
+
   return (
     <>
-      <View style={{flexDirection: "row"}}>
+      <View style={{ flexDirection: "row" }}>
         <Text style={styles.addText}>지불할</Text>
       </View>
-      <View style={{flexDirection: "row"}}>
-        <Text style={[styles.addText, {color: "#6D61FF"}]}>경조사비</Text>
+      <View style={{ flexDirection: "row" }}>
+        <Text style={[styles.addText, { color: "#6D61FF" }]}>경조사비</Text>
         <Text style={styles.addText}>를 입력해주세요</Text>
       </View>
       <View style={styles.nameInputBox}>
@@ -35,54 +54,31 @@ export default function MoneyInputComponent({handleButtonClick}) {
           style={styles.nameInput}
           placeholder="경조사비를 입력해주세요"
           //   onSubmitEditing={handleButtonClick}
+          keyboardType="numeric"
           value={textInputValue}
+          onChangeText={onChangeText}
         />
       </View>
       <View style={styles.moneyBtnFlex}>
-        <TouchableOpacity
-          onPress={() => TextButtonClick("미정")}
-          style={[styles.moneyBtn]}
-        >
+        <TouchableOpacity onPress={() => TextButtonClick("미정")} style={[styles.moneyBtn]}>
           <Text style={styles.moneyBtnText}>미정</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => TextButtonClick("10000")}
-          style={[styles.moneyBtn]}
-        >
+        <TouchableOpacity onPress={() => TextButtonClick(10000)} style={[styles.moneyBtn]}>
           <Text style={styles.moneyBtnText}>+1만</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => TextButtonClick("50000")}
-          style={[styles.moneyBtn]}
-        >
+        <TouchableOpacity onPress={() => TextButtonClick(50000)} style={[styles.moneyBtn]}>
           <Text style={styles.moneyBtnText}>+5만</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => TextButtonClick("100000")}
-          style={[styles.moneyBtn]}
-        >
+        <TouchableOpacity onPress={() => TextButtonClick(100000)} style={[styles.moneyBtn]}>
           <Text style={styles.moneyBtnText}>+10만</Text>
         </TouchableOpacity>
       </View>
 
       {showButton && (
-        <TouchableOpacity onPress={modalOpenClick} style={styles.nextBtn}>
+        <TouchableOpacity style={styles.nextBtn}>
           <Text style={styles.nextBtnText}>확인</Text>
         </TouchableOpacity>
       )}
-      <Modal isVisible={modalVisible === true} transparent={true}>
-        <View style={styles.modalBox}>
-          <Text style={styles.modalTitle}>저장이 완료되었습니다!</Text>
-
-          <View style={styles.modalBtnBox}>
-            <TouchableOpacity
-              style={[styles.modalBtn, {backgroundColor: "#6d61ff"}]}
-            >
-              <Text style={styles.modalBtnText}>확인</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
     </>
   );
 }
