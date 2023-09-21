@@ -22,7 +22,7 @@ export default function App() {
   useEffect(() => {
     const restoreToken = async () => {
       try {
-        const token = await AsyncStorage.getItem("authToken");
+        // const token = await AsyncStorage.getItem("authToken");
         if (token) {
           setToken(token);
         }

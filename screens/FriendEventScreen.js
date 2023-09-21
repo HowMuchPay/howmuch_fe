@@ -539,7 +539,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
     flexWrap: "wrap",
-    maxWidth: "95%",
+    maxWidth: "100%",
   },
   modalSelectBtn: {
     paddingTop: 12,

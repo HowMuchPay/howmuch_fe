@@ -147,10 +147,6 @@ export default function Navigation() {
   //   if (token) navigation.navigate("Drawer");
   // }, [token]);
 
-  useEffect(() => {
-    // useAppStore.getState().clearToken();
-  }, []);
-
   StatusBar.setBarStyle("dark-content");
 
   return (
@@ -158,8 +154,8 @@ export default function Navigation() {
       {/* <Stack.Screen name="Boarding" component={Boarding}/> */}
       {/* <Stack.Screen name="KakaoLogin" component={KakaoLogin} options={{ headerShown: false }} /> */}
 
-      <Stack.Screen name="Drawer" component={HandleDrawer} options={{ headerShown: false }} />
       <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="Drawer" component={HandleDrawer} options={{ headerShown: false }} />
       <Stack.Screen
         name="MyEvent"
         component={MyEventScreen}
@@ -175,6 +171,40 @@ export default function Navigation() {
           headerLeft: () => <BackBtn />,
           headerBackTitleVisible: false,
           headerRight: () => <MyEventPlusButton />,
+        }}
+      />
+      <Stack.Screen
+        name="MyEventDetailScreen"
+        component={MyEventDetailScreen}
+        options={{
+          title: "",
+          headerStyle: { backgroundColor: "transparent" },
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            fontFamily: "font-B",
+            fontSize: 17,
+            color: "#1f1f1f",
+          },
+          headerLeft: () => <BackBtn />,
+          headerRight: () => <MyEventPersonPlusButton />,
+          headerBackTitleVisible: false,
+        }}
+      />
+      <Stack.Screen
+        name="AddDetailPersonScreen"
+        component={AddDetailPersonScreen}
+        options={{
+          title: "신규인원 추가",
+          headerStyle: { backgroundColor: "transparent" },
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            fontFamily: "font-B",
+            fontSize: 17,
+            color: "#1f1f1f",
+          },
+          headerLeft: () => <BackBtn />,
+
+          headerBackTitleVisible: false,
         }}
       />
       <Stack.Screen
@@ -304,42 +334,6 @@ export default function Navigation() {
             color: "#1f1f1f",
           },
           headerLeft: () => <BackBtn />,
-          headerBackTitleVisible: false,
-        }}
-      />
-
-      <Stack.Screen
-        name="MyEventDetailScreen"
-        component={MyEventDetailScreen}
-        options={{
-          title: "",
-          headerStyle: { backgroundColor: "transparent" },
-          headerTitleAlign: "center",
-          headerTitleStyle: {
-            fontFamily: "font-B",
-            fontSize: 17,
-            color: "#1f1f1f",
-          },
-          headerLeft: () => <BackBtn />,
-          headerRight: () => <MyEventPersonPlusButton />,
-          headerBackTitleVisible: false,
-        }}
-      />
-
-      <Stack.Screen
-        name="AddDetailPersonScreen"
-        component={AddDetailPersonScreen}
-        options={{
-          title: "신규인원 추가",
-          headerStyle: { backgroundColor: "transparent" },
-          headerTitleAlign: "center",
-          headerTitleStyle: {
-            fontFamily: "font-B",
-            fontSize: 17,
-            color: "#1f1f1f",
-          },
-          headerLeft: () => <BackBtn />,
-
           headerBackTitleVisible: false,
         }}
       />

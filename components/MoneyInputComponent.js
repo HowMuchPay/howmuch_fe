@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity } from "react-nativ
 import React, { useState } from "react";
 import Modal from "react-native-modal";
 
-export default function MoneyInputComponent({ handleButtonClick }) {
+export default function MoneyInputComponent({ handleButtonClick, handleAddData, modalOpenClick }) {
   const [textInputValue, setTextInputValue] = useState("");
   const [showButton, setShowButton] = useState(false);
 
@@ -15,6 +15,16 @@ export default function MoneyInputComponent({ handleButtonClick }) {
       }
     }
     setShowButton(true);
+  };
+
+  const handleConfirmClick = () => {
+    // console.log("TextInput의 값:", inputValue);
+    modalOpenClick();
+    if (textInputValue === "미정") {
+      handleAddData(null);
+    } else {
+      handleAddData(textInputValue);
+    }
   };
 
   const formatNumber = (num) => {
@@ -75,7 +85,7 @@ export default function MoneyInputComponent({ handleButtonClick }) {
       </View>
 
       {showButton && (
-        <TouchableOpacity style={styles.nextBtn}>
+        <TouchableOpacity style={styles.nextBtn} onPress={handleConfirmClick}>
           <Text style={styles.nextBtnText}>확인</Text>
         </TouchableOpacity>
       )}
@@ -136,7 +146,7 @@ const styles = StyleSheet.create({
 
   // 다음 버튼
   nextBtn: {
-    top: "45%",
+    top: "30%",
     position: "relative",
     width: "100%",
     alignItems: "center",

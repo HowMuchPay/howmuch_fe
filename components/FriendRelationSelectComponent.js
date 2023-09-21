@@ -12,13 +12,15 @@ export default function FriendRelationSelectComponent({ handleButtonClick }) {
         <Text style={styles.addText}>선택해주세요</Text>
       </View>
 
-      <View style={styles.relationBtnFlex}>
+      <View style={[styles.relationBtnFlex, { marginTop: 50 }]}>
         <TouchableOpacity onPress={() => handleButtonClick(3)} style={styles.relationBtn}>
           <Text style={styles.relationBtnText}>친척</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={() => handleButtonClick(1)} style={styles.relationBtn}>
           <Text style={styles.relationBtnText}>친구</Text>
         </TouchableOpacity>
+      </View>
+      <View style={[styles.relationBtnFlex, { marginTop: 15 }]}>
         <TouchableOpacity onPress={() => handleButtonClick(2)} style={styles.relationBtn}>
           <Text style={styles.relationBtnText}>직장</Text>
         </TouchableOpacity>
@@ -42,18 +44,20 @@ const styles = StyleSheet.create({
   //관계 선택 버튼
   relationBtnFlex: {
     flexDirection: "row",
-    flexWrap: "wrap",
-    marginTop: 50,
+
+    alignItems: "center",
+    // justifyContent: "space-around",
   },
   relationBtn: {
     borderRadius: 20,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#F3F3FF",
-    width: 163,
+    width: 160,
     height: 57,
     marginRight: 10,
-    marginBottom: 17,
+    // marginHorizontal: 10,
+    // marginBottom: 17,
   },
   relationBtnText: {
     fontFamily: "font-M",

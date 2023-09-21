@@ -47,6 +47,8 @@ export default function LoginScreen() {
       }
 
       if (kakaotoken && kakaotoken.accessToken) {
+        const name = kakaoProfile.nickname;
+        useAppStore.setState({ name }); // 이름 설정
         const body = {
           oauthId: kakaoProfile.id,
           nickname: kakaoProfile.nickname,

@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
 
   // 다음 버튼
   nextBtn: {
-    top: "80%",
+    top: "65%",
     position: "relative",
     width: "100%",
     alignItems: "center",
