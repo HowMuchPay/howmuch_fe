@@ -11,9 +11,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#6D61FF"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.howmuch"

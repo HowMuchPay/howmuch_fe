@@ -209,7 +209,7 @@ function ComingEventBox({ data }) {
         <View style={styles.comingInner}>
           <View style={styles.comingInfo}>
             {/* <Image style={{ width: 24, height: 24, marginRight: 10 }} source={require("../assets/images/icon_congrats.png")} /> */}
-            <Text style={styles.comingText}>{data.acEventDisplayName === null ? "경조사 디데이를 등록해보세요" : data.acEventDisplayName}</Text>
+            <Text style={styles.comingText}>{data.eventDisplayName === null ? "경조사 디데이를 등록해보세요" : data.eventDisplayName}</Text>
           </View>
 
           {data.acEventDisplayName === null ? null : (

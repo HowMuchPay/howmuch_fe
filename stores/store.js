@@ -8,8 +8,10 @@ export const useAppStore = create(
     (set, get) => ({
       token: "",
       refreshToken: "",
+      name: "",
       setRefreshToken: (token) => set({ ...get(), refreshToken: refreshToken }),
       setToken: (token) => set({ ...get(), token: token }),
+      setName: (name) => set({ ...get(), name: name }),
       clearToken: () => set({ token: null }),
     }),
     {

@@ -97,48 +97,41 @@ const ModalComponent = ({ modalOpenClick, modalVisible, postData }) => {
   const handlePostData = () => {
     // 여기서 데이터를 준비합니다.
     console.log("post", postData);
-    if (postData.length === 4) {
+    if (postData.length === 6) {
       eventData = {
-        eventAt: postData[0],
-        myType: postData[2],
+        acName: postData[4],
+        acType: postData[2],
         eventCategory: postData[3],
-        myEventName: null,
-        myEventCharacterName: null,
-        eventTime: postData[1],
+        payAmount: postData[5] === null ? postData[5] : parseInt(postData[5].replace(/,/g, ""), 10),
+        eventAt: postData[0],
+        eventName: null,
+        // eventTime: postData[1],
       };
-    } else if (postData.length === 5) {
+    } else if (postData.length === 7) {
       eventData = {
-        eventAt: postData[0],
-        myType: postData[2],
+        acName: postData[4],
+        acType: postData[2],
         eventCategory: postData[3],
-        myEventName: null,
-        myEventCharacterName: postData[4],
-        eventTime: postData[1],
-      };
-    } else if (postData.length === 6) {
-      eventData = {
+        payAmount: postData[6] === null ? postData[6] : parseInt(postData[5].replace(/,/g, ""), 10),
         eventAt: postData[0],
-        myType: postData[2],
-        eventCategory: postData[3],
-        myEventName: postData[5],
-        myEventCharacterName: postData[4],
-        eventTime: postData[1],
+        eventName: postData[5],
+        // eventTime: postData[1],
       };
     }
     console.log(eventData);
 
-    API.post("/event/my", eventData, {
+    API.post("/event/acquaintance", eventData, {
       headers: {
         Authorization: token,
       },
     })
       .then((response) => {
         console.log("성공적으로 POST 요청을 보냈습니다.", response.data);
-        navigation.navigate("MyEvent");
+        navigation.navigate("FriendEvent");
       })
       .catch((error) => {
         console.error("POST 요청을 보내는 중 오류가 발생했습니다.", error);
-        navigation.navigate("MyEvent");
+        navigation.navigate("FriendEvent");
       });
 
     // 모달을 닫습니다.

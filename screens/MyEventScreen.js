@@ -112,9 +112,9 @@ export default function MyEventScreen() {
       keyExtractor={(item, index) => index.toString()} // 간단한 keyExtractor를 사용
       renderItem={({ item }) => (
         <View style={styles.inner}>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => {
-              API.get("/calendar/statistics?time=2023-08", {
+              API.get("calendar/statistics?time=2023-09", {
                 headers: {
                   Authorization: token,
                   "Content-Type": "application/json",
@@ -122,6 +122,7 @@ export default function MyEventScreen() {
               })
                 .then((response) => {
                   console.log("성공적으로 get 요청을 보냈습니다.", response.data);
+                  console.log(response.data);
                   // console.log(response.data.allAcEvents);
                 })
                 .catch((error) => {
@@ -156,7 +157,7 @@ export default function MyEventScreen() {
             }}
           >
             <Text>post</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           {item ? (
             <>
               <NowGetMoneyBox data={item} />
