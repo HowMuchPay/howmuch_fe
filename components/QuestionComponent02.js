@@ -1,20 +1,8 @@
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 
-export default function AskSelectComponent({ handleButtonClick, countUp }) {
-  const [displayText, setDisplayText] = useState();
-
-  let askTextArr = [
-    <>
-      <View style={{ flexDirection: "row" }}>
-        <Text style={[styles.addText, { color: "#6D61FF" }]}>1년에 10회 </Text>
-        <Text style={styles.addText}>이상</Text>
-      </View>
-      <View style={{ flexDirection: "row" }}>
-        <Text style={[styles.addText, { color: "#6D61FF" }]}>연락</Text>
-        <Text style={styles.addText}>하고 지내시나요?</Text>
-      </View>
-    </>,
+export default function QuestionComponent02({ handleButtonClick }) {
+  return (
     <>
       <View style={{ flexDirection: "row" }}>
         <Text style={[styles.addText, { color: "#6D61FF" }]}>1촌 이내 가족</Text>
@@ -25,27 +13,12 @@ export default function AskSelectComponent({ handleButtonClick, countUp }) {
         <Text style={[styles.addText, { color: "#6D61FF" }]}>만난 적</Text>
         <Text style={styles.addText}>이 있나요?</Text>
       </View>
-    </>,
-    <>
-      <View style={{ flexDirection: "row" }}>
-        <Text style={styles.addText}>알고 지낸지</Text>
-      </View>
-      <View style={{ flexDirection: "row" }}>
-        <Text style={[styles.addText, { color: "#6D61FF" }]}>5년 이상</Text>
-        <Text style={styles.addText}>됐나요?</Text>
-      </View>
-    </>,
-  ];
-
-  return (
-    <>
-      {askTextArr[countUp - 2]}
       <View style={styles.addBtnBox}>
-        <TouchableOpacity onPress={handleButtonClick} style={[styles.addBtn, { backgroundColor: "#F3F3FF", marginBottom: 15 }]}>
+        <TouchableOpacity onPress={() => handleButtonClick(0)} style={[styles.addBtn, { backgroundColor: "#F3F3FF", marginBottom: 15 }]}>
           <Text style={styles.addBtnText}>네</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={handleButtonClick} style={[styles.addBtn, { backgroundColor: "#F3F3FF" }]}>
+        <TouchableOpacity onPress={() => handleButtonClick(1)} style={[styles.addBtn, { backgroundColor: "#F3F3FF" }]}>
           <Text style={[styles.addBtnText]}>아니요</Text>
         </TouchableOpacity>
       </View>
