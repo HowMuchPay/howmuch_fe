@@ -5,7 +5,6 @@ import CalendarSelectComponent from "../components/CalendarSelectComponent";
 import NameInputComponent from "../components/NameInputComponent";
 import RelationSelectComponent from "../components/RelationSelectComponent";
 import EventTypeSelectComponent from "../components/EventTypeSelectComponent";
-import MoneyInputComponent from "../components/MoneyInputComponent";
 import EventNameInputComponent from "../components/EventNameInputComponent";
 import Modal from "react-native-modal";
 import TimeSelectComponent from "../components/TimeSelectComponent";

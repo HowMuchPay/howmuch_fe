@@ -1,38 +1,38 @@
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import * as Progress from "react-native-progress";
 import CalendarSelectComponent from "../components/CalendarSelectComponent";
 import NameInputComponent from "../components/NameInputComponent";
+import RelationSelectComponent from "../components/RelationSelectComponent";
 import EventTypeSelectComponent from "../components/EventTypeSelectComponent";
+import AskSelectComponent from "../components/AskSelectComponent";
 import MoneyInputComponent from "../components/MoneyInputComponent";
-import EventNameInputComponent from "../components/EventNameInputComponent";
-import Modal from "react-native-modal";
+import AgeInputComponent from "../components/AgeInputComponent";
+import IncomeInputComponent from "../components/IncomeInputComponent";
+import QuestionComponent01 from "../components/QuestionComponent01";
+import QuestionComponent02 from "../components/QuestionComponent02";
+import QuestionComponent03 from "../components/QuestionComponent03";
+import QuestionComponent04 from "../components/QuestionComponent04";
+import QuestionComponent05 from "../components/QuestionComponent05";
 import TimeSelectComponent from "../components/TimeSelectComponent";
-import { useNavigation } from "@react-navigation/native";
-import { API } from "../stores/api";
-import { useAppStore } from "../stores/store";
 import FriendRelationSelectComponent from "../components/FriendRelationSelectComponent";
+import EventNameInputComponent from "../components/EventNameInputComponent";
+import { useNavigation } from "@react-navigation/native";
+import { useAppStore } from "../stores/store";
+import Modal from "react-native-modal";
+import { API } from "../stores/api";
 
-export default function NotAskRelationScreen() {
+export default function AskRelationScreen() {
   const [countUp, setCountUp] = useState(0);
-  const [progress, setProgress] = useState(0.2);
+  const [progress, setProgress] = useState(0.15);
   const [postData, setPostData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-
-  const handleCountUp = () => {
-    setCountUp(6);
-  };
 
   const handleButtonClick = (data) => {
     handleAddData(data);
     // 버튼을 클릭할 때마다 텍스트와 프로그레스 바가 변경되도록 설정
-    if (postData.length > 3 && postData[2] === 0 && postData[3] !== 4) {
-      console.log("tt");
-      return null;
-    } else {
-      setCountUp(countUp + 1);
-      setProgress(progress + 0.1); // 0.1씩 증가시키거나 원하는 값으로 변경 가능
-    }
+    setCountUp(countUp + 1);
+    setProgress(progress + 0.075); // 0.1씩 증가시키거나 원하는 값으로 변경 가능
   };
 
   const handleAddData = (data) => {
@@ -44,8 +44,12 @@ export default function NotAskRelationScreen() {
     setModalVisible((prevVisible) => !prevVisible);
   };
 
+  const handleCountUp = () => {
+    setCountUp(13);
+  };
+
   // count가 3일 때의 스타일
-  const changeBackground = countUp === 0 || countUp === 1 || countUp === 4 || countUp === 5 || countUp === 6 ? styles.changeColor : null;
+  const changeBackground = countUp === 0 || countUp === 1 || countUp === 7 || countUp === 8 || countUp === 11 || countUp === 12 || countUp === 13 ? styles.changeColor : null;
 
   const componentData = {
     countUp,
@@ -71,23 +75,37 @@ export default function NotAskRelationScreen() {
 const ComponentBasedOnCount = ({ countUp, handleButtonClick, postData, modalOpenClick, handleAddData, modalVisible, handleCountUp }) => {
   switch (countUp) {
     case 1:
-      return <TimeSelectComponent handleButtonClick={handleButtonClick} />;
+      return <IncomeInputComponent handleButtonClick={handleButtonClick} eventType={"friend"} />;
     case 2:
-      return <FriendRelationSelectComponent handleButtonClick={handleButtonClick} />;
+      return <QuestionComponent01 handleButtonClick={handleButtonClick} />;
     case 3:
-      return <EventTypeSelectComponent handleButtonClick={handleButtonClick} />;
+      return <QuestionComponent02 handleButtonClick={handleButtonClick} />;
     case 4:
-      return <NameInputComponent handleButtonClick={handleButtonClick} handleAddData={handleAddData} myType={postData[2]} eventType={postData[3]} modalOpenClick={modalOpenClick} type={"friend"} />;
+      return <QuestionComponent03 handleButtonClick={handleButtonClick} />;
     case 5:
-      if (postData[3] === 4) {
-        return <EventNameInputComponent handleButtonClick={handleButtonClick} handleAddData={handleAddData} modalOpenClick={modalOpenClick} type={"friend"} />;
+      return <QuestionComponent04 handleButtonClick={handleButtonClick} />;
+    case 6:
+      return <QuestionComponent05 handleButtonClick={handleButtonClick} />;
+    case 7:
+      return <CalendarSelectComponent handleButtonClick={handleButtonClick} />;
+    case 8:
+      return <TimeSelectComponent handleButtonClick={handleButtonClick} />;
+    case 9:
+      return <FriendRelationSelectComponent handleButtonClick={handleButtonClick} />;
+    case 10:
+      return <EventTypeSelectComponent handleButtonClick={handleButtonClick} />;
+    case 11:
+      return <NameInputComponent handleButtonClick={handleButtonClick} handleAddData={handleAddData} myType={postData[2]} eventType={postData[3]} modalOpenClick={modalOpenClick} type={"friend"} />;
+    case 12:
+      if (postData[10] === 4) {
+        return <EventNameInputComponent handleButtonClick={handleButtonClick} handleAddData={handleAddData} modalOpenClick={modalOpenClick} type={"friend"} postData={postData} />;
       } else {
         handleCountUp();
       }
-    case 6:
-      return <MoneyInputComponent handleButtonClick={handleButtonClick} handleAddData={handleAddData} modalOpenClick={modalOpenClick} recommend={false} />;
+    case 13:
+      return <MoneyInputComponent handleButtonClick={handleButtonClick} handleAddData={handleAddData} modalOpenClick={modalOpenClick} recommend={true} postData={postData} />;
     default:
-      return <CalendarSelectComponent handleButtonClick={handleButtonClick} />;
+      return <AgeInputComponent handleButtonClick={handleButtonClick} />;
   }
 };
 
@@ -99,24 +117,25 @@ const ModalComponent = ({ modalOpenClick, modalVisible, postData }) => {
   const handlePostData = () => {
     // 여기서 데이터를 준비합니다.
     console.log("post", postData);
-    if (postData.length === 6) {
+    console.log("postlength", postData.length);
+    if (postData.length === 13) {
       eventData = {
-        acName: postData[4],
-        acType: postData[2],
-        eventCategory: postData[3],
-        payAmount: postData[5] === null ? postData[5] : parseInt(postData[5].replace(/,/g, ""), 10),
-        eventAt: postData[0],
+        acName: postData[11],
+        acType: postData[9],
+        eventCategory: postData[10],
+        payAmount: postData[12] === null ? postData[12] : parseInt(postData[12].replace(/,/g, ""), 10),
+        eventAt: postData[7],
         eventName: null,
         // eventTime: postData[1],
       };
-    } else if (postData.length === 7) {
+    } else if (postData.length === 14) {
       eventData = {
-        acName: postData[4],
-        acType: postData[2],
-        eventCategory: postData[3],
-        payAmount: postData[6] === null ? postData[6] : parseInt(postData[5].replace(/,/g, ""), 10),
-        eventAt: postData[0],
-        eventName: postData[5],
+        acName: postData[11],
+        acType: postData[9],
+        eventCategory: postData[10],
+        payAmount: postData[13] === null ? postData[13] : parseInt(postData[13].replace(/,/g, ""), 10),
+        eventAt: postData[7],
+        eventName: postData[12],
         // eventTime: postData[1],
       };
     }
@@ -154,57 +173,6 @@ const ModalComponent = ({ modalOpenClick, modalVisible, postData }) => {
         </View>
       </Modal>
     </>
-  );
-};
-
-const NoticesModal = () => {
-  const [modalVisible, setModalVisible] = useState(true);
-
-  const modalOpenClick = () => {
-    setModalVisible(!modalVisible);
-  };
-
-  return (
-    <Modal
-      isVisible={modalVisible === true}
-      transparent={true}
-      onBackdropPress={() => setModalVisible(false)}
-      onSwipeComplete={() => setModalVisible(false)}
-      swipeDirection="down"
-      style={styles.bottomModalFlex}
-    >
-      <View style={styles.bottomModalBox}>
-        <TouchableOpacity
-          style={{
-            marginLeft: "auto",
-            marginRight: "auto",
-            alignItems: "center",
-            marginBottom: 0,
-            height: 20,
-            width: 100,
-          }}
-          onPress={() => setModalVisible(false)}
-        >
-          <Image style={{ width: 37, height: 2 }} source={require("../assets/images/icon_close_bar.png")} />
-        </TouchableOpacity>
-
-        <View style={styles.bottomModalInner}>
-          <Image style={{ width: 40, height: 40 }} source={require("../assets/images/icon_bell.png")} />
-          <Text style={styles.bottomModalTitle}>지인에게 나의 경조사를 알리시겠어요?</Text>
-          <Text style={styles.bottomModalText}>나의 경조사를 알리려면 연락처를 연동해야 합니다.</Text>
-
-          <View style={styles.bottomModalBtnFlex}>
-            <TouchableOpacity style={styles.bottomModalBtn}>
-              <Text style={styles.bottomModalBtnText}>아니요</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => navigation.navigate("ContactSelectScreen")} style={[styles.bottomModalBtn, { backgroundColor: "#6D61FF" }]}>
-              <Text style={[styles.bottomModalBtnText, { color: "#fff" }]}>네</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
-    </Modal>
   );
 };
 
@@ -253,7 +221,6 @@ const styles = StyleSheet.create({
     width: 80,
     textAlign: "center",
   },
-
   //바텀 모달창
   bottomModalFlex: {
     justifyContent: "flex-end",

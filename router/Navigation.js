@@ -14,7 +14,7 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import CalendarScreen from "../screens/CalendarScreen";
 import StatisticsScreen from "../screens/StatisticsScreen";
 import NewAddEventScreen from "../screens/NewAddEventScreen";
-import AskRelationScreen01 from "../screens/AskRelationScreen01";
+import AskRelationScreen from "../screens/AskRelationScreen";
 import NotAskRelationScreen from "../screens/NotAskRelationScreen";
 import AddMyEventScreen from "../screens/AddMyEventScreen";
 import ContactSelectScreen from "../screens/ContactSelectScreen";
@@ -90,7 +90,7 @@ function FriendEventPlusButton() {
             <TouchableOpacity style={[styles.recommendModalBtn, { backgroundColor: "#f3f3ff" }]} onPress={() => navigation.navigate("NotAskRelationScreen")}>
               <Text style={styles.recommendModalBtnText}>아니요</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.recommendModalBtn, { backgroundColor: "#6D61FF" }]} onPress={() => navigation.navigate("AskRelationScreen01")}>
+            <TouchableOpacity style={[styles.recommendModalBtn, { backgroundColor: "#6D61FF" }]} onPress={() => navigation.navigate("AskRelationScreen")}>
               <Text style={[styles.recommendModalBtnText, { color: "#fff" }]}>네</Text>
             </TouchableOpacity>
           </View>
@@ -290,8 +290,8 @@ export default function Navigation() {
       />
 
       <Stack.Screen
-        name="AskRelationScreen01"
-        component={AskRelationScreen01}
+        name="AskRelationScreen"
+        component={AskRelationScreen}
         options={{
           title: "",
           headerStyle: { backgroundColor: "transparent" },

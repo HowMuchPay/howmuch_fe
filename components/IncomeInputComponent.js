@@ -1,50 +1,10 @@
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Modal from "react-native-modal";
-import { API } from "../stores/api";
 
-export default function MoneyInputComponent({ handleButtonClick, handleAddData, modalOpenClick, recommend, postData }) {
+export default function IncomeInputComponent({ handleButtonClick, handleAddData }) {
   const [textInputValue, setTextInputValue] = useState("");
   const [showButton, setShowButton] = useState(false);
-  const [recommendMoney, setRecommendMoney] = useState(0);
-
-  useEffect(() => {
-    if (recommend) {
-      console.log(postData);
-      // console.log(parseFloat(postData[1].replace(/,/g, "")));
-      fetchData();
-    } else {
-      console.log("not");
-    }
-  }, []);
-
-  const fetchData = async () => {
-    let recommendSum = postData[2];
-    for (let i = 2; i < 7; i++) {
-      recommendSum += postData[i];
-    }
-
-    const formatIncomeToNumber = parseFloat(postData[1].replace(/,/g, ""));
-
-    try {
-      // 데이터를 가져오는 axios 요청을 보냅니다.
-      const response = await API.get(
-        `/recommendation/get?ageGroup=${postData[0]}&annualIncome=${formatIncomeToNumber}&eventCategory=${postData[10]}&acquaintanceType=${postData[9]}&intimacyLevel=${recommendSum}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const newData = response.data; // 새로운 데이터
-
-      // 상태를 업데이트하고 화면을 다시 렌더링합니다.
-      console.log(newData);
-      setRecommendMoney(newData);
-    } catch (error) {
-      console.error("데이터를 불러오는 중 오류가 발생했습니다.", error);
-    }
-  };
 
   const TextButtonClick = (value) => {
     if (value === "미정") {
@@ -59,11 +19,10 @@ export default function MoneyInputComponent({ handleButtonClick, handleAddData, 
 
   const handleConfirmClick = () => {
     // console.log("TextInput의 값:", inputValue);
-    modalOpenClick();
     if (textInputValue === "미정") {
-      handleAddData(null);
+      handleButtonClick(null);
     } else {
-      handleAddData(textInputValue);
+      handleButtonClick(textInputValue);
     }
   };
 
@@ -93,35 +52,19 @@ export default function MoneyInputComponent({ handleButtonClick, handleAddData, 
   return (
     <>
       <View style={{ flexDirection: "row" }}>
-        <Text style={styles.addText}>지불할</Text>
+        <Text style={[styles.addText, { color: "#6D61FF" }]}>본인의 연수입</Text>
+        <Text style={styles.addText}>은</Text>
       </View>
-      <View style={{ flexDirection: "row" }}>
-        <Text style={[styles.addText, { color: "#6D61FF" }]}>경조사비</Text>
-        <Text style={styles.addText}>를 입력해주세요</Text>
-      </View>
+      <Text style={styles.addText}>얼마인가요?</Text>
       <View style={styles.nameInputBox}>
         <TextInput
           style={styles.nameInput}
-          placeholder={recommend ? (recommendMoney !== 0 ? recommendMoney : "아직 데이터가 쌓이지 않았어요") : "경조사비를 입력해주세요"}
+          placeholder="연수입을 선택해주세요"
           //   onSubmitEditing={handleButtonClick}
           keyboardType="numeric"
           value={textInputValue}
           onChangeText={onChangeText}
         />
-      </View>
-      <View style={styles.moneyBtnFlex}>
-        <TouchableOpacity onPress={() => TextButtonClick("미정")} style={[styles.moneyBtn]}>
-          <Text style={styles.moneyBtnText}>미정</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => TextButtonClick(10000)} style={[styles.moneyBtn]}>
-          <Text style={styles.moneyBtnText}>+1만</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => TextButtonClick(50000)} style={[styles.moneyBtn]}>
-          <Text style={styles.moneyBtnText}>+5만</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => TextButtonClick(100000)} style={[styles.moneyBtn]}>
-          <Text style={styles.moneyBtnText}>+10만</Text>
-        </TouchableOpacity>
       </View>
 
       {showButton && (
@@ -186,7 +129,7 @@ const styles = StyleSheet.create({
 
   // 다음 버튼
   nextBtn: {
-    top: "30%",
+    top: "45%",
     position: "relative",
     width: "100%",
     alignItems: "center",

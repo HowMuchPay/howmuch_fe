@@ -11,14 +11,31 @@ import { useAppStore } from "../stores/store";
 const Drawer = createDrawerNavigator();
 
 function SideScreen() {
+  const store = useAppStore();
+  const token = store.token;
   const clearToken = useAppStore((state) => state.clearToken);
   const navigation = useNavigation();
   const name = useAppStore((state) => state.name); // 이름 가져오기
 
-  const handleLogout = () => {
-    clearToken();
+  const handleLogout = async () => {
+    try {
+      // axios를 사용하여 로그아웃 API 요청 보내기
+      const response = await API.post("/user/logout/me", null, {
+        headers: {
+          Authorization: token,
+        },
+      });
 
-    navigation.navigate("Login");
+      if (response.status === 200) {
+        clearToken();
+
+        navigation.navigate("Login");
+      } else {
+        console.error("로그아웃 실패: 서버 응답 오류");
+      }
+    } catch (error) {
+      console.error("로그아웃 요청 실패:", error);
+    }
   };
 
   return (

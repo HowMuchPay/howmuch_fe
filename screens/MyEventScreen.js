@@ -112,7 +112,7 @@ export default function MyEventScreen() {
       keyExtractor={(item, index) => index.toString()} // 간단한 keyExtractor를 사용
       renderItem={({ item }) => (
         <View style={styles.inner}>
-          {/* <TouchableOpacity
+          <TouchableOpacity
             onPress={() => {
               API.get("calendar/statistics?time=2023-09", {
                 headers: {
@@ -133,7 +133,7 @@ export default function MyEventScreen() {
             <Text>get</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => {
               const postData = {
                 acName: "로컬 테스트",

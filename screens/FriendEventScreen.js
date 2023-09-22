@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image, Button, Pressable, FlatList, Alert } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import Modal from "react-native-modal";
 import { useAppStore } from "../stores/store";
@@ -154,9 +154,9 @@ function PayListBox({ handleFilter, fetchData, handleSearchChange, searchText })
 
   const navigation = useNavigation();
 
-  const handleButtonPress = (number) => {
+  const handleButtonPress = useCallback((number) => {
     setModalVisible(number);
-  };
+  }, []);
 
   const handleModalClose = () => {
     let groupResult;
@@ -254,7 +254,7 @@ function SelectGroupBtnBox(props) {
   const [buttons, setButtons] = useState(props.btnArr);
   const [activeIds, setActiveIds] = useState([]);
 
-  const handleButtonPress = (buttonId) => {
+  const handleGroupButtonPress = (buttonId) => {
     setButtons((prevButtons) => prevButtons.map((button) => (button.id === buttonId ? { ...button, pressed: !button.pressed } : button)));
     setActiveIds((prevActiveIds) => (prevActiveIds.includes(buttonId) ? prevActiveIds.filter((id) => id !== buttonId) : [...prevActiveIds, buttonId]));
   };
@@ -268,7 +268,7 @@ function SelectGroupBtnBox(props) {
       <View style={styles.modalBtnFlex}>
         {buttons.map((button, idx) => {
           return (
-            <TouchableOpacity style={[styles.modalSelectBtn, { backgroundColor: button.pressed ? "#6D61FF" : "#F3F3FF" }]} key={button.id} onPress={() => handleButtonPress(button.id)}>
+            <TouchableOpacity style={[styles.modalSelectBtn, { backgroundColor: button.pressed ? "#6D61FF" : "#F3F3FF" }]} key={button.id} onPress={() => handleGroupButtonPress(button.id)}>
               <Text style={[styles.modalBtnTitle, { color: button.pressed ? "#fff" : "#1F1F1F" }]}>{button.title}</Text>
             </TouchableOpacity>
           );
@@ -282,7 +282,7 @@ function SelectEventBtnBox(props) {
   const [buttons, setButtons] = useState(props.btnArr);
   const [activeIds, setActiveIds] = useState([]);
 
-  const handleButtonPress = (buttonId) => {
+  const handleEventButtonPress = (buttonId) => {
     setButtons((prevButtons) => prevButtons.map((button) => (button.id === buttonId ? { ...button, pressed: !button.pressed } : button)));
     setActiveIds((prevActiveIds) => (prevActiveIds.includes(buttonId) ? prevActiveIds.filter((id) => id !== buttonId) : [...prevActiveIds, buttonId]));
   };
@@ -295,7 +295,7 @@ function SelectEventBtnBox(props) {
       <View style={styles.modalBtnFlex}>
         {buttons.map((button, idx) => {
           return (
-            <TouchableOpacity style={[styles.modalSelectBtn, { backgroundColor: button.pressed ? "#6D61FF" : "#F3F3FF" }]} key={button.id} onPress={() => handleButtonPress(button.id)}>
+            <TouchableOpacity style={[styles.modalSelectBtn, { backgroundColor: button.pressed ? "#6D61FF" : "#F3F3FF" }]} key={button.id} onPress={() => handleEventButtonPress(button.id)}>
               <Text style={[styles.modalBtnTitle, { color: button.pressed ? "#fff" : "#1F1F1F" }]}>{button.title}</Text>
             </TouchableOpacity>
           );
