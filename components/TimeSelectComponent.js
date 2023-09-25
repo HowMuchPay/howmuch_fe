@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, TouchableOpacity, TextInput, Platform, Image, Pressable } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { format, addHours } from "date-fns";
 import { WithLocalSvg } from "react-native-svg";
@@ -13,6 +13,23 @@ const TimeSelectComponent = ({ handleButtonClick }) => {
   const [showButton, setShowButton] = useState(false);
   const [notDecide, setNotDecide] = useState(false);
   const [time, setTime] = useState("");
+  const [inputValue, setInputValue] = useState("");
+
+  useEffect(() => {
+    if (!notDecide) {
+      console.log(dateChange);
+    } else {
+      console.log("시간 미정");
+    }
+
+    // Input의 value 값이 있는지 여부에 따라 showButton 상태 설정
+    if (dateChange || notDecide) {
+      setShowButton(true);
+    } else {
+      setShowButton(false);
+    }
+  }, [dateChange, notDecide]);
+
   const handleClick = () => {
     if (notDecide) {
       handleButtonClick(null);
@@ -23,7 +40,7 @@ const TimeSelectComponent = ({ handleButtonClick }) => {
 
   const toggleNotDecide = () => {
     setNotDecide(!notDecide);
-    setShowButton(!showButton);
+    // setShowButton(!showButton);
   };
   const toggleDatePicker = () => {
     setShowDatePicker(!showDatePicker);

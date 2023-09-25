@@ -1,5 +1,5 @@
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image, Button, Pressable, FlatList, Alert } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 
 import Modal from "react-native-modal";
 import { useAppStore } from "../stores/store";
@@ -16,7 +16,7 @@ import trashIcon from "../assets/images/trash_icon.svg";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { TextInput } from "react-native-gesture-handler";
 
-export default function MyEventScreen() {
+export default function AllEventScreen() {
   const store = useAppStore();
   const token = store.token;
   const [data, setData] = useState(null);
@@ -32,14 +32,14 @@ export default function MyEventScreen() {
     fetchData();
   }, [isFocused]);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
   const fetchData = async () => {
     try {
       // 데이터를 가져오는 axios 요청을 보냅니다.
-      const response = await API.get("/event/my", {
+      const response = await API.get("/event/acquaintance", {
         headers: {
           Authorization: token,
           "Content-Type": "application/json",
@@ -48,7 +48,7 @@ export default function MyEventScreen() {
       const newData = response.data; // 새로운 데이터
 
       // 상태를 업데이트하고 화면을 다시 렌더링합니다.
-      console.log(newData.allMyEvents);
+      console.log(newData.allAcEvents);
       setData(newData);
     } catch (error) {
       console.error("데이터를 불러오는 중 오류가 발생했습니다.", error);
@@ -70,7 +70,7 @@ export default function MyEventScreen() {
           onPress: async () => {
             try {
               // 삭제 요청을 보냅니다.
-              const response = await API.delete(`/event/my/${id}`, {
+              const response = await API.delete(`/event/acquaintance/${id}`, {
                 headers: {
                   Authorization: token,
                   "Content-Type": "application/json",
@@ -91,13 +91,13 @@ export default function MyEventScreen() {
   };
 
   const handleFilter = (groupNumList, eventNumList) => {
-    API.get(`/event/my/filter?myTypes=${groupNumList}&eventCategories=${eventNumList}`, {
+    API.get(`/event/acquaintance/filter?acTypes=${groupNumList}&eventCategories=${eventNumList}`, {
       headers: {
         Authorization: token,
       },
     })
       .then((response) => {
-        console.log("성공적으로 get 요청을 보냈습니다.", response.data.allMyEvents);
+        console.log("성공적으로 get 요청을 보냈습니다.", response.data.allAcEvents);
         setData(response.data);
       })
       .catch((error) => {
@@ -108,62 +108,15 @@ export default function MyEventScreen() {
   return (
     <FlatList // ScrollView를 FlatList로 변경
       style={styles.container}
-      data={data ? [data] : []} // FlatList는 배열 데이터를 받으므로 data를 배열로 감싸줍니다.
-      keyExtractor={(item, index) => index.toString()} // 간단한 keyExtractor를 사용
+      data={data ? [data] : []}
+      keyExtractor={(item, index) => index.toString()}
       renderItem={({ item }) => (
         <View style={styles.inner}>
-          <TouchableOpacity
-            onPress={() => {
-              API.get("calendar/statistics?time=2023-09", {
-                headers: {
-                  Authorization: token,
-                  "Content-Type": "application/json",
-                },
-              })
-                .then((response) => {
-                  console.log("성공적으로 get 요청을 보냈습니다.", response.data);
-                  console.log(response.data);
-                  // console.log(response.data.allAcEvents);
-                })
-                .catch((error) => {
-                  console.error("get 요청을 보내는 중 오류가 발생했습니다.", error);
-                });
-            }}
-          >
-            <Text>get</Text>
-          </TouchableOpacity>
-
-          {/* <TouchableOpacity
-            onPress={() => {
-              const postData = {
-                acName: "로컬 테스트",
-                acType: 3,
-                eventCategory: 0,
-                payAmount: 300000,
-                eventAt: "2023-08-30",
-              };
-
-              API.post("/event/acquaintance", postData, {
-                headers: {
-                  Authorization: token,
-                },
-              })
-                .then((response) => {
-                  console.log("성공적으로 POST 요청을 보냈습니다.", response.data);
-                })
-                .catch((error) => {
-                  console.error("POST 요청을 보내는 중 오류가 발생했습니다.", error);
-                });
-            }}
-          >
-            <Text>post</Text>
-          </TouchableOpacity> */}
           {item ? (
             <>
-              <NowGetMoneyBox data={item} />
               <View>
                 <PayListBox handleFilter={handleFilter} fetchData={fetchData} handleSearchChange={handleSearchChange} searchText={searchText} />
-                {item && item.allMyEvents && Object.keys(item.allMyEvents).length === 0 ? (
+                {item && item.allAcEvents && Object.keys(item.allAcEvents).length === 0 ? (
                   <View style={[styles.payListBox, { height: 460, alignItems: "center", justifyContent: "center" }]}>
                     <Text style={{ fontSize: 16, fontFamily: "font-B", color: "#cccccc" }}>이벤트 목록이 없습니다.</Text>
                   </View>
@@ -179,20 +132,6 @@ export default function MyEventScreen() {
   );
 }
 
-function NowGetMoneyBox({ data }) {
-  // console.log("re", data);
-  return (
-    <View style={styles.nowGetMoneyBox}>
-      <Text style={styles.nowGetMoneyTitle}>현재까지</Text>
-      <View style={styles.nowGetMoneyTitleFlex}>
-        <Text style={[styles.nowGetMoneyTitle, styles.accentColor]}>총 {data.totalReceiveAmount.toLocaleString()}원</Text>
-        <Text style={styles.nowGetMoneyTitle}>을</Text>
-      </View>
-      <Text style={styles.nowGetMoneyTitle}>받았어요.</Text>
-    </View>
-  );
-}
-
 function PayListBox({ handleFilter, fetchData, handleSearchChange, searchText }) {
   const [modalVisible, setModalVisible] = useState(null);
   const [groupNumList, setGroupNumList] = useState(null);
@@ -200,18 +139,18 @@ function PayListBox({ handleFilter, fetchData, handleSearchChange, searchText })
 
   const navigation = useNavigation();
 
-  const handleButtonPress = (number) => {
+  const handleButtonPress = useCallback((number) => {
     setModalVisible(number);
-  };
+  }, []);
 
   const handleModalClose = () => {
     let groupResult;
     let eventResult;
 
     if (groupNumList.includes(5)) {
-      groupResult = "0,1,2";
+      groupResult = "0,1,2,3,4";
     } else if (groupNumList.length === 0) {
-      groupResult = "0,1,2";
+      groupResult = "0,1,2,3,4";
     } else {
       groupResult = groupNumList.sort((a, b) => a - b).join(",");
     }
@@ -232,9 +171,11 @@ function PayListBox({ handleFilter, fetchData, handleSearchChange, searchText })
 
   let groupList = [
     { id: 5, title: "전체", pressed: false },
-    { id: 0, title: "나", pressed: false },
-    { id: 1, title: "가족", pressed: false },
-    { id: 2, title: "기타", pressed: false },
+    { id: 0, title: "가족", pressed: false },
+    { id: 1, title: "친구", pressed: false },
+    { id: 2, title: "직장", pressed: false },
+    { id: 3, title: "친척", pressed: false },
+    { id: 4, title: "기타", pressed: false },
   ];
 
   let eventList = [
@@ -277,17 +218,17 @@ function PayListBox({ handleFilter, fetchData, handleSearchChange, searchText })
         </View>
 
         <View style={styles.filterSearchBox}>
-          <View>
+          {/* <View>
             <TextInput style={styles.eventInput} fontSize={15} onChangeText={handleSearchChange} value={searchText} placeholder="이름을 입력해주세요" placeholderTextColor="#ccc" />
             <Image style={{ width: 22, height: 22, position: "absolute", top: 0, left: 0 }} source={require("../assets/images/icon_search_black.png")} />
-          </View>
-          {/* <TouchableOpacity style={styles.filterSearchIcon} onPress={() => navigation.navigate("SearchEventScreen")}>
+          </View> */}
+          <TouchableOpacity style={styles.filterSearchIcon} onPress={() => navigation.navigate("SearchEventScreen")}>
             <Image style={{ width: 24, height: 24 }} source={require("../assets/images/icon_search_black.png")} />
-          </TouchableOpacity> */}
+          </TouchableOpacity>
 
-          {/* <TouchableOpacity style={styles.filterRefreshIcon} onPress={fetchData}>
+          <TouchableOpacity style={styles.filterRefreshIcon} onPress={fetchData}>
             <Image style={{ width: 24, height: 24 }} source={require("../assets/images/icon_rotate_right.png")} />
-          </TouchableOpacity> */}
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -296,9 +237,9 @@ function PayListBox({ handleFilter, fetchData, handleSearchChange, searchText })
 
 function SelectGroupBtnBox(props) {
   const [buttons, setButtons] = useState(props.btnArr);
-  const [activeIds, setActiveIds] = useState([]); // 활성화된 ID들을 추적하는 배열
+  const [activeIds, setActiveIds] = useState([]);
 
-  const handleButtonPress = (buttonId) => {
+  const handleGroupButtonPress = (buttonId) => {
     setButtons((prevButtons) => prevButtons.map((button) => (button.id === buttonId ? { ...button, pressed: !button.pressed } : button)));
     setActiveIds((prevActiveIds) => (prevActiveIds.includes(buttonId) ? prevActiveIds.filter((id) => id !== buttonId) : [...prevActiveIds, buttonId]));
   };
@@ -312,7 +253,7 @@ function SelectGroupBtnBox(props) {
       <View style={styles.modalBtnFlex}>
         {buttons.map((button, idx) => {
           return (
-            <TouchableOpacity style={[styles.modalSelectBtn, { backgroundColor: button.pressed ? "#6D61FF" : "#F3F3FF" }]} key={button.id} onPress={() => handleButtonPress(button.id)}>
+            <TouchableOpacity style={[styles.modalSelectBtn, { backgroundColor: button.pressed ? "#6D61FF" : "#F3F3FF" }]} key={button.id} onPress={() => handleGroupButtonPress(button.id)}>
               <Text style={[styles.modalBtnTitle, { color: button.pressed ? "#fff" : "#1F1F1F" }]}>{button.title}</Text>
             </TouchableOpacity>
           );
@@ -324,9 +265,9 @@ function SelectGroupBtnBox(props) {
 
 function SelectEventBtnBox(props) {
   const [buttons, setButtons] = useState(props.btnArr);
-  const [activeIds, setActiveIds] = useState([]); // 활성화된 ID들을 추적하는 배열
+  const [activeIds, setActiveIds] = useState([]);
 
-  const handleButtonPress = (buttonId) => {
+  const handleEventButtonPress = (buttonId) => {
     setButtons((prevButtons) => prevButtons.map((button) => (button.id === buttonId ? { ...button, pressed: !button.pressed } : button)));
     setActiveIds((prevActiveIds) => (prevActiveIds.includes(buttonId) ? prevActiveIds.filter((id) => id !== buttonId) : [...prevActiveIds, buttonId]));
   };
@@ -339,7 +280,7 @@ function SelectEventBtnBox(props) {
       <View style={styles.modalBtnFlex}>
         {buttons.map((button, idx) => {
           return (
-            <TouchableOpacity style={[styles.modalSelectBtn, { backgroundColor: button.pressed ? "#6D61FF" : "#F3F3FF" }]} key={button.id} onPress={() => handleButtonPress(button.id)}>
+            <TouchableOpacity style={[styles.modalSelectBtn, { backgroundColor: button.pressed ? "#6D61FF" : "#F3F3FF" }]} key={button.id} onPress={() => handleEventButtonPress(button.id)}>
               <Text style={[styles.modalBtnTitle, { color: button.pressed ? "#fff" : "#1F1F1F" }]}>{button.title}</Text>
             </TouchableOpacity>
           );
@@ -364,27 +305,27 @@ function PayList({ data, handleDelete, searchText }) {
   return (
     <FlatList
       style={styles.allContainer}
-      data={Object.keys(data.allMyEvents)}
+      data={Object.keys(data.allAcEvents)}
       keyExtractor={(key) => key}
       renderItem={({ item: key, index }) => {
-        const events = data.allMyEvents[key];
+        const events = data.allAcEvents[key];
         const formattedKey = formatKey(key);
 
         // 검색어에 따라 이벤트 필터링
-        const filteredEvents = searchText ? events.filter((event) => event.myEventDisplayName.toLowerCase().includes(searchText.toLowerCase())) : events;
+        // const filteredEvents = searchText ? events.filter((event) => event.myEventDisplayName.toLowerCase().includes(searchText.toLowerCase())) : events;
 
-        const noEventMessage = (
-          <View style={[styles.payListBox, { height: 480, alignItems: "center", justifyContent: "center" }]}>
-            <Text style={{ fontSize: 16, fontFamily: "font-B", color: "#cccccc" }}>이벤트 목록이 없습니다.</Text>
-          </View>
-        );
+        // const noEventMessage = (
+        //   <View style={[styles.payListBox, { height: 480, alignItems: "center", justifyContent: "center" }]}>
+        //     <Text style={{ fontSize: 16, fontFamily: "font-B", color: "#cccccc" }}>이벤트 목록이 없습니다.</Text>
+        //   </View>
+        // );
 
-        if (filteredEvents.length === 0) {
-          return null;
-        }
+        // if (filteredEvents.length === 0) {
+        //   return null;
+        // }
 
-        console.log("filter", filteredEvents);
-        console.log("filter", filteredEvents.length);
+        // console.log("filter", filteredEvents);
+        // console.log("filter", filteredEvents.length);
         return (
           <View key={key} style={{ paddingHorizontal: 20 }}>
             {index !== 0 ? <View style={{ height: 0.3, backgroundColor: "#ccc", marginVertical: 30 }}></View> : null}
@@ -395,56 +336,53 @@ function PayList({ data, handleDelete, searchText }) {
               </View>
             )} */}
 
-            {filteredEvents.length > 0 && (
-              <View style={{}}>
-                <Text style={{ fontFamily: "font-B", fontSize: 14, color: "#1f1f1f", marginBottom: 10 }}>{formattedKey}</Text>
+            <View style={{}}>
+              <Text style={{ fontFamily: "font-B", fontSize: 14, color: "#1f1f1f", marginBottom: 10 }}>{formattedKey}</Text>
 
-                <SwipeListView
-                  data={filteredEvents.length > 0 ? filteredEvents : events}
-                  renderItem={(data, rowMap) => {
-                    let selectedEvent;
+              <SwipeListView
+                data={events}
+                renderItem={(data, rowMap) => {
+                  let selectedEvent;
 
-                    if (data.item.eventCategory === 0) {
-                      selectedEvent = event0;
-                    } else if (data.item.eventCategory === 1) {
-                      selectedEvent = event1;
-                    } else if (data.item.eventCategory === 2) {
-                      selectedEvent = event2;
-                    } else if (data.item.eventCategory === 3) {
-                      selectedEvent = event3;
-                    } else if (data.item.eventCategory === 4) {
-                      selectedEvent = event4;
-                    }
+                  if (data.item.eventCategory === 0) {
+                    selectedEvent = event0;
+                  } else if (data.item.eventCategory === 1) {
+                    selectedEvent = event1;
+                  } else if (data.item.eventCategory === 2) {
+                    selectedEvent = event2;
+                  } else if (data.item.eventCategory === 3) {
+                    selectedEvent = event3;
+                  } else if (data.item.eventCategory === 4) {
+                    selectedEvent = event4;
+                  }
 
-                    return (
-                      <Pressable style={styles.rowFront} onPress={() => navigation.navigate("MyEventDetailScreen", { id: data.item.id, eventNum: data.item.eventCategory })}>
-                        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                          <View style={{ width: 40, height: 40, borderRadius: 50, marginRight: 10 }}>
-                            <WithLocalSvg width={40} height={40} asset={selectedEvent} style={{ marginRight: 15 }} />
-                          </View>
-                          <View style={{}}>
-                            <Text style={{ fontSize: 14, fontFamily: "font-M", color: "#1f1f1f" }}>{data.item.myEventDisplayName}</Text>
-                            <Text style={{ fontSize: 13, fontFamily: "font-R", color: "#5f5f5f" }}>{formatDate(data.item.eventAt)}</Text>
-                          </View>
+                  return (
+                    <Pressable style={styles.rowFront} /*onPress={() => navigation.navigate("MyEventDetailScreen", { id: data.item.id, eventNum: data.item.eventCategory })}*/>
+                      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                        <View style={{ width: 40, height: 40, borderRadius: 50, marginRight: 10 }}>
+                          <WithLocalSvg width={40} height={40} asset={selectedEvent} style={{ marginRight: 15 }} />
                         </View>
-                        {data.item.receiveAmount === 0}
-                        <Text style={{ fontSize: 15, color: "#1f1f1f", fontFamily: "font-B" }}>{data.item.receiveAmount !== 0 ? `+${data.item.receiveAmount.toLocaleString()}원` : `0원`}</Text>
-                      </Pressable>
-                    );
-                  }}
-                  renderHiddenItem={(data, rowMap) => (
-                    <View style={styles.rowBack}>
-                      {console.log(data.item.id)}
-                      <TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnLeft]} onPress={() => handleDelete(data.item.id)}>
-                        <WithLocalSvg width={24} height={24} asset={trashIcon} />
-                      </TouchableOpacity>
-                    </View>
-                  )}
-                  rightOpenValue={-70}
-                  disableRightSwipe
-                />
-              </View>
-            )}
+                        <View style={{}}>
+                          <Text style={{ fontSize: 14, fontFamily: "font-M", color: "#1f1f1f" }}>{data.item.acEventDisplayName}</Text>
+                          <Text style={{ fontSize: 13, fontFamily: "font-R", color: "#5f5f5f" }}>{formatDate(data.item.eventAt)}</Text>
+                        </View>
+                      </View>
+                      <Text style={{ fontSize: 15, color: "#1f1f1f", fontFamily: "font-B" }}>{data.item.payAmount !== 0 ? `+${data.item.payAmount.toLocaleString()}원` : `0원`}</Text>
+                    </Pressable>
+                  );
+                }}
+                renderHiddenItem={(data, rowMap) => (
+                  <View style={styles.rowBack}>
+                    {console.log(data.item.id)}
+                    <TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnLeft]} onPress={() => handleDelete(data.item.id)}>
+                      <WithLocalSvg width={24} height={24} asset={trashIcon} />
+                    </TouchableOpacity>
+                  </View>
+                )}
+                rightOpenValue={-70}
+                disableRightSwipe
+              />
+            </View>
           </View>
         );
       }}
@@ -586,7 +524,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
     flexWrap: "wrap",
-    maxWidth: "95%",
+    maxWidth: "100%",
   },
   modalSelectBtn: {
     paddingTop: 12,
