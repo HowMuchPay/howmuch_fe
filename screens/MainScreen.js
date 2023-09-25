@@ -134,6 +134,8 @@ function PayShowBox(props) {
 }
 
 function StatisticsBox({ percentage }) {
+  const navigation = useNavigation();
+
   const percentageTextFormat = (percentage) => {
     if (percentage > 50) {
       return (
@@ -166,7 +168,7 @@ function StatisticsBox({ percentage }) {
     }
   };
   return (
-    <>
+    <Pressable onPress={() => navigation.navigate("AllEvent")}>
       <View style={styles.totalBox}>
         <View style={styles.totalTextBox}>
           <View>{percentageTextFormat(percentage)}</View>
@@ -189,7 +191,7 @@ function StatisticsBox({ percentage }) {
           />
         </View>
       </View>
-    </>
+    </Pressable>
   );
 }
 
@@ -198,10 +200,10 @@ function ComingEventBox({ data }) {
   return (
     <TouchableOpacity
       onPress={() => {
-        if (data.acEventDisplayName === null) {
+        if (data.eventDisplayName === null) {
           return null;
         } else {
-          navigation.navigate("ComingEvent");
+          navigation.navigate("ComingEvent", { eventId: data.eventId });
         }
       }}
     >

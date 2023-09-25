@@ -24,6 +24,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MyEventDetailScreen, MyEventPersonPlusButton } from "../screens/MyEventDetailScreen";
 import AddDetailPersonScreen from "../screens/AddDetailPersonScreen";
 import SearchEventScreen from "../screens/SearchEventScreen";
+import MainScreen from "../screens/MainScreen";
+import AllEventScreen from "../screens/AllEventScreen";
 
 function HeaderTitle(props) {
   return (
@@ -105,6 +107,16 @@ function BackBtn() {
 
   return (
     <TouchableOpacity onPress={navigation.goBack}>
+      <Image source={BackIcon} style={{ height: 24, width: 24 }} />
+    </TouchableOpacity>
+  );
+}
+
+function MainBtn() {
+  const navigation = useNavigation();
+
+  return (
+    <TouchableOpacity onPress={navigation.navigate("Main")}>
       <Image source={BackIcon} style={{ height: 24, width: 24 }} />
     </TouchableOpacity>
   );
@@ -270,6 +282,23 @@ export default function Navigation() {
           },
           headerLeft: () => <BackBtn />,
           headerBackTitleVisible: false,
+        }}
+      />
+      <Stack.Screen
+        name="AllEvent"
+        component={AllEventScreen}
+        options={{
+          title: "전체 경조사",
+          headerStyle: { backgroundColor: "#F3F3FF" },
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            fontFamily: "font-B",
+            fontSize: 17,
+            color: "#1f1f1f",
+          },
+          headerLeft: () => <BackBtn />,
+          headerBackTitleVisible: false,
+          // headerRight: () => <MyEventPlusButton />,
         }}
       />
       <Stack.Screen
