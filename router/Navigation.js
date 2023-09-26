@@ -116,7 +116,7 @@ function MainBtn() {
   const navigation = useNavigation();
 
   return (
-    <TouchableOpacity onPress={navigation.navigate("Main")}>
+    <TouchableOpacity onPress={navigation.navigate("Drawer")}>
       <Image source={BackIcon} style={{ height: 24, width: 24 }} />
     </TouchableOpacity>
   );

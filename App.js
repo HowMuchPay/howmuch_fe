@@ -63,7 +63,11 @@ export default function App() {
   }, [appIsReady, fontsLoaded]);
 
   if (!appIsReady) {
-    return null;
+    return (
+      <View style={[styles.container, { backgroundColor: "#6D61FF" }]}>
+        <StatusBar backgroundColor="#6D61FF" barStyle="dark-content" />
+      </View>
+    );
   }
 
   return (

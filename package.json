@@ -43,6 +43,7 @@
     "react-native-svg": "13.4.0",
     "react-native-swipe-list-view": "^3.2.9",
     "react-native-tab-view": "^3.5.2",
+    "react-native-wheely": "^0.6.0",
     "styled-components": "^6.0.0",
     "zustand": "^4.4.1"
   },
