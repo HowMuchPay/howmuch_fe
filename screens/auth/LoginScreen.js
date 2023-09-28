@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, Button, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, Image, Button, TouchableOpacity, StatusBar } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import * as KakaoLogin from "@react-native-seoul/kakao-login";
@@ -15,6 +15,7 @@ const signInWithKakao = async () => {
 
 export default function LoginScreen() {
   const [token, setToken] = useAppStore((state) => [state.token, state.setToken]);
+  const [refreshToken, setRefreshToken] = useAppStore((state) => [state.token, state.setToken]);
   const [errorMsg, setErrorMsg] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
@@ -28,7 +29,7 @@ export default function LoginScreen() {
 
       const kakaoProfile = await getProfile();
       console.log("kakaoProfile", kakaoProfile);
-
+      console.log("img", kakaoProfile.profileImageUrl);
       let phone_num = kakaoProfile.phoneNumber;
       // 예를 들어 phone_num가 +82 10-3433-5673 일때 이걸 01034335673 이렇게 만들기
       if (phone_num) {
@@ -59,12 +60,11 @@ export default function LoginScreen() {
         const data = response.data;
 
         console.log("data", data);
+        console.log("img", kakaoProfile.profileImageUrl);
         if (data["accessToken"]) {
           setToken(data["accessToken"]);
           console.log(data["refreshToken"]);
           setRefreshToken(data["refreshToken"]);
-          AsyncStorage.setItem("authToken", data["accessToken"]);
-          AsyncStorage.setItem("refreshToken", data["refreshToken"]);
         }
       }
     })()
@@ -83,6 +83,8 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
+      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
+
       <Image style={styles.logo} source={require(".././../assets/images/logo1.png")} />
       {/* <TouchableOpacity
         style={styles.buttonContainer}

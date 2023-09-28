@@ -39,7 +39,7 @@ export default function AllEventScreen() {
   const fetchData = async () => {
     try {
       // 데이터를 가져오는 axios 요청을 보냅니다.
-      const response = await API.get("/event/acquaintance", {
+      const response = await API.get("/home/statistics", {
         headers: {
           Authorization: token,
           "Content-Type": "application/json",
