@@ -1,7 +1,10 @@
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Platform, Image } from "react-native";
-import React, { useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, Platform, Image, Button } from "react-native";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { format, addHours } from "date-fns";
+import BottomWheelyModal from "./modals/BottomWheelyModal";
+import BottomSheet, { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const CalendarSelectComponent = ({ handleButtonClick }) => {
   const [date, setDate] = useState(new Date());
@@ -18,6 +21,7 @@ const CalendarSelectComponent = ({ handleButtonClick }) => {
 
   //   return `${year}년 ${month}월 ${day}일`;
   // };
+
   const handleClick = () => {
     const data = format(dateChange, "yyyy-MM-dd"); // 데이터 생성 또는 가져오기
     handleButtonClick(data);
@@ -55,6 +59,7 @@ const CalendarSelectComponent = ({ handleButtonClick }) => {
           <Text style={styles.addText}>을 설정해주세요</Text>
         </View>
       </View>
+
       <View style={styles.nameInputBox}>
         <TouchableOpacity onPress={toggleDatePicker} style={styles.calendarInputFlex}>
           <TextInput
@@ -81,7 +86,31 @@ const CalendarSelectComponent = ({ handleButtonClick }) => {
   );
 };
 
+const BottomModal = ({ bottomSheetModalRef, handlePresentModalPress, handleSheetChanges, snapPoints }) => {
+  const renderBackdrop = useCallback((props) => <BottomSheetBackdrop {...props} pressBehavior="close" appearsOnIndex={0} disappearsOnIndex={-1} />, []);
+
+  return (
+    <BottomSheetModalProvider>
+      <BottomSheetModal ref={bottomSheetModalRef} backdropComponent={renderBackdrop} index={0} snapPoints={snapPoints} onChange={handleSheetChanges}>
+        <View style={styles.contentContainer}>
+          <Text>Awesome 🎉</Text>
+        </View>
+      </BottomSheetModal>
+    </BottomSheetModalProvider>
+  );
+};
+
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 24,
+    justifyContent: "center",
+    backgroundColor: "grey",
+  },
+  contentContainer: {
+    flex: 1,
+    alignItems: "center",
+  },
   addText: {
     fontSize: 26,
     fontFamily: "font-B",

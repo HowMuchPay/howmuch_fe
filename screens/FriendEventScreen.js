@@ -7,11 +7,11 @@ import { API } from "../stores/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { WithLocalSvg } from "react-native-svg";
-import event0 from "../assets/images/event_icon_0.svg";
-import event1 from "../assets/images/event_icon_1.svg";
-import event2 from "../assets/images/event_icon_2.svg";
-import event3 from "../assets/images/event_icon_3.svg";
-import event4 from "../assets/images/event_icon_4.svg";
+import event0 from "../assets/images/event_icon_0.png";
+import event1 from "../assets/images/event_icon_1.png";
+import event2 from "../assets/images/event_icon_2.png";
+import event3 from "../assets/images/event_icon_3.png";
+import event4 from "../assets/images/event_icon_4.png";
 import trashIcon from "../assets/images/trash_icon.svg";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { TextInput } from "react-native-gesture-handler";
@@ -372,10 +372,11 @@ function PayList({ data, handleDelete, searchText }) {
                   }
 
                   return (
-                    <Pressable style={styles.rowFront} /*onPress={() => navigation.navigate("MyEventDetailScreen", { id: data.item.id, eventNum: data.item.eventCategory })}*/>
+                    <Pressable style={styles.rowFront} onPress={() => navigation.navigate("FriendEventDetailScreen", { id: data.item.id, eventNum: data.item.eventCategory })}>
                       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
                         <View style={{ width: 40, height: 40, borderRadius: 50, marginRight: 10 }}>
-                          <WithLocalSvg width={40} height={40} asset={selectedEvent} style={{ marginRight: 15 }} />
+                          <Image style={{ width: 40, height: 40, marginRight: 15 }} source={selectedEvent} />
+                          {/* <WithLocalSvg width={40} height={40} asset={selectedEvent} style={{ marginRight: 15 }} /> */}
                         </View>
                         <View style={{}}>
                           <Text style={{ fontSize: 14, fontFamily: "font-M", color: "#1f1f1f" }}>{data.item.acEventDisplayName}</Text>

@@ -4,11 +4,11 @@ import { StyleSheet } from "react-native";
 import { StatusBar } from "react-native";
 import { WithLocalSvg } from "react-native-svg";
 import { SwipeListView } from "react-native-swipe-list-view";
-import event0 from "../assets/images/detail_event_icon_0.svg";
-import event1 from "../assets/images/detail_event_icon_1.svg";
-import event2 from "../assets/images/detail_event_icon_2.svg";
-import event3 from "../assets/images/detail_event_icon_3.svg";
-import event4 from "../assets/images/detail_event_icon_4.svg";
+import event0 from "../assets/images/detail_event_icon_0.png";
+import event1 from "../assets/images/detail_event_icon_1.png";
+import event2 from "../assets/images/detail_event_icon_2.png";
+import event3 from "../assets/images/detail_event_icon_3.png";
+import event4 from "../assets/images/detail_event_icon_4.png";
 import trashIcon from "../assets/images/trash_icon.svg";
 import { API } from "../stores/api";
 import Modal from "react-native-modal";
@@ -150,7 +150,9 @@ function MyEventDetailScreen({ route }) {
           {console.log("test", item.myEventInfo)}
           <View style={styles.eventBox}>
             <View style={styles.eventTextBox}>
-              <WithLocalSvg width={22} height={22} asset={selectedEvent} style={{ marginBottom: 15 }} />
+              <Image style={{ width: 22, height: 22, marginBottom: 10 }} source={selectedEvent} />
+
+              {/* <WithLocalSvg width={25} height={25} asset={selectedEvent} style={{ marginBottom: 15 }} /> */}
               <Text style={styles.eventTitle}>{item.myEventInfo.myEventDisplayName}</Text>
               <Text style={styles.eventDes}>{formatDate(item.myEventInfo.eventAt)}</Text>
               <Text style={styles.eventDes}>{item.myEventInfo.eventTime === null ? "시간 미정" : item.myEventInfo.eventTime}</Text>

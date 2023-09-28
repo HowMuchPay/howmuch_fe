@@ -54,7 +54,9 @@ function SideScreen() {
         <Pressable onPress={handleLogout}>
           <Text style={styles.footerText}>로그아웃</Text>
         </Pressable>
-        <Text style={styles.footerText}>탈퇴하기</Text>
+        <Pressable onPress={() => navigation.navigate("RemoveAccountScreen")}>
+          <Text style={styles.footerText}>탈퇴하기</Text>
+        </Pressable>
       </View>
     </SafeAreaView>
   );

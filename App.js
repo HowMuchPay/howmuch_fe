@@ -8,6 +8,7 @@ import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import Navigation from "./router/Navigation";
 import { useAppStore } from "./stores/store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
@@ -71,10 +72,12 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer style={styles.container} onReady={onLayoutRootView}>
-      <StatusBar backgroundColor="#F3F3FF" barStyle="dark-content" />
-      <Navigation />
-    </NavigationContainer>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <NavigationContainer style={styles.container} onReady={onLayoutRootView}>
+        <StatusBar backgroundColor="#F3F3FF" barStyle="dark-content" />
+        <Navigation />
+      </NavigationContainer>
+    </GestureHandlerRootView>
   );
 }
 

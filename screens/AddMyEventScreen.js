@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, ScrollView } from "react-native";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as Progress from "react-native-progress";
 import CalendarSelectComponent from "../components/CalendarSelectComponent";
 import NameInputComponent from "../components/NameInputComponent";
@@ -11,12 +11,31 @@ import TimeSelectComponent from "../components/TimeSelectComponent";
 import { useNavigation } from "@react-navigation/native";
 import { API } from "../stores/api";
 import { useAppStore } from "../stores/store";
+import BottomSheet, { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider, BottomSheetScrollView, BottomSheetView } from "@gorhom/bottom-sheet";
+
+import { asPickerFormat } from "../utils/utils";
+import { BUTTON_HEIGHT, VIEW_WIDTH } from "../utils/values";
+import TimePicker from "../components/TimePicker";
+import WheelPicker from "react-native-wheely";
 
 export default function AddMyEventScreen() {
   const [countUp, setCountUp] = useState(0);
   const [progress, setProgress] = useState(0.2);
   const [postData, setPostData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
+
+  const bottomSheetModalRef = useRef(null);
+
+  // variables
+  const snapPoints = useMemo(() => ["40%"], []);
+
+  // callbacks
+  const handlePresentModalPress = useCallback(() => {
+    bottomSheetModalRef.current?.present();
+  }, []);
+  const handleSheetChanges = useCallback((index) => {
+    console.log("handleSheetChanges", index);
+  }, []);
 
   const handleButtonClick = (data) => {
     handleAddData(data);
@@ -45,10 +64,15 @@ export default function AddMyEventScreen() {
   return (
     <View style={[styles.container, changeBackground]}>
       <View style={styles.inner}>
+        <TouchableOpacity onPress={handlePresentModalPress}>
+          <Text>modal</Text>
+        </TouchableOpacity>
+
         <Progress.Bar progress={progress} width={null} height={4} color={"#6D61FF"} unfilledColor={"#E7E7FF"} borderWidth={0} style={{ marginTop: 50, marginBottom: 75 }} />
         <ComponentBasedOnCount countUp={countUp} handleButtonClick={handleButtonClick} handleAddData={handleAddData} postData={postData} modalOpenClick={modalOpenClick} modalVisible={modalVisible} />
         <ModalComponent modalOpenClick={modalOpenClick} modalVisible={modalVisible} postData={postData} />
       </View>
+      <BottomModal bottomSheetModalRef={bottomSheetModalRef} handlePresentModalPress={handlePresentModalPress} handleSheetChanges={handleSheetChanges} snapPoints={snapPoints} />
     </View>
   );
 }
@@ -211,6 +235,19 @@ const NoticesModal = () => {
         </View>
       </View>
     </Modal>
+  );
+};
+
+const BottomModal = ({ bottomSheetModalRef, handlePresentModalPress, handleSheetChanges, snapPoints }) => {
+  const renderBackdrop = useCallback((props) => <BottomSheetBackdrop {...props} pressBehavior="close" appearsOnIndex={0} disappearsOnIndex={-1} />, []);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [time, setTime] = useState(asPickerFormat(new Date()));
+  return (
+    <BottomSheetModalProvider>
+      <BottomSheetModal enableContentPanningGesture={false} ref={bottomSheetModalRef} backdropComponent={renderBackdrop} index={0} snapPoints={snapPoints} onChange={handleSheetChanges}>
+        <WheelPicker selectedIndex={selectedIndex} options={["Berlin", "London", "Amsterdam"]} onChange={(index) => setSelectedIndex(index)} />
+      </BottomSheetModal>
+    </BottomSheetModalProvider>
   );
 };
 

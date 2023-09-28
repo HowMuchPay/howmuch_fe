@@ -26,6 +26,8 @@ import AddDetailPersonScreen from "../screens/AddDetailPersonScreen";
 import SearchEventScreen from "../screens/SearchEventScreen";
 import MainScreen from "../screens/MainScreen";
 import AllEventScreen from "../screens/AllEventScreen";
+import FriendEventDetailScreen from "../screens/FriendEventDetailScreen";
+import RemoveAccountScreen from "../screens/auth/RemoveAccountScreen";
 
 function HeaderTitle(props) {
   return (
@@ -169,6 +171,22 @@ export default function Navigation() {
       <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
       <Stack.Screen name="Drawer" component={HandleDrawer} options={{ headerShown: false }} />
       <Stack.Screen
+        name="RemoveAccountScreen"
+        component={RemoveAccountScreen}
+        options={{
+          title: "",
+          headerStyle: { backgroundColor: "#fff" },
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            fontFamily: "font-B",
+            fontSize: 17,
+            color: "#1f1f1f",
+          },
+          headerLeft: () => <BackBtn />,
+          headerBackTitleVisible: false,
+        }}
+      />
+      <Stack.Screen
         name="MyEvent"
         component={MyEventScreen}
         options={{
@@ -236,6 +254,23 @@ export default function Navigation() {
           headerRight: () => <FriendEventPlusButton />,
         }}
       />
+      <Stack.Screen
+        name="FriendEventDetailScreen"
+        component={FriendEventDetailScreen}
+        options={{
+          title: "",
+          headerStyle: { backgroundColor: "#F3F3FF" },
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            fontFamily: "font-B",
+            fontSize: 17,
+            color: "#1f1f1f",
+          },
+          headerLeft: () => <BackBtn />,
+          headerBackTitleVisible: false,
+        }}
+      />
+
       <Stack.Screen
         name="ComingEvent"
         component={ComingEventScreen}
