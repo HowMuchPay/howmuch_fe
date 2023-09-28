@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, StatusBar } from "react-native";
 import React, { useState } from "react";
 import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/native";
@@ -9,6 +9,8 @@ export default function NewAddEventScreen() {
 
   return (
     <View style={styles.container}>
+      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
+
       <View style={styles.inner}>
         <View style={styles.addTextBox}>
           <Text style={styles.addText}>입력하고자 하는</Text>

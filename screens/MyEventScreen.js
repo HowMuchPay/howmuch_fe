@@ -114,7 +114,7 @@ export default function MyEventScreen() {
         <View style={styles.inner}>
           <TouchableOpacity
             onPress={() => {
-              API.get("calendar/statistics?time=2023-09", {
+              API.get("/calendar/statistics?time=2023-10", {
                 headers: {
                   Authorization: token,
                   "Content-Type": "application/json",

@@ -1,7 +1,17 @@
 import { View, Text, StyleSheet, Image } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Calendar, LocaleConfig } from "react-native-calendars";
 import { ScrollView } from "react-native-gesture-handler";
+import { useAppStore } from "../stores/store";
+import { API } from "../stores/api";
+import { useIsFocused } from "@react-navigation/native";
+import leftArrowIcon from "../assets/images/left_arrow_icon.png";
+import rightArrowIcon from "../assets/images/right_arrow_icon.png";
+import event0 from "../assets/images/event_icon_0.png";
+import event1 from "../assets/images/event_icon_1.png";
+import event2 from "../assets/images/event_icon_2.png";
+import event3 from "../assets/images/event_icon_3.png";
+import event4 from "../assets/images/event_icon_4.png";
 
 LocaleConfig.locales["fr"] = {
   monthNames: ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
@@ -13,12 +23,17 @@ LocaleConfig.locales["fr"] = {
 LocaleConfig.defaultLocale = "fr";
 
 export default function CalendarScreen() {
+  const store = useAppStore();
+  const token = store.token;
+  const isFocused = useIsFocused();
+
   const offset = 1000 * 60 * 60 * 9;
   //한국 시간 계산
   const today = new Date(new Date().getTime() + offset);
-
-  const leftArrowIcon = require("../assets/images/left_arrow_icon.png");
-  const rightArrowIcon = require("../assets/images/right_arrow_icon.png");
+  const [data, setData] = useState([]);
+  const [markedDates, setMarkedDates] = useState({});
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedEvent, setSelectedEvent] = useState([]);
 
   const renderCustomArrow = (direction) => {
     if (direction === "left") {
@@ -49,7 +64,7 @@ export default function CalendarScreen() {
   };
 
   todayFormat = today.toISOString().split("T")[0];
-  console.log(today);
+
   const [selectedDay, setSelectedDay] = useState({
     dateString: todayFormat,
     day: todayFormat.split("-")[2],
@@ -57,6 +72,53 @@ export default function CalendarScreen() {
     timestamp: 1688428800000,
     year: todayFormat.split("-")[0],
   });
+  const [selectedMonth, setSelectedMonth] = useState({
+    year: todayFormat.split("-")[0],
+    month: todayFormat.split("-")[1],
+  });
+
+  useEffect(() => {
+    fetchData(selectedMonth.year, selectedMonth.month);
+  }, [isFocused]);
+
+  const fetchData = async (year, month) => {
+    try {
+      const date = `${year}-${month}`;
+      console.log(date);
+      const response = await API.get(`/calendar/schedule?time=${date}`, {
+        headers: {
+          Authorization: token,
+          "Content-Type": "application/json",
+        },
+      });
+      const newData = response.data; // 새로운 데이터
+
+      // 상태를 업데이트하고 화면을 다시 렌더링합니다.
+      console.log(newData);
+      setData(newData);
+
+      const updatedMarkedDates = {};
+      newData.forEach((event) => {
+        updatedMarkedDates[event.eventAt] = { marked: true, dotColor: "#6D61FF" };
+      });
+      setMarkedDates(updatedMarkedDates);
+    } catch (error) {
+      console.error("데이터를 불러오는 중 오류가 발생했습니다.", error);
+    }
+  };
+
+  const renderEventDisplayName = () => {
+    if (selectedEvent) {
+      console.log("selected", selectedEvent);
+      {
+        selectedEvent.map((event) => {
+          return <Text>{event.eventDisplayName}</Text>;
+        });
+      }
+    } else {
+      return null;
+    }
+  };
 
   return (
     <ScrollView style={styles.container}>
@@ -67,15 +129,30 @@ export default function CalendarScreen() {
           monthFormat={"yyyy년 MM월"}
           onDayPress={(day) => {
             setSelectedDay(day);
+            setSelectedDate(day.dateString);
+            console.log(
+              "test3",
+              data.filter((event) => event.eventAt === day.dateString)
+            );
+            setSelectedEvent(data.filter((event) => event.eventAt === day.dateString) || null);
+          }}
+          onMonthChange={(date) => {
+            setSelectedMonth({ year: date.dateString.split("-")[0], month: date.dateString.split("-")[1] });
+            fetchData(date.dateString.split("-")[0], date.dateString.split("-")[1]);
           }}
           markedDates={{
-            "2023-07-10": { marked: true },
+            ...markedDates,
+            [selectedDate]: {
+              selected: true,
+              selectedColor: "#6D61FF", // 선택된 날짜의 색상을 빨간색으로 지정
+              selectedBackground: true, // 선택된 날짜에 배경색 적용
+            },
           }}
           theme={{
-            selectedDayBackgroundColor: "#EB4C60",
-            todayTextColor: "#EB4C60",
+            todayTextColor: "#6D61FF",
             arrowColor: "#EB4C60",
             dayWidth: 22,
+
             "stylesheet.calendar.header": {
               monthText: customMonthTextStyle,
               dayHeader: customWeekdayStyle,
@@ -83,21 +160,55 @@ export default function CalendarScreen() {
           }}
         />
 
-        <CalendarEventCard selectedDay={selectedDay} />
+        <View style={styles.dayEventContainer}>
+          <View style={styles.dayEventBox}>
+            <Text style={{ fontSize: 16, fontFamily: "font-B", color: "#1f1f1f" }}>
+              {selectedDay.dateString.split("-")[1]}월 {selectedDay.dateString.split("-")[2]}일
+            </Text>
+            {selectedEvent.length !== 0 ? (
+              selectedEvent.map((event, index) => {
+                // let selectedEvent;
+
+                // if (data.item.eventCategory === 0) {
+                //   selectedEvent = event0;
+                // } else if (data.item.eventCategory === 1) {
+                //   selectedEvent = event1;
+                // } else if (data.item.eventCategory === 2) {
+                //   selectedEvent = event2;
+                // } else if (data.item.eventCategory === 3) {
+                //   selectedEvent = event3;
+                // } else if (data.item.eventCategory === 4) {
+                //   selectedEvent = event4;
+                // }
+
+                return (
+                  <View key={index} style={styles.rowFront}>
+                    {/* <Image style={{ width: 40, height: 40, marginRight: 15 }} source={selectedEvent} /> */}
+                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                      <View style={{ width: 40, height: 40, borderRadius: 50, marginRight: 10, backgroundColor: "#F3F3FF" }}>
+                        {/* <Image style={{ width: 40, height: 40, marginRight: 15 }} source={selectedEvent} /> */}
+                      </View>
+                      <Text style={{ fontSize: 14, fontFamily: "font-M", color: "#1f1f1f" }}>{event.eventDisplayName}</Text>
+                    </View>
+                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-end" }}>
+                      {event.type === "myEvent" ? (
+                        <Text style={{ fontSize: 15, color: "#E21068", fontFamily: "font-B" }}>{event.amount !== 0 ? `+ ${event.amount.toLocaleString()}원` : `0원`}</Text>
+                      ) : (
+                        <Text style={{ fontSize: 15, color: "#6D61FF", fontFamily: "font-B" }}>{event.amount !== 0 ? `- ${event.amount.toLocaleString()}원` : `0원`}</Text>
+                      )}
+                    </View>
+                  </View>
+                );
+              })
+            ) : (
+              <View style={{ alignItems: "center", marginVertical: 20 }}>
+                <Text style={{ fontFamily: "font-SM", fontSize: 14, color: "#5f5f5f" }}>주고받은 내역이 없습니다.</Text>
+              </View>
+            )}
+          </View>
+        </View>
       </View>
     </ScrollView>
-  );
-}
-
-function CalendarEventCard(props) {
-  return (
-    <View style={styles.dayEventContainer}>
-      <View style={styles.dayEventBox}>
-        <Text style={{ fontSize: 16, fontFamily: "font-B", color: "#1f1f1f" }}>
-          {props.selectedDay.dateString.split("-")[1]}월 {props.selectedDay.dateString.split("-")[2]}일
-        </Text>
-      </View>
-    </View>
   );
 }
 
@@ -120,7 +231,7 @@ const styles = StyleSheet.create({
   },
   dayEventBox: {
     width: "100%",
-    height: 230,
+    // height: 230,
     backgroundColor: "#fff",
     borderRadius: 20,
     padding: 20,
@@ -129,5 +240,15 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: "font-B",
     color: "#1f1f1f",
+  },
+  rowFront: {
+    // width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    justifyContent: "space-between",
+    // height: 60,
+    paddingVertical: 20,
+    // borderWidth: 1,
   },
 });
