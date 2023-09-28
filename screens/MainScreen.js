@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, TextInput, ScrollView, Pressable } from "react-native";
+import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, TextInput, ScrollView, Pressable, StatusBar } from "react-native";
 import React, { useEffect, useState } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer, useIsFocused, useNavigation } from "@react-navigation/native";
@@ -48,6 +48,8 @@ export default function MainScreen({}) {
   // }, []);
 
   const fetchData = async () => {
+    console.log("home", token);
+    console.log("test", `Bearer ${token}`);
     try {
       // 데이터를 가져오는 axios 요청을 보냅니다.
       const response = await API.get("/home", {
@@ -68,6 +70,7 @@ export default function MainScreen({}) {
 
   return (
     <ScrollView style={styles.container}>
+      <StatusBar backgroundColor="#F3F3FF" barStyle="dark-content" />
       <View style={styles.inner}>
         <TouchableOpacity
           onPress={() => {
@@ -214,7 +217,7 @@ function ComingEventBox({ data }) {
             <Text style={styles.comingText}>{data.eventDisplayName === null ? "경조사 디데이를 등록해보세요" : data.eventDisplayName}</Text>
           </View>
 
-          {data.acEventDisplayName === null ? null : (
+          {data.eventDisplayName === null ? null : (
             <View style={styles.comingDateBox}>
               <Text style={styles.comingDate}>{data.dday === 0 ? "당일" : `D-${data.dday}일`}</Text>
             </View>

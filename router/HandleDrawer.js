@@ -23,6 +23,7 @@ function SideScreen() {
       const response = await API.post("/user/logout/me", null, {
         headers: {
           Authorization: token,
+          "Content-Type": "application/json",
         },
       });
 
@@ -37,6 +38,10 @@ function SideScreen() {
       console.error("로그아웃 요청 실패:", error);
     }
   };
+
+  // useEffect(() => {
+  //   navigation.navigate("Login");
+  // }, [token]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -85,8 +90,8 @@ export default function HandleDrawer() {
   // }, []);
 
   useEffect(() => {
-    console.log(token);
-
+    console.log("token", token);
+    console.log("test2", `Bearer ${token}`);
     API.get(`/home`, {
       headers: {
         Authorization: token,

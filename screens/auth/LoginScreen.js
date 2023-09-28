@@ -53,7 +53,7 @@ export default function LoginScreen() {
         const body = {
           oauthId: kakaoProfile.id,
           nickname: kakaoProfile.nickname,
-          profileImage: kakaoProfile.profileImageUrl,
+          profileImageUrl: kakaoProfile.profileImageUrl,
         };
         const response = await API.post(`/login/kakao`, body);
 
@@ -63,8 +63,11 @@ export default function LoginScreen() {
         console.log("img", kakaoProfile.profileImageUrl);
         if (data["accessToken"]) {
           setToken(data["accessToken"]);
-          console.log(data["refreshToken"]);
-          setRefreshToken(data["refreshToken"]);
+          console.log("access", data["accessToken"]);
+          console.log("refresh", data["refreshToken"]);
+          // setRefreshToken(data["refreshToken"]);
+          AsyncStorage.setItem("authToken", data["accessToken"]);
+          AsyncStorage.setItem("refreshToken", data["refreshToken"]);
         }
       }
     })()
@@ -75,6 +78,24 @@ export default function LoginScreen() {
       .finally(() => {
         setIsLoading(false);
       });
+  };
+
+  const cleanPhoneNumber = (phoneNumber) => {
+    if (phoneNumber) {
+      // 빈 칸 지우기
+      phoneNumber = phoneNumber.replace(/ /g, "");
+      // - 지우기
+      phoneNumber = phoneNumber.replace(/-/g, "");
+      // +82로 시작하면 0으로 바꾸기
+      if (phoneNumber.startsWith("+82")) {
+        phoneNumber = "0" + phoneNumber.slice(3);
+      }
+      // 10으로 시작하면 010으로 바꾸기
+      if (phoneNumber.startsWith("10")) {
+        phoneNumber = "0" + phoneNumber;
+      }
+    }
+    return phoneNumber;
   };
 
   useEffect(() => {
