@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Text, View, StyleSheet, StatusBar } from "react-native";
-import * as SplashScreen from "expo-splash-screen";
+import SplashScreen from "react-native-splash-screen";
 import { useFonts } from "expo-font";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
@@ -9,9 +9,6 @@ import Navigation from "./router/Navigation";
 import { useAppStore } from "./stores/store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-
-// Keep the splash screen visible while we fetch resources
-SplashScreen.preventAutoHideAsync();
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
@@ -44,22 +41,19 @@ export default function App() {
   });
 
   useEffect(() => {
-    async function prepare() {
-      try {
-        await new Promise((resolve) => setTimeout(resolve, 3000));
-      } catch (e) {
-        console.warn(e);
-      } finally {
-        // Tell the application to render
+    try {
+      setTimeout(() => {
+        SplashScreen.hide();
         setAppIsReady(true);
-      }
+      }, 2000); //스플래시 활성화 시간 2초
+    } catch (e) {
+      console.log(e.message);
     }
-    prepare();
   }, []);
 
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady && fontsLoaded) {
-      await SplashScreen.hideAsync();
+      SplashScreen.hide();
     }
   }, [appIsReady, fontsLoaded]);
 

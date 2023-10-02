@@ -142,7 +142,7 @@ const ModalComponent = ({ modalOpenClick, modalVisible, postData }) => {
 
   return (
     <>
-      <Modal isVisible={modalVisible === true} transparent={true}>
+      <Modal isVisible={modalVisible === true} transparent={true} useNativeDriverForBackdrop={true}>
         <View style={styles.modalBox}>
           <Text style={styles.modalTitle}>저장이 완료되었습니다!</Text>
 
@@ -166,6 +166,7 @@ const NoticesModal = () => {
 
   return (
     <Modal
+      useNativeDriverForBackdrop={true}
       isVisible={modalVisible === true}
       transparent={true}
       onBackdropPress={() => setModalVisible(false)}

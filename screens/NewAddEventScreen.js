@@ -31,7 +31,7 @@ export default function NewAddEventScreen() {
             <Text style={[styles.addBtnText, { color: "#fff" }]}>지인의 경조사</Text>
           </TouchableOpacity>
 
-          <Modal isVisible={modalVisible === true} transparent={true} onBackdropPress={() => setModalVisible(false)}>
+          <Modal isVisible={modalVisible === true} useNativeDriverForBackdrop={true} transparent={true} onBackdropPress={() => setModalVisible(false)}>
             <View style={styles.modalBox}>
               <Text style={styles.modalTitle}>경조사비를 추천 받으시겠습니까?</Text>
 
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     width: "97%",
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     marginTop: 80,
   },
   addBtn: {

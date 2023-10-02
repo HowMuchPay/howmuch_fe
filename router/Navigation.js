@@ -23,7 +23,7 @@ import { useAppStore } from "../stores/store";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MyEventDetailScreen, MyEventPersonPlusButton } from "../screens/MyEventDetailScreen";
 import AddDetailPersonScreen from "../screens/AddDetailPersonScreen";
-import SearchEventScreen from "../screens/SearchEventScreen";
+import SearchMyEventScreen from "../screens/SearchMyEventScreen";
 import MainScreen from "../screens/MainScreen";
 import AllEventScreen from "../screens/AllEventScreen";
 import FriendEventDetailScreen from "../screens/FriendEventDetailScreen";
@@ -54,7 +54,7 @@ function MyEventPlusButton() {
         <Image style={{ width: 24, height: 24 }} source={require("../assets/images/icon_plus_black.png")} />
       </TouchableOpacity>
 
-      <Modal isVisible={modalVisible === true} transparent={true} onBackdropPress={() => setModalVisible(false)}>
+      <Modal isVisible={modalVisible === true} transparent={true} onBackdropPress={() => setModalVisible(false)} useNativeDriverForBackdrop={true}>
         <View style={styles.recommendModalBox}>
           <Text style={styles.recommendModalTitle}>다음 작업을 선택해주세요</Text>
 
@@ -86,7 +86,7 @@ function FriendEventPlusButton() {
         <Image style={{ width: 24, height: 24 }} source={require("../assets/images/icon_plus_black.png")} />
       </TouchableOpacity>
 
-      <Modal isVisible={modalVisible === true} transparent={true} onBackdropPress={() => setModalVisible(false)}>
+      <Modal isVisible={modalVisible === true} transparent={true} onBackdropPress={() => setModalVisible(false)} useNativeDriverForBackdrop={true}>
         <View style={styles.recommendModalBox}>
           <Text style={styles.recommendModalTitle}>경조사비를 추천 받으시겠습니까?</Text>
 
@@ -322,8 +322,8 @@ export default function Navigation() {
         }}
       />
       <Stack.Screen
-        name="SearchEventScreen"
-        component={SearchEventScreen}
+        name="SearchMyEventScreen"
+        component={SearchMyEventScreen}
         options={{
           title: "검색",
           headerStyle: { backgroundColor: "transparent" },

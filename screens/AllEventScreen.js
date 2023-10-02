@@ -195,7 +195,15 @@ function PayListBox({ handleFilter, fetchData, handleSearchChange, searchText })
           <Image style={{ width: 12, height: 12 }} source={require("../assets/images/icon_arrow.png")} />
         </TouchableOpacity>
         <View>
-          <Modal isVisible={modalVisible === 1} transparent={true} onBackdropPress={handleModalClose} onSwipeComplete={handleModalClose} swipeDirection="down" style={styles.bottomModalFlex}>
+          <Modal
+            isVisible={modalVisible === 1}
+            transparent={true}
+            useNativeDriverForBackdrop={true}
+            onBackdropPress={handleModalClose}
+            onSwipeComplete={handleModalClose}
+            swipeDirection="down"
+            style={styles.bottomModalFlex}
+          >
             <View style={styles.bottomModalBox}>
               <TouchableOpacity
                 style={{
@@ -222,7 +230,7 @@ function PayListBox({ handleFilter, fetchData, handleSearchChange, searchText })
             <TextInput style={styles.eventInput} fontSize={15} onChangeText={handleSearchChange} value={searchText} placeholder="이름을 입력해주세요" placeholderTextColor="#ccc" />
             <Image style={{ width: 22, height: 22, position: "absolute", top: 0, left: 0 }} source={require("../assets/images/icon_search_black.png")} />
           </View> */}
-          <TouchableOpacity style={styles.filterSearchIcon} onPress={() => navigation.navigate("SearchEventScreen")}>
+          <TouchableOpacity style={styles.filterSearchIcon} onPress={() => navigation.navigate("SearchMyEventScreen")}>
             <Image style={{ width: 24, height: 24 }} source={require("../assets/images/icon_search_black.png")} />
           </TouchableOpacity>
 
