@@ -217,7 +217,15 @@ function PayFilterBox({ id, fetchData, handleSearchClose }) {
           <Image style={{ width: 12, height: 12 }} source={require("../assets/images/icon_arrow.png")} />
         </TouchableOpacity>
         <View>
-          <Modal isVisible={modalVisible === 1} transparent={true} onBackdropPress={handleModalClose} onSwipeComplete={handleModalClose} swipeDirection="down" style={styles.bottomModalFlex}>
+          <Modal
+            isVisible={modalVisible === 1}
+            transparent={true}
+            useNativeDriverForBackdrop={true}
+            onBackdropPress={handleModalClose}
+            onSwipeComplete={handleModalClose}
+            swipeDirection="down"
+            style={styles.bottomModalFlex}
+          >
             <View style={styles.bottomModalBox}>
               <TouchableOpacity
                 style={{
@@ -248,6 +256,7 @@ function PayFilterBox({ id, fetchData, handleSearchClose }) {
       </View>
 
       <Modal
+        useNativeDriverForBackdrop={true}
         isVisible={modalVisible === 2}
         transparent={true}
         onBackdropPress={() => {

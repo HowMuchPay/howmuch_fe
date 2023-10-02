@@ -3,11 +3,11 @@ import React, { useEffect, useState } from "react";
 import { useIsFocused, useRoute } from "@react-navigation/native";
 import { API } from "../stores/api";
 import { useAppStore } from "../stores/store";
-import event0 from "../assets/images/event_icon_0.png";
-import event1 from "../assets/images/event_icon_1.png";
-import event2 from "../assets/images/event_icon_2.png";
-import event3 from "../assets/images/event_icon_3.png";
-import event4 from "../assets/images/event_icon_4.png";
+import event0 from "../assets/images/detail_event_icon_0.png";
+import event1 from "../assets/images/detail_event_icon_1.png";
+import event2 from "../assets/images/detail_event_icon_2.png";
+import event3 from "../assets/images/detail_event_icon_3.png";
+import event4 from "../assets/images/detail_event_icon_4.png";
 
 export default function FriendEventDetailScreen() {
   const route = useRoute();
@@ -15,6 +15,7 @@ export default function FriendEventDetailScreen() {
   const token = store.token;
 
   const { id, eventNum } = route.params;
+
   const [data, setData] = useState([]);
 
   let selectedEvent;
@@ -23,18 +24,7 @@ export default function FriendEventDetailScreen() {
 
   useEffect(() => {
     fetchData();
-    console.log(eventNum);
-    if (eventNum === 0) {
-      selectedEvent = event0;
-    } else if (eventNum === 1) {
-      selectedEvent = event1;
-    } else if (eventNum === 2) {
-      selectedEvent = event2;
-    } else if (eventNum === 3) {
-      selectedEvent = event3;
-    } else if (eventNum === 4) {
-      selectedEvent = event4;
-    }
+    console.log("event", eventNum);
   }, [isFocused]);
 
   const fetchData = async () => {
@@ -49,8 +39,19 @@ export default function FriendEventDetailScreen() {
       const newData = response.data;
 
       // 상태를 업데이트하고 화면을 다시 렌더링합니다.
-      console.log(newData);
+      console.log("newdata", newData);
       setData(newData);
+      if (eventNum === 0) {
+        selectedEvent = event0;
+      } else if (eventNum === 1) {
+        selectedEvent = event1;
+      } else if (eventNum === 2) {
+        selectedEvent = event2;
+      } else if (eventNum === 3) {
+        selectedEvent = event3;
+      } else if (eventNum === 4) {
+        selectedEvent = event4;
+      }
     } catch (error) {
       console.error("데이터를 불러오는 중 오류가 발생했습니다.", error);
     }
@@ -61,20 +62,20 @@ export default function FriendEventDetailScreen() {
       <View style={styles.inner}>
         <View style={styles.comingBox}>
           <View style={styles.comingRelationBox}>
-            <Text style={styles.comingRelation}>친구</Text>
+            <Text style={styles.comingRelation}>{data.acType}</Text>
           </View>
           <View style={styles.comingTitleBox}>
-            <Image style={{ width: 24, height: 24 }} source={selectedEvent} />
-            <Text style={styles.comingTitle}>박지영님의 생일</Text>
-            <Text style={styles.comingDate}>2023년 07월 10일</Text>
+            <Image style={{ width: 24, height: 24 }} source={eventNum === 0 ? event0 : eventNum === 1 ? event1 : eventNum === 2 ? event2 : eventNum === 3 ? event3 : eventNum === 4 ? event4 : null} />
+            <Text style={styles.comingTitle}>{data.acEventDisplayName}</Text>
+            <Text style={styles.comingDate}>{data.eventAt}</Text>
             <View style={styles.comingDdayBox}>
-              <Text style={styles.comingDday}>D-14일</Text>
+              <Text style={styles.comingDday}>D{data["d-day"]}</Text>
             </View>
           </View>
           <View style={styles.comingPayBox}>
             <View style={styles.comingPayLine}></View>
             <View style={styles.comingPayTextBox}>
-              <Text style={styles.comingPayMoney}>50,000원</Text>
+              <Text style={styles.comingPayMoney}>{data.payAmount}원</Text>
               <Text style={styles.comingPayMoneyDes}>을 낼 거예요</Text>
             </View>
           </View>

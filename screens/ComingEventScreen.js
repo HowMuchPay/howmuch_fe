@@ -9,21 +9,28 @@ export default function ComingEventScreen() {
   const store = useAppStore();
   const token = store.token;
 
-  const { eventId } = route.params;
+  const { eventId, eventType } = route.params;
   const [data, setData] = useState([]);
 
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    // fetchData();
     console.log("id", eventId);
+    console.log("event", eventType);
+    fetchData();
     console.log(token);
   }, [isFocused]);
 
   const fetchData = async () => {
+    let apiEndpoint = `/event/acquaintance/${eventId}/detail`;
+
+    if (eventType === "myEvent") {
+      apiEndpoint = `/event/my/${eventId}/detail`;
+    }
+
     try {
       // 데이터를 가져오는 axios 요청을 보냅니다.
-      const response = await API.get(`/event/acquaintance/${eventId}/detail`, {
+      const response = await API.get(apiEndpoint, {
         headers: {
           Authorization: token,
           "Content-Type": "application/json",
@@ -32,7 +39,7 @@ export default function ComingEventScreen() {
       const newData = response.data;
 
       // 상태를 업데이트하고 화면을 다시 렌더링합니다.
-      console.log(newData);
+      console.log("comingData", newData);
       setData(newData);
     } catch (error) {
       console.error("데이터를 불러오는 중 오류가 발생했습니다.", error);

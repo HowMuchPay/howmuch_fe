@@ -81,6 +81,10 @@ export default function CalendarScreen() {
     fetchData(selectedMonth.year, selectedMonth.month);
   }, [isFocused]);
 
+  useEffect(() => {
+    setSelectedEvent(data.filter((event) => event.eventAt === selectedDay.dateString) || null);
+  }, [data]);
+
   const fetchData = async (year, month) => {
     try {
       const date = `${year}-${month}`;
@@ -104,19 +108,6 @@ export default function CalendarScreen() {
       setMarkedDates(updatedMarkedDates);
     } catch (error) {
       console.error("데이터를 불러오는 중 오류가 발생했습니다.", error);
-    }
-  };
-
-  const renderEventDisplayName = () => {
-    if (selectedEvent) {
-      console.log("selected", selectedEvent);
-      {
-        selectedEvent.map((event) => {
-          return <Text>{event.eventDisplayName}</Text>;
-        });
-      }
-    } else {
-      return null;
     }
   };
 

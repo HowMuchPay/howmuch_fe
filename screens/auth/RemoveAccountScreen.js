@@ -20,7 +20,7 @@ export default function RemoveAccountScreen() {
 
   const handleRemove = () => {
     if (checkState) {
-      API.delete("/user", {
+      API.delete("/user/delete", {
         headers: {
           Authorization: token, // 토큰을 Bearer 스타일로 보냅니다.
         },

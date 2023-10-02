@@ -175,7 +175,7 @@ function StatisticsBox({ percentage }) {
       <View style={styles.totalBox}>
         <View style={styles.totalTextBox}>
           <View>{percentageTextFormat(percentage)}</View>
-          <Pressable style={{ marginTop: 10 }}>
+          <Pressable style={{ marginTop: 10 }} onPress={() => navigation.navigate("AllEvent")}>
             <Text style={{ fontFamily: "font-M", color: "#8E8E8E" }}>자세히 보기 {">"}</Text>
           </Pressable>
         </View>
@@ -206,7 +206,7 @@ function ComingEventBox({ data }) {
         if (data.eventDisplayName === null) {
           return null;
         } else {
-          navigation.navigate("ComingEvent", { eventId: data.eventId });
+          navigation.navigate("ComingEvent", { eventId: data.eventId, eventType: data.eventType });
         }
       }}
     >
