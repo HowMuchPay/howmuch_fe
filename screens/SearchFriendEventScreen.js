@@ -10,7 +10,7 @@ import { FlatList } from "react-native";
 import lineImg from "../assets/images/line01.png";
 import searchImg from "../assets/images/icon_search_gray.png";
 
-const SearchMyEventScreen = () => {
+const SearchFriendEventScreen = () => {
   const [text, setText] = useState("");
   const [showClearButton, setShowClearButton] = useState(false);
   const [data, setData] = useState([]);
@@ -30,7 +30,7 @@ const SearchMyEventScreen = () => {
   const fetchData = async () => {
     try {
       // 데이터를 가져오는 axios 요청을 보냅니다.
-      const response = await API.get(`/event/my/people`, {
+      const response = await API.get(`/event/acquaintance/name`, {
         headers: {
           Authorization: token,
           "Content-Type": "application/json",
@@ -120,7 +120,7 @@ const SearchMyEventScreen = () => {
   );
 };
 
-export default SearchMyEventScreen;
+export default SearchFriendEventScreen;
 
 const styles = StyleSheet.create({
   allContainer: {

@@ -245,7 +245,7 @@ function PayListBox({ handleFilter, fetchData, handleSearchChange, searchText })
             <TextInput style={styles.eventInput} fontSize={15} onChangeText={handleSearchChange} value={searchText} placeholder="이름을 입력해주세요" placeholderTextColor="#ccc" />
             <Image style={{ width: 22, height: 22, position: "absolute", top: 0, left: 0 }} source={require("../assets/images/icon_search_black.png")} />
           </View> */}
-          <TouchableOpacity style={styles.filterSearchIcon} onPress={() => navigation.navigate("SearchMyEventScreen")}>
+          <TouchableOpacity style={styles.filterSearchIcon} onPress={() => navigation.navigate("SearchFriendEventScreen")}>
             <Image style={{ width: 24, height: 24 }} source={require("../assets/images/icon_search_black.png")} />
           </TouchableOpacity>
 

@@ -82,8 +82,8 @@ function MenuArea() {
 export default function HandleDrawer() {
   const store = useAppStore();
   const token = store.token;
-  // const clearToken = useAppStore((state) => state.clearToken);
-
+  const clearToken = useAppStore((state) => state.clearToken);
+  const navigation = useNavigation();
   // useEffect(() => {
   //   // 앱이 시작될 때 토큰을 clear 하고 싶은 경우 여기에서 clearToken 함수를 호출합니다.
   //   clearToken();
@@ -91,7 +91,6 @@ export default function HandleDrawer() {
 
   useEffect(() => {
     console.log("token", token);
-    console.log("test2", `Bearer ${token}`);
     API.get(`/home`, {
       headers: {
         Authorization: token,
@@ -105,6 +104,11 @@ export default function HandleDrawer() {
       })
       .catch((err) => {
         console.log(err);
+        if (err.response && err.response.status === 403) {
+          // 403 에러가 발생한 경우 토큰을 삭제하고 로그인 페이지로 이동합니다.
+          clearToken();
+          navigation.navigate("Login");
+        }
       });
   }, []);
 

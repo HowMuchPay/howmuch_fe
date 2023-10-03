@@ -28,6 +28,8 @@ import MainScreen from "../screens/MainScreen";
 import AllEventScreen from "../screens/AllEventScreen";
 import FriendEventDetailScreen from "../screens/FriendEventDetailScreen";
 import RemoveAccountScreen from "../screens/auth/RemoveAccountScreen";
+import SearchMyAllEventScreen from "../screens/SearchMyAllEventScreen";
+import SearchFriendEventScreen from "../screens/SearchFriendEventScreen";
 
 function HeaderTitle(props) {
   return (
@@ -324,6 +326,40 @@ export default function Navigation() {
       <Stack.Screen
         name="SearchMyEventScreen"
         component={SearchMyEventScreen}
+        options={{
+          title: "검색",
+          headerStyle: { backgroundColor: "transparent" },
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            fontFamily: "font-B",
+            fontSize: 17,
+            color: "#1f1f1f",
+          },
+          headerLeft: () => <BackBtn />,
+          headerBackTitleVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="SearchMyAllEventScreen"
+        component={SearchMyAllEventScreen}
+        options={{
+          title: "",
+          headerStyle: { backgroundColor: "transparent" },
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            fontFamily: "font-B",
+            fontSize: 17,
+            color: "#1f1f1f",
+          },
+          headerLeft: () => <BackBtn />,
+          headerBackTitleVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="SearchFriendEventScreen"
+        component={SearchFriendEventScreen}
         options={{
           title: "검색",
           headerStyle: { backgroundColor: "transparent" },
