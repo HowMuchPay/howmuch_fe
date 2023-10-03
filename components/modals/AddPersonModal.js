@@ -7,7 +7,7 @@ const AddPersonModal = ({ visible, id, eventNum }) => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(visible);
   return (
-    <Modal isVisible={modalVisible === true} transparent={true} onBackdropPress={() => setModalVisible(false)}>
+    <Modal isVisible={modalVisible === true} transparent={true}>
       <View style={styles.recommendModalBox}>
         <Text style={styles.recommendModalTitle}>신규인원이 저장되었습니다.</Text>
 

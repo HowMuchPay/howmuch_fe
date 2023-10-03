@@ -328,7 +328,7 @@ function MyEventPersonPlusButton() {
         <Image style={{ width: 24, height: 24 }} source={require("../assets/images/icon_plus_black.png")} />
       </TouchableOpacity>
 
-      <Modal isVisible={modalVisible === true} transparent={true} onBackdropPress={() => setModalVisible(false)} animationIn="slideInUp">
+      <Modal isVisible={modalVisible === true} transparent={true} useNativeDriverForBackdrop={true} onBackdropPress={() => setModalVisible(false)} animationIn="slideInUp">
         <View style={styles.recommendModalBox}>
           <Text style={styles.recommendModalTitle}>신규 인원을 추가하시겠습니까?</Text>
 
