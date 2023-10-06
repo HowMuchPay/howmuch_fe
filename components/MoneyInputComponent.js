@@ -102,7 +102,7 @@ export default function MoneyInputComponent({ handleButtonClick, handleAddData, 
       <View style={styles.nameInputBox}>
         <TextInput
           style={styles.nameInput}
-          placeholder={recommend ? (recommendMoney !== 0 ? recommendMoney : "아직 데이터가 쌓이지 않았어요") : "경조사비를 입력해주세요"}
+          placeholder={recommend ? (recommendMoney !== 0 ? `${recommendMoney.toString()}만원을 추천해요` : "아직 데이터가 쌓이지 않았어요") : "경조사비를 입력해주세요"}
           //   onSubmitEditing={handleButtonClick}
           keyboardType="numeric"
           value={textInputValue}

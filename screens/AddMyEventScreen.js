@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, ScrollView } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, ScrollView, StatusBar } from "react-native";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as Progress from "react-native-progress";
 import CalendarSelectComponent from "../components/CalendarSelectComponent";
@@ -63,6 +63,8 @@ export default function AddMyEventScreen() {
 
   return (
     <View style={[styles.container, changeBackground]}>
+      <StatusBar backgroundColor="#F3F3FF" barStyle="dark-content" />
+
       <View style={styles.inner}>
         <TouchableOpacity onPress={handlePresentModalPress}>
           <Text>modal</Text>

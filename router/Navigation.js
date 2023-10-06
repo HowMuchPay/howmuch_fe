@@ -4,7 +4,7 @@ import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import HandleDrawer from "./HandleDrawer";
 
 import MyEventScreen from "../screens/MyEventScreen";
-import { Button, Image, Text, TouchableOpacity, View, StyleSheet } from "react-native";
+import { Button, Image, Text, TouchableOpacity, View, StyleSheet, Pressable, TouchableHighlight } from "react-native";
 import { StatusBar } from "react-native";
 import BackIcon from "../assets/images/icon_back.png";
 import FriendEventScreen from "../screens/FriendEventScreen";
@@ -30,6 +30,7 @@ import FriendEventDetailScreen from "../screens/FriendEventDetailScreen";
 import RemoveAccountScreen from "../screens/auth/RemoveAccountScreen";
 import SearchMyAllEventScreen from "../screens/SearchMyAllEventScreen";
 import SearchFriendEventScreen from "../screens/SearchFriendEventScreen";
+import Boarding from "../screens/auth/Boarding";
 
 function HeaderTitle(props) {
   return (
@@ -56,22 +57,23 @@ function MyEventPlusButton() {
         <Image style={{ width: 24, height: 24 }} source={require("../assets/images/icon_plus_black.png")} />
       </TouchableOpacity>
 
-      <Modal isVisible={modalVisible === true} transparent={true} onBackdropPress={() => setModalVisible(false)} useNativeDriverForBackdrop={true}>
+      <Modal isVisible={modalVisible === true} transparent={true} onBackdropPress={() => setModalVisible(false)} useNativeDriverForBackdrop={true} animationIn="slideInUp">
         <View style={styles.recommendModalBox}>
           <Text style={styles.recommendModalTitle}>다음 작업을 선택해주세요</Text>
 
           <View style={styles.recommendModalBtnBox}>
-            <TouchableOpacity style={[styles.recommendModalBtn, { backgroundColor: "#f3f3ff" }]}>
+            <TouchableHighlight underlayColor="#6D61FF" style={[styles.recommendModalBtn, { backgroundColor: "#f3f3ff" }]}>
               <Text style={styles.recommendModalBtnText}>엑셀 내보내기</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
+            </TouchableHighlight>
+            <TouchableHighlight
+              underlayColor="#6D61FF"
               onPress={() => {
                 navigation.navigate("AddMyEventScreen");
               }}
-              style={[styles.recommendModalBtn, { backgroundColor: "#6D61FF" }]}
+              style={[styles.recommendModalBtn, { backgroundColor: "#f3f3ff" }]}
             >
-              <Text style={[styles.recommendModalBtnText, { color: "#fff" }]}>신규 등록하기</Text>
-            </TouchableOpacity>
+              <Text style={[styles.recommendModalBtnText]}>신규 등록하기</Text>
+            </TouchableHighlight>
           </View>
         </View>
       </Modal>
@@ -153,6 +155,14 @@ function TotalPage() {
   );
 }
 
+const CustomHeaderButton = ({ onPress, icon }) => {
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <Image source={icon} style={{ height: 24, width: 24 }} />
+    </TouchableOpacity>
+  );
+};
+
 export default function Navigation() {
   const Stack = createNativeStackNavigator();
   const [token, setToken] = useAppStore((state) => [state.token, state.setToken]);
@@ -163,11 +173,17 @@ export default function Navigation() {
   //   if (token) navigation.navigate("Drawer");
   // }, [token]);
 
+  const handleCustomButtonPress = () => {
+    // Handle custom button press logic here
+    // For example, navigate to Drawer screen
+    navigation.navigate("Drawer");
+  };
+
   StatusBar.setBarStyle("dark-content");
 
   return (
     <Stack.Navigator initialRouteName={token ? "Drawer" : "Login"} screenOptions={{ headerTransparent: true }}>
-      {/* <Stack.Screen name="Boarding" component={Boarding}/> */}
+      {/* <Stack.Screen name="Boarding" component={Boarding} /> */}
       {/* <Stack.Screen name="KakaoLogin" component={KakaoLogin} options={{ headerShown: false }} /> */}
 
       <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
@@ -176,7 +192,7 @@ export default function Navigation() {
       <Stack.Screen
         name="MyEvent"
         component={MyEventScreen}
-        options={{
+        options={({ route }) => ({
           title: "나의 경조사",
           headerStyle: { backgroundColor: "#F3F3FF" },
           headerTitleAlign: "center",
@@ -185,17 +201,17 @@ export default function Navigation() {
             fontSize: 17,
             color: "#1f1f1f",
           },
-          headerLeft: () => <BackBtn />,
+          headerLeft: () => <CustomHeaderButton onPress={handleCustomButtonPress} icon={BackIcon} />,
           headerBackTitleVisible: false,
           headerRight: () => <MyEventPlusButton />,
-        }}
+        })}
       />
       <Stack.Screen
         name="MyEventDetailScreen"
         component={MyEventDetailScreen}
         options={{
           title: "",
-          headerStyle: { backgroundColor: "transparent" },
+          headerStyle: { backgroundColor: "#F3F3FF" },
           headerTitleAlign: "center",
           headerTitleStyle: {
             fontFamily: "font-B",
@@ -227,7 +243,7 @@ export default function Navigation() {
       <Stack.Screen
         name="FriendEvent"
         component={FriendEventScreen}
-        options={{
+        options={({ route }) => ({
           title: "지인의 경조사",
           headerStyle: { backgroundColor: "#F3F3FF" },
           headerTitleAlign: "center",
@@ -236,10 +252,10 @@ export default function Navigation() {
             fontSize: 17,
             color: "#1f1f1f",
           },
-          headerLeft: () => <BackBtn />,
+          headerLeft: () => <CustomHeaderButton onPress={handleCustomButtonPress} icon={BackIcon} />,
           headerBackTitleVisible: false,
           headerRight: () => <FriendEventPlusButton />,
-        }}
+        })}
       />
       <Stack.Screen
         name="FriendEventDetailScreen"

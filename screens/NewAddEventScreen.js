@@ -27,8 +27,8 @@ export default function NewAddEventScreen() {
             <Text style={styles.addBtnText}>나의 경조사</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity onPress={() => setModalVisible(true)} style={[styles.addBtn, { backgroundColor: "#6D61FF" }]}>
-            <Text style={[styles.addBtnText, { color: "#fff" }]}>지인의 경조사</Text>
+          <TouchableOpacity onPress={() => setModalVisible(true)} style={[styles.addBtn, { backgroundColor: "#F3F3FF" }]}>
+            <Text style={[styles.addBtnText]}>지인의 경조사</Text>
           </TouchableOpacity>
 
           <Modal isVisible={modalVisible === true} useNativeDriverForBackdrop={true} transparent={true} onBackdropPress={() => setModalVisible(false)}>

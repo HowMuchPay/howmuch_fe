@@ -6,7 +6,7 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-nat
 import * as Contacts from "expo-contacts";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import CircularProgress from "react-native-circular-progress-indicator";
-import { useAppStore } from "../stores/store";
+import { checkAndUpdateToken, useAppStore } from "../stores/store";
 import { API } from "../stores/api";
 
 export default function MainScreen({}) {
@@ -26,7 +26,7 @@ export default function MainScreen({}) {
 
   useEffect(() => {
     fetchData();
-  }, [isFocused]);
+  }, [isFocused, token]);
 
   // useEffect(() => {
   //   (async () => {
@@ -48,8 +48,6 @@ export default function MainScreen({}) {
   // }, []);
 
   const fetchData = async () => {
-    console.log("home", token);
-    console.log("test", `Bearer ${token}`);
     try {
       // 데이터를 가져오는 axios 요청을 보냅니다.
       const response = await API.get("/home", {
@@ -65,6 +63,12 @@ export default function MainScreen({}) {
       setData(newData);
     } catch (error) {
       console.error("데이터를 불러오는 중 오류가 발생했습니다.", error);
+      // if (error.response && error.response.status === 403) {
+      //   await checkAndUpdateToken(); // 새로운 토큰을 받아옵니다.
+      //   fetchData(); // 토큰을 갱신한 후 다시 데이터를 가져옵니다.
+      // } else {
+      //   console.error("데이터를 불러오는 중 오류가 발생했습니다.", error);
+      // }
     }
   };
 

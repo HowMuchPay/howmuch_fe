@@ -15,10 +15,12 @@ import event4 from "../assets/images/event_icon_4.png";
 import trashIcon from "../assets/images/trash_icon.svg";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { TextInput } from "react-native-gesture-handler";
+import lineImg from "../assets/images/line01.png";
 
 export default function MyEventScreen() {
   const store = useAppStore();
   const token = store.token;
+  const refreshToken = store.refreshToken;
   const [data, setData] = useState(null);
   const isFocused = useIsFocused();
 
@@ -32,9 +34,9 @@ export default function MyEventScreen() {
     fetchData();
   }, [isFocused]);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   fetchData();
+  // }, []);
 
   const fetchData = async () => {
     try {
@@ -114,7 +116,7 @@ export default function MyEventScreen() {
         <View style={styles.inner}>
           <TouchableOpacity
             onPress={() => {
-              API.get("/event/my/people/filter?name=김철수", {
+              API.get("/calendar/statistics?time=2023-10", {
                 headers: {
                   Authorization: token,
                   "Content-Type": "application/json",
@@ -122,7 +124,8 @@ export default function MyEventScreen() {
               })
                 .then((response) => {
                   console.log("성공적으로 get 요청을 보냈습니다.", response.data);
-                  console.log(response.data);
+                  console.log(response.data.statisticsListResponse);
+
                   // console.log(response.data.allAcEvents);
                 })
                 .catch((error) => {
@@ -133,7 +136,7 @@ export default function MyEventScreen() {
             <Text>get</Text>
           </TouchableOpacity>
 
-          {/* <TouchableOpacity
+          <TouchableOpacity
             onPress={() => {
               const postData = {
                 acName: "로컬 테스트",
@@ -143,9 +146,10 @@ export default function MyEventScreen() {
                 eventAt: "2023-08-30",
               };
 
-              API.post("/event/acquaintance", postData, {
+              API.post(`/user/reissue`, null, {
                 headers: {
                   Authorization: token,
+                  "Refresh-Token": refreshToken,
                 },
               })
                 .then((response) => {
@@ -157,7 +161,36 @@ export default function MyEventScreen() {
             }}
           >
             <Text>post</Text>
-          </TouchableOpacity> */}
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              const postData = {
+                acName: "로컬 테스트",
+                acType: 3,
+                eventCategory: 0,
+                payAmount: 300000,
+                eventAt: "2023-08-30",
+              };
+
+              API.put(`/user/phone?phone=010-1234-1234`, null, {
+                headers: {
+                  Authorization: token,
+                  "Content-Type": "application/json",
+                  // "Refresh-Token": `Bearer ${refreshToken}`,
+                },
+              })
+                .then((response) => {
+                  console.log("성공적으로 POST 요청을 보냈습니다.", response.data);
+                })
+                .catch((error) => {
+                  console.error("POST 요청을 보내는 중 오류가 발생했습니다.", error);
+                });
+            }}
+          >
+            <Text>put</Text>
+          </TouchableOpacity>
+
           {item ? (
             <>
               <NowGetMoneyBox data={item} />
@@ -395,7 +428,9 @@ function PayList({ data, handleDelete, searchText }) {
         console.log("filter", filteredEvents.length);
         return (
           <View key={key} style={{ paddingHorizontal: 20 }}>
-            {index !== 0 ? <View style={{ height: 0.3, backgroundColor: "#ccc", marginVertical: 30 }}></View> : null}
+            {/* {index !== 0 ? <View style={{ height: 0.3, backgroundColor: "#ccc", marginVertical: 30 }}></View> : null} */}
+            {index !== 0 ? <Image source={lineImg} style={{ width: "100%", marginTop: 15, marginBottom: 30 }} /> : null}
+
             {/* 
             {filteredEvents.length === 0 && (
               <View style={[styles.payListBox, { height: 480, alignItems: "center", justifyContent: "center" }]}>

@@ -15,7 +15,7 @@ const signInWithKakao = async () => {
 
 export default function LoginScreen() {
   const [token, setToken] = useAppStore((state) => [state.token, state.setToken]);
-  const [refreshToken, setRefreshToken] = useAppStore((state) => [state.token, state.setToken]);
+  const [refreshToken, setRefreshToken] = useAppStore((state) => [state.refreshToken, state.setRefreshToken]);
   const [errorMsg, setErrorMsg] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
@@ -63,11 +63,13 @@ export default function LoginScreen() {
         console.log("img", kakaoProfile.profileImageUrl);
         if (data["accessToken"]) {
           setToken(data["accessToken"]);
+          setRefreshToken(data["refreshToken"]);
           console.log("access", data["accessToken"]);
           console.log("refresh", data["refreshToken"]);
+
           // setRefreshToken(data["refreshToken"]);
-          AsyncStorage.setItem("authToken", data["accessToken"]);
-          AsyncStorage.setItem("refreshToken", data["refreshToken"]);
+          // AsyncStorage.setItem("authToken", data["accessToken"]);
+          // AsyncStorage.setItem("refreshToken", data["refreshToken"]);
         }
       }
     })()
