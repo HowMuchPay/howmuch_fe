@@ -95,7 +95,7 @@ const TimeSelectComponent = ({ handleButtonClick }) => {
           {/* <Image style={{ width: 24, height: 24 }} source={require("../assets/images/icon_calendar.png")} /> */}
           {showDatePicker && Platform.OS === "android" && <DateTimePicker mode="time" display="spinner" value={date} onChange={onChange} style={styles.datePicker} />}
         </TouchableOpacity>
-        <Pressable style={{ marginHorizontal: 20, marginVertical: 20 }} onPress={toggleNotDecide}>
+        <Pressable style={{ marginHorizontal: 10, marginVertical: 20 }} onPress={toggleNotDecide}>
           <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
             {notDecide ? (
               <WithLocalSvg width={20} height={20} asset={checkColorIcon} style={{ marginRight: 10 }} />

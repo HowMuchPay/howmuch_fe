@@ -13,14 +13,14 @@ export default function FriendEventDetailScreen() {
   const route = useRoute();
   const store = useAppStore();
   const token = store.token;
+  const isFocused = useIsFocused();
 
   const { id, eventNum } = route.params;
 
   const [data, setData] = useState([]);
+  const currentDate = new Date();
 
   let selectedEvent;
-
-  const isFocused = useIsFocused();
 
   useEffect(() => {
     fetchData();
@@ -60,26 +60,33 @@ export default function FriendEventDetailScreen() {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.inner}>
-        <View style={styles.comingBox}>
-          <View style={styles.comingRelationBox}>
-            <Text style={styles.comingRelation}>{data.acType}</Text>
-          </View>
-          <View style={styles.comingTitleBox}>
-            <Image style={{ width: 24, height: 24 }} source={eventNum === 0 ? event0 : eventNum === 1 ? event1 : eventNum === 2 ? event2 : eventNum === 3 ? event3 : eventNum === 4 ? event4 : null} />
-            <Text style={styles.comingTitle}>{data.acEventDisplayName}</Text>
-            <Text style={styles.comingDate}>{data.eventAt}</Text>
-            <View style={styles.comingDdayBox}>
-              <Text style={styles.comingDday}>D{data["d-day"]}</Text>
+        {data && data.acType !== undefined && (
+          <View style={styles.comingBox}>
+            <View style={styles.comingRelationBox}>
+              <Text style={styles.comingRelation}>{data.acType === 0 ? "가족" : data.acType === 1 ? "친구" : data.acType === 2 ? "동료" : data.acType === 3 ? "친척" : "기타"}</Text>
+            </View>
+            <View style={styles.comingTitleBox}>
+              <Image
+                style={{ width: 24, height: 24 }}
+                source={eventNum === 0 ? event0 : eventNum === 1 ? event1 : eventNum === 2 ? event2 : eventNum === 3 ? event3 : eventNum === 4 ? event4 : null}
+              />
+              <Text style={styles.comingTitle}>{data.acEventDisplayName}</Text>
+              <Text style={styles.comingDate}>
+                {data.eventAt.split("-")[0]}년 {data.eventAt.split("-")[1]}월 {data.eventAt.split("-")[2]}일
+              </Text>
+              <View style={styles.comingDdayBox}>
+                <Text style={styles.comingDday}>D{data["d-day"]}</Text>
+              </View>
+            </View>
+            <View style={styles.comingPayBox}>
+              <View style={styles.comingPayLine}></View>
+              <View style={styles.comingPayTextBox}>
+                <Text style={styles.comingPayMoney}>{data.payAmount.toLocaleString()}원</Text>
+                <Text style={styles.comingPayMoneyDes}>{currentDate < new Date(data.eventAt) ? "을 낼 거예요" : "을 냈어요"}</Text>
+              </View>
             </View>
           </View>
-          <View style={styles.comingPayBox}>
-            <View style={styles.comingPayLine}></View>
-            <View style={styles.comingPayTextBox}>
-              <Text style={styles.comingPayMoney}>{data.payAmount}원</Text>
-              <Text style={styles.comingPayMoneyDes}>을 낼 거예요</Text>
-            </View>
-          </View>
-        </View>
+        )}
         <TouchableOpacity style={styles.modifyBtn}>
           <Text style={styles.modifyBtnText}>수정하기</Text>
         </TouchableOpacity>

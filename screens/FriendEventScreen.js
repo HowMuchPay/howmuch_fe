@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image, Button, Pressable, FlatList, Alert } from "react-native";
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image, Button, Pressable, FlatList, Alert, StatusBar } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 
 import Modal from "react-native-modal";
@@ -15,6 +15,7 @@ import event4 from "../assets/images/event_icon_4.png";
 import trashIcon from "../assets/images/trash_icon.svg";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { TextInput } from "react-native-gesture-handler";
+import lineImg from "../assets/images/line01.png";
 
 export default function FriendEventScreen() {
   const store = useAppStore();
@@ -112,6 +113,8 @@ export default function FriendEventScreen() {
       keyExtractor={(item, index) => index.toString()}
       renderItem={({ item }) => (
         <View style={styles.inner}>
+          <StatusBar backgroundColor="#F3F3FF" barStyle="dark-content" />
+
           {item ? (
             <>
               <NowGetMoneyBox data={item} />
@@ -351,7 +354,9 @@ function PayList({ data, handleDelete, searchText }) {
         // console.log("filter", filteredEvents.length);
         return (
           <View key={key} style={{ paddingHorizontal: 20 }}>
-            {index !== 0 ? <View style={{ height: 0.3, backgroundColor: "#ccc", marginVertical: 30 }}></View> : null}
+            {/* {index !== 0 ? <View style={{ height: 0.3, backgroundColor: "#ccc", marginVertical: 30 }}></View> : null} */}
+            {index !== 0 ? <Image source={lineImg} style={{ width: "100%", marginTop: 15, marginBottom: 30 }} /> : null}
+
             {/* 
             {filteredEvents.length === 0 && (
               <View style={[styles.payListBox, { height: 480, alignItems: "center", justifyContent: "center" }]}>

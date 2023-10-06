@@ -15,6 +15,7 @@ import event4 from "../assets/images/event_icon_4.svg";
 import trashIcon from "../assets/images/trash_icon.svg";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { TextInput } from "react-native-gesture-handler";
+import lineImg from "../assets/images/line01.png";
 
 export default function AllEventScreen() {
   const store = useAppStore();
@@ -48,7 +49,7 @@ export default function AllEventScreen() {
       const newData = response.data; // 새로운 데이터
 
       // 상태를 업데이트하고 화면을 다시 렌더링합니다.
-      console.log(newData.allAcEvents);
+      console.log(newData.allCombineEvents);
       setData(newData);
     } catch (error) {
       console.error("데이터를 불러오는 중 오류가 발생했습니다.", error);
@@ -313,10 +314,10 @@ function PayList({ data, handleDelete, searchText }) {
   return (
     <FlatList
       style={styles.allContainer}
-      data={Object.keys(data.allAcEvents)}
+      data={Object.keys(data.allCombineEvents)}
       keyExtractor={(key) => key}
       renderItem={({ item: key, index }) => {
-        const events = data.allAcEvents[key];
+        const events = data.allCombineEvents[key];
         const formattedKey = formatKey(key);
 
         // 검색어에 따라 이벤트 필터링
@@ -336,7 +337,9 @@ function PayList({ data, handleDelete, searchText }) {
         // console.log("filter", filteredEvents.length);
         return (
           <View key={key} style={{ paddingHorizontal: 20 }}>
-            {index !== 0 ? <View style={{ height: 0.3, backgroundColor: "#ccc", marginVertical: 30 }}></View> : null}
+            {/* {index !== 0 ? <View style={{ height: 0.3, backgroundColor: "#ccc", marginVertical: 30 }}></View> : null} */}
+            {index !== 0 ? <Image source={lineImg} style={{ width: "100%", marginTop: 15, marginBottom: 30 }} /> : null}
+
             {/* 
             {filteredEvents.length === 0 && (
               <View style={[styles.payListBox, { height: 480, alignItems: "center", justifyContent: "center" }]}>
@@ -347,48 +350,43 @@ function PayList({ data, handleDelete, searchText }) {
             <View style={{}}>
               <Text style={{ fontFamily: "font-B", fontSize: 14, color: "#1f1f1f", marginBottom: 10 }}>{formattedKey}</Text>
 
-              <SwipeListView
+              <FlatList
                 data={events}
                 renderItem={(data, rowMap) => {
                   let selectedEvent;
 
-                  if (data.item.eventCategory === 0) {
+                  if (data.item.category === 0) {
                     selectedEvent = event0;
-                  } else if (data.item.eventCategory === 1) {
+                  } else if (data.item.category === 1) {
                     selectedEvent = event1;
-                  } else if (data.item.eventCategory === 2) {
+                  } else if (data.item.category === 2) {
                     selectedEvent = event2;
-                  } else if (data.item.eventCategory === 3) {
+                  } else if (data.item.category === 3) {
                     selectedEvent = event3;
-                  } else if (data.item.eventCategory === 4) {
+                  } else if (data.item.category === 4) {
                     selectedEvent = event4;
                   }
 
                   return (
-                    <Pressable style={styles.rowFront} /*onPress={() => navigation.navigate("MyEventDetailScreen", { id: data.item.id, eventNum: data.item.eventCategory })}*/>
+                    <View style={styles.rowFront}>
                       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
                         <View style={{ width: 40, height: 40, borderRadius: 50, marginRight: 10 }}>
                           <WithLocalSvg width={40} height={40} asset={selectedEvent} style={{ marginRight: 15 }} />
                         </View>
                         <View style={{}}>
-                          <Text style={{ fontSize: 14, fontFamily: "font-M", color: "#1f1f1f" }}>{data.item.acEventDisplayName}</Text>
+                          <Text style={{ fontSize: 14, fontFamily: "font-M", color: "#1f1f1f" }}>{data.item.displayName}</Text>
                           <Text style={{ fontSize: 13, fontFamily: "font-R", color: "#5f5f5f" }}>{formatDate(data.item.eventAt)}</Text>
                         </View>
                       </View>
-                      <Text style={{ fontSize: 15, color: "#1f1f1f", fontFamily: "font-B" }}>{data.item.payAmount !== 0 ? `+${data.item.payAmount.toLocaleString()}원` : `0원`}</Text>
-                    </Pressable>
+                      {console.log("all", data)}
+                      {data.item.eventType === "MyEvent" ? (
+                        <Text style={{ fontSize: 15, color: "#E21068", fontFamily: "font-B" }}>{data.item.amount !== 0 ? `+${data.item.amount.toLocaleString()}원` : `0원`}</Text>
+                      ) : (
+                        <Text style={{ fontSize: 15, color: "#6D61FF", fontFamily: "font-B" }}>{data.item.amount !== 0 ? `-${data.item.amount.toLocaleString()}원` : `0원`}</Text>
+                      )}
+                    </View>
                   );
                 }}
-                renderHiddenItem={(data, rowMap) => (
-                  <View style={styles.rowBack}>
-                    {console.log(data.item.id)}
-                    <TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnLeft]} onPress={() => handleDelete(data.item.id)}>
-                      <WithLocalSvg width={24} height={24} asset={trashIcon} />
-                    </TouchableOpacity>
-                  </View>
-                )}
-                rightOpenValue={-70}
-                disableRightSwipe
               />
             </View>
           </View>

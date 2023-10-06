@@ -2,6 +2,7 @@ import { create, GetState } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import moment from "moment";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect } from "react";
 
 export const useAppStore = create(
   persist(
@@ -9,8 +10,10 @@ export const useAppStore = create(
       token: "",
       refreshToken: "",
       name: "",
-      setRefreshToken: (token) => set({ ...get(), refreshToken: refreshToken }),
+      expiredTime: null,
+      setRefreshToken: (refreshToken) => set({ ...get(), refreshToken: refreshToken }),
       setToken: (token) => set({ ...get(), token: token }),
+      setExpiredTime: (time) => set({ ...get(), expiredTime: time }),
       setName: (name) => set({ ...get(), name: name }),
       clearToken: () => set({ token: null }),
     }),
@@ -21,16 +24,28 @@ export const useAppStore = create(
   )
 );
 
-// export const useAppStore = create(
-//   persist(
-//     (set) => ({
-//       token: null, // 토큰 상태
-//       login: (token) => set({ token }), // 로그인 함수
-//       logout: () => set({ token: null }), // 로그아웃 함수
-//     }),
-//     {
-//       name: "auth-store", // 저장소 이름
-//       version: 1, // 저장소 버전
-//     }
-//   )
-// );
+export const checkAndUpdateToken = async () => {
+  const { expiredTime, refreshToken, setToken, setExpiredTime, setRefreshToken } = useAppStore.getState();
+  const currentTime = moment();
+
+  if (expiredTime && currentTime.isBefore(expiredTime)) {
+    try {
+      const response = await API.post(`/user/reissue`, null, {
+        headers: {
+          Authorization: token,
+          "Refresh-Token": refreshToken,
+        },
+      });
+      const data = response.data;
+      const newToken = data["accessToken"]; // 새로운 토큰 값
+      const newRefreshToken = data["refreshToken"];
+      const newExpiredTime = moment().add(1, "hour"); // 1시간 뒤의 시간으로 설정
+
+      setToken(newToken);
+      setRefreshToken(newRefreshToken);
+      setExpiredTime(newExpiredTime);
+    } catch (error) {
+      console.error("토큰 갱신 중 오류 발생:", error);
+    }
+  }
+};

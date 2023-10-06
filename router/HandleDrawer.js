@@ -89,28 +89,28 @@ export default function HandleDrawer() {
   //   clearToken();
   // }, []);
 
-  useEffect(() => {
-    console.log("token", token);
-    API.get(`/home`, {
-      headers: {
-        Authorization: token,
-        "Content-Type": "application/json",
-      },
-    })
-      .then((results) => {
-        const data = results.data;
-        console.log(results);
-        console.log(data);
-      })
-      .catch((err) => {
-        console.log(err);
-        if (err.response && err.response.status === 403) {
-          // 403 에러가 발생한 경우 토큰을 삭제하고 로그인 페이지로 이동합니다.
-          clearToken();
-          navigation.navigate("Login");
-        }
-      });
-  }, []);
+  // useEffect(() => {
+  //   console.log("token", token);
+  // API.get(`/home`, {
+  //   headers: {
+  //     Authorization: token,
+  //     "Content-Type": "application/json",
+  //   },
+  // })
+  //   .then((results) => {
+  //     const data = results.data;
+  //     console.log(results);
+  //     console.log(data);
+  //   })
+  //   .catch((err) => {
+  //     console.log(err);
+  //     if (err.response && err.response.status === 403) {
+  //       // 403 에러가 발생한 경우 토큰을 삭제하고 로그인 페이지로 이동합니다.
+  //       clearToken();
+  //       navigation.navigate("Login");
+  //     }
+  //   });
+  // }, []);
 
   return (
     <Drawer.Navigator initialRouteName="Main" useLegacyImplementation={true} screenOptions={{ drawerPosition: "left", headerShown: false }} drawerContent={() => <SideScreen />}>
