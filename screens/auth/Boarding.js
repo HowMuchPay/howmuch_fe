@@ -1,33 +1,49 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import { Text, View, FlatList, StyleSheet, Animated, Alert, TouchableOpacity } from "react-native";
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { StatusBar } from "expo-status-bar";
+import * as React from "react";
+import { StyleSheet, Text, View, FlatList, Animated, Image, TouchableOpacity, Pressable } from "react-native";
+import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
+import { useNavigation } from "@react-navigation/native";
 
 const DATA = [
-  { title: "title1", description: "애매한 사이인데 \n축의금을 얼마 내야 하지.. \n고민되시나요?" },
-  { title: "title2", description: "축의금을 관리하기\n번거로우신가요?" },
-  { title: "title3", description: "축의금 관리\n얼마나에서 함께 시작해요" },
+  {
+    title: "오잉 이전 직장동료에게 \n청첩장이 왔네?!",
+    description: "Loren ipsum is simply dummy text of the printing and typesetting industry.",
+    images: require("../../assets/images/boarding_1.png"),
+  },
+  {
+    title: "퇴사하고 연락한 적 없고 \n그다지 친하지도 않았는데….",
+    description: "Loren ipsum is simply dummy text of the printing and typesetting industry.",
+    images: require("../../assets/images/boarding_2.png"),
+  },
+  {
+    title: "정말 난감하네...! \n얼마나 내야 할지 고민이야",
+    description: "Loren ipsum is simply dummy text of the printing and typesetting industry.",
+    images: require("../../assets/images/boarding_3.png"),
+  },
 ];
 
 export default function Boarding() {
   const scrollX = new Animated.Value(0);
-  const animation = useRef(null);
+  const animation = React.useRef(null);
+  const navigation = useNavigation();
 
   const renderItem = ({ item, index }) => {
     return (
-      <View style={{ flex: 1, backgroundColor: "#fff" }}>
-        <Text style={styles.description}>{item.description}</Text>
+      <View style={{ width: wp(100), height: hp(100), backgroundColor: "#fff", paddingTop: hp(10) }}>
+        <Text style={{ marginTop: hp(5), fontFamily: "font-B", fontSize: 26, lineHeight: 38, paddingLeft: 20 }}>{item.title}</Text>
+
+        <View style={{ alignItems: "center", marginTop: 62 }}>
+          <Image style={{ width: 230, height: 230 }} source={item.images} />
+        </View>
       </View>
     );
   };
-
   return (
-    <View style={{ flex: 1 }}>
-      <StatusBar style="auto" />
+    <View style={styles.container}>
       <Animated.FlatList
-        horizontal
-        pagingEnabled
         showsHorizontalScrollIndicator={false}
+        pagingEnabled
+        horizontal
         data={DATA}
         keyExtractor={(item, index) => index.toString()}
         renderItem={renderItem}
@@ -44,53 +60,68 @@ export default function Boarding() {
           { useNativeDriver: true }
         )}
       />
-      <View style={{ flexDirection: "row", marginBottom: 150 }}>
+      <View style={{ position: "absolute", bottom: hp(38), flexDirection: "row" }}>
         {DATA.map((item, index) => {
-          const bgcolor = scrollX.interpolate({
+          const opacity = scrollX.interpolate({
             inputRange: [(index - 1) * wp(100), index * wp(100), (index + 1) * wp(100)],
-            outputRange: ["rgb(104, 169, 77)", "rgb(35, 22, 77)", "rgb(104, 169, 77)"],
+            outputRange: [0.3, 1, 0.3],
             extrapolate: "clamp",
           });
-          const animatedStyles = {
-            backgroundColor: bgcolor,
-          };
-          console.log(animatedStyles);
+          const scale = scrollX.interpolate({
+            inputRange: [(index - 1) * wp(100), index * wp(100), (index + 1) * wp(100)],
+            outputRange: [1, 1, 1],
+            extrapolate: "clamp",
+          });
           return (
-            <View style={{ alignItems: "center" }}>
-              <Animated.View key={index} style={[styles.circle]} />
-            </View>
+            <Animated.View
+              key={index}
+              style={{
+                width: 8,
+                height: 8,
+                marginHorizontal: 6,
+                backgroundColor: "#000",
+                borderRadius: 100,
+                opacity: opacity,
+                transform: [
+                  {
+                    scale: scale,
+                  },
+                ],
+              }}
+            />
           );
         })}
       </View>
-      {/* <TouchableOpacity onPress={() => {}} style={styles.skipbtn}>
-        <Text>건너뛰기</Text>
-      </TouchableOpacity> */}
+
+      <Pressable style={styles.nextBtn} onPress={() => navigation.navigate("Login")}>
+        <Text style={styles.nextBtnText}>다음</Text>
+      </Pressable>
+      <StatusBar style="auto" />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  circle: {
-    width: 8,
-    height: 8,
-    marginHorizontal: wp(2),
-    borderRadius: 100,
-    backgroundColor: "#333",
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
-  description: {
-    marginLeft: 26,
-    marginTop: hp(30),
-    fontSize: 24,
-    lineHeight: 34,
-    width: 375,
-    textAlign: "left",
-    fontFamily: "font-SM",
+  // 다음 버튼
+  nextBtn: {
+    position: "relative",
+    bottom: 50,
+    width: "90%",
+    alignItems: "center",
+    justifyContent: "center",
+    height: 57,
+    backgroundColor: "#6d61ff",
+    borderRadius: 20,
   },
-  skipbtn: {
-    textAlign: "center",
-    color: "#000",
+  nextBtnText: {
+    color: "#fff",
+    fontFamily: "font-M",
     fontSize: 16,
-    fontFamily: "font-R",
-    marginBottom: 100,
   },
 });
