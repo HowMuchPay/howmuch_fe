@@ -31,6 +31,9 @@ import RemoveAccountScreen from "../screens/auth/RemoveAccountScreen";
 import SearchMyAllEventScreen from "../screens/SearchMyAllEventScreen";
 import SearchFriendEventScreen from "../screens/SearchFriendEventScreen";
 import Boarding from "../screens/auth/Boarding";
+import LoginPhoneNumScreen from "../screens/auth/LoginPhoneNumScreen";
+import TermsScreen from "../screens/auth/TermsScreen";
+import AgreementScreen01 from "../screens/auth/AgreementScreen01";
 
 function HeaderTitle(props) {
   return (
@@ -183,10 +186,14 @@ export default function Navigation() {
 
   return (
     <Stack.Navigator initialRouteName={token ? "Drawer" : "Login"} screenOptions={{ headerTransparent: true }}>
-      {/* <Stack.Screen name="Boarding" component={Boarding} /> */}
+      <Stack.Screen name="Boarding" component={Boarding} options={{ headerShown: false }} />
       {/* <Stack.Screen name="KakaoLogin" component={KakaoLogin} options={{ headerShown: false }} /> */}
 
       <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="LoginPhoneNumScreen" component={LoginPhoneNumScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="TermsScreen" component={TermsScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="AgreementScreen01" component={AgreementScreen01} options={{ headerShown: false }} />
+
       <Stack.Screen name="Drawer" component={HandleDrawer} options={{ headerShown: false }} />
 
       <Stack.Screen
