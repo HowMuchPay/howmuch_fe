@@ -38,6 +38,8 @@ import TermsPrivacyPolicyScreen from "../screens/auth/TermsPrivacyPolicyScreen";
 import TermsPrivacyCollectScreen from "../screens/auth/TermsPrivacyCollectScreen";
 import TermsOfServiceDrawerScreen from "../screens/TermsOfServiceDrawerScreen";
 import NoticeListScreen from "../screens/NoticeListScreen";
+import TotalScreen from "../screens/TotalScreen";
+import AddNoticeScreen from "../screens/AddNoticeScreen";
 
 function HeaderTitle(props) {
   return (
@@ -173,7 +175,8 @@ const CustomHeaderButton = ({ onPress, icon }) => {
 export default function Navigation() {
   const Stack = createNativeStackNavigator();
   const [token, setToken] = useAppStore((state) => [state.token, state.setToken]);
-
+  const store = useAppStore();
+  const userType = store.userType;
   const navigation = useNavigation();
 
   // useEffect(() => {
@@ -188,6 +191,7 @@ export default function Navigation() {
 
   StatusBar.setBarStyle("dark-content");
   console.log("token", token);
+  console.log(userType);
   return (
     <Stack.Navigator initialRouteName={token ? "Drawer" : "Login"} screenOptions={{ headerTransparent: true }}>
       {/* <Stack.Screen name="KakaoLogin" component={KakaoLogin} options={{ headerShown: false }} /> */}
@@ -217,7 +221,34 @@ export default function Navigation() {
             color: "#1f1f1f",
           },
           headerLeft: () => <BackBtn />,
-          headerRight: () => <MyEventPersonPlusButton />,
+          headerRight: () => {
+            if (userType === "ROLE_ADMIN") {
+              return (
+                <TouchableOpacity onPress={() => navigation.navigate("AddNoticeScreen")}>
+                  <Image style={{ width: 24, height: 24 }} source={require("../assets/images/icon_plus_black.png")} />
+                </TouchableOpacity>
+              );
+            } else {
+              return null;
+            }
+          },
+          headerBackTitleVisible: false,
+        }}
+      />
+      <Stack.Screen
+        name="AddNoticeScreen"
+        component={AddNoticeScreen}
+        options={{
+          title: "공지사항 등록",
+          headerStyle: { backgroundColor: "transparent" },
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            fontFamily: "font-B",
+            fontSize: 17,
+            color: "#1f1f1f",
+          },
+          headerLeft: () => <BackBtn />,
+
           headerBackTitleVisible: false,
         }}
       />
@@ -256,6 +287,22 @@ export default function Navigation() {
           headerBackTitleVisible: false,
           headerRight: () => <MyEventPlusButton />,
         })}
+      />
+      <Stack.Screen
+        name="TotalPage"
+        component={TotalScreen}
+        options={{
+          title: "캘린더",
+          headerStyle: { backgroundColor: "#F3F3FF" },
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            fontFamily: "font-B",
+            fontSize: 17,
+            color: "#1f1f1f",
+          },
+          headerLeft: () => <BackBtn />,
+          headerBackTitleVisible: false,
+        }}
       />
       <Stack.Screen
         name="MyEventDetailScreen"
@@ -341,22 +388,7 @@ export default function Navigation() {
           headerBackTitleVisible: false,
         }}
       />
-      <Stack.Screen
-        name="TotalPage"
-        component={TotalPage}
-        options={{
-          title: "캘린더",
-          headerStyle: { backgroundColor: "#F3F3FF" },
-          headerTitleAlign: "center",
-          headerTitleStyle: {
-            fontFamily: "font-B",
-            fontSize: 17,
-            color: "#1f1f1f",
-          },
-          headerLeft: () => <BackBtn />,
-          headerBackTitleVisible: false,
-        }}
-      />
+
       <Stack.Screen
         name="NewAddEventPage"
         component={NewAddEventScreen}

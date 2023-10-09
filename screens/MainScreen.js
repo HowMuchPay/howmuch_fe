@@ -241,22 +241,22 @@ function ComingEventBox({ data }) {
 function CalendarBox() {
   const navigation = useNavigation();
   return (
-    <TouchableOpacity
+    <Pressable
       style={styles.calendarBox}
-      onPress={() => {
+      onPressIn={() => {
         navigation.navigate("TotalPage");
       }}
     >
       <Image style={{ width: 22, height: 22, marginBottom: 10 }} source={require("../assets/images/icon_calendar.png")} />
       <Text style={styles.calendarText}>캘린더</Text>
-    </TouchableOpacity>
+    </Pressable>
   );
 }
 
 function AddEventBox() {
   const navigation = useNavigation();
   return (
-    <TouchableOpacity
+    <Pressable
       style={styles.addEventBox}
       onPress={() => {
         navigation.navigate("NewAddEventPage");
@@ -264,7 +264,7 @@ function AddEventBox() {
     >
       <Image style={{ width: 22, height: 22, marginBottom: 10 }} source={require("../assets/images/icon_plus_gray.png")} />
       <Text style={styles.addEventText}>경조사를 입력하세요</Text>
-    </TouchableOpacity>
+    </Pressable>
   );
 }
 

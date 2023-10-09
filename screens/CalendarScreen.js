@@ -26,6 +26,7 @@ export default function CalendarScreen() {
   const store = useAppStore();
   const token = store.token;
   const isFocused = useIsFocused();
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
 
   const offset = 1000 * 60 * 60 * 9;
   //한국 시간 계산
@@ -79,16 +80,18 @@ export default function CalendarScreen() {
 
   useEffect(() => {
     fetchData(selectedMonth.year, selectedMonth.month);
-  }, [isFocused]);
+  }, []);
 
   useEffect(() => {
     setSelectedEvent(data.filter((event) => event.eventAt === selectedDay.dateString) || null);
   }, [data]);
 
   const fetchData = async (year, month) => {
+    setIsLoading(true);
+
     try {
       const date = `${year}-${month}`;
-      console.log(date);
+      // console.log(date);
       const response = await API.get(`/calendar/schedule?time=${date}`, {
         headers: {
           Authorization: token,
@@ -98,7 +101,7 @@ export default function CalendarScreen() {
       const newData = response.data; // 새로운 데이터
 
       // 상태를 업데이트하고 화면을 다시 렌더링합니다.
-      console.log(newData);
+      // console.log(newData);
       setData(newData);
 
       const updatedMarkedDates = {};
@@ -106,13 +109,21 @@ export default function CalendarScreen() {
         updatedMarkedDates[event.eventAt] = { marked: true, dotColor: "#6D61FF" };
       });
       setMarkedDates(updatedMarkedDates);
+      setIsLoading(false);
     } catch (error) {
+      setIsLoading(false);
+
       console.error("데이터를 불러오는 중 오류가 발생했습니다.", error);
     }
   };
 
   return (
     <ScrollView style={styles.container}>
+      {/* {isLoading && (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#6D61FF" />
+        </View>
+      )} */}
       <View style={styles.inner}>
         <Calendar
           style={styles.calendar}
@@ -121,13 +132,11 @@ export default function CalendarScreen() {
           onDayPress={(day) => {
             setSelectedDay(day);
             setSelectedDate(day.dateString);
-            console.log(
-              "test3",
-              data.filter((event) => event.eventAt === day.dateString)
-            );
+
             setSelectedEvent(data.filter((event) => event.eventAt === day.dateString) || null);
           }}
           onMonthChange={(date) => {
+            setSelectedDay(date);
             setSelectedMonth({ year: date.dateString.split("-")[0], month: date.dateString.split("-")[1] });
             fetchData(date.dateString.split("-")[0], date.dateString.split("-")[1]);
           }}

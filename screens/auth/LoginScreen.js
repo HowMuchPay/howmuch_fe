@@ -19,6 +19,8 @@ export default function LoginScreen() {
   const [phoneExisted, setPhoneExisted] = useAppStore((state) => [state.phoneExisted, state.setPhoneExisted]);
 
   const [refreshToken, setRefreshToken] = useAppStore((state) => [state.refreshToken, state.setRefreshToken]);
+  const [userType, setUserType] = useAppStore((state) => [state.userType, state.setUserType]);
+  const [userProfileImg, setUserProfileImg] = useAppStore((state) => [state.userProfileImg, state.setUserProfileImg]);
 
   const [errorMsg, setErrorMsg] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -69,6 +71,8 @@ export default function LoginScreen() {
           setToken(data["accessToken"]);
           setRefreshToken(data["refreshToken"]);
           setPhoneExisted(data["phoneExisted"]);
+          setUserType(data["roleType"]);
+          setUserProfileImg(kakaoProfile.profileImageUrl);
           console.log("access", data["accessToken"]);
           console.log("refresh", data["refreshToken"]);
           console.log("phoneExisted", data["phoneExisted"]);

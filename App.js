@@ -45,8 +45,8 @@ export default function App() {
   useEffect(() => {
     try {
       setTimeout(() => {
-        SplashScreen.hide();
         setAppIsReady(true);
+        SplashScreen.hide();
       }, 2000); //스플래시 활성화 시간 2초
     } catch (e) {
       console.log(e.message);

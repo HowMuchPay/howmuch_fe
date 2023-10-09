@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Pressable, Image } from "react-native";
 import React, { useEffect } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
@@ -13,6 +13,7 @@ const Drawer = createDrawerNavigator();
 function SideScreen() {
   const store = useAppStore();
   const token = store.token;
+  const userImg = store.userProfileImg;
   const clearToken = useAppStore((state) => state.clearToken);
   const navigation = useNavigation();
   const name = useAppStore((state) => state.name); // 이름 가져오기
@@ -46,7 +47,9 @@ function SideScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.profileContainer}>
-        <View style={styles.profileIcon}></View>
+        <View style={styles.profileIcon}>
+          <Image style={{ width: 40, height: 40, borderRadius: 100 }} source={{ uri: userImg }} resizeMode="cover" />
+        </View>
         <Text style={styles.profileText}>{name}님 안녕하세요!</Text>
       </View>
       <MenuArea />

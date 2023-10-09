@@ -114,9 +114,9 @@ export default function MyEventScreen() {
       keyExtractor={(item, index) => index.toString()} // 간단한 keyExtractor를 사용
       renderItem={({ item }) => (
         <View style={styles.inner}>
-          {/* <TouchableOpacity
+          <TouchableOpacity
             onPress={() => {
-              API.get("/calendar/statistics?time=2023-10", {
+              API.delete("/admin/notice/7", {
                 headers: {
                   Authorization: token,
                   "Content-Type": "application/json",
@@ -124,7 +124,7 @@ export default function MyEventScreen() {
               })
                 .then((response) => {
                   console.log("성공적으로 get 요청을 보냈습니다.", response.data);
-                  console.log(response.data.statisticsListResponse);
+                  // console.log(response.data.statisticsListResponse);
 
                   // console.log(response.data.allAcEvents);
                 })
@@ -134,7 +134,7 @@ export default function MyEventScreen() {
             }}
           >
             <Text>get</Text>
-          </TouchableOpacity> */}
+          </TouchableOpacity>
 
           <TouchableOpacity
             onPress={() => {
@@ -143,10 +143,9 @@ export default function MyEventScreen() {
                 content: "공지사항내용",
               };
               console.log(postData);
-              API.post("/admin/notice", postData, {
+              API.post(`/admin/notice`, postData, {
                 headers: {
                   Authorization: token,
-                  // "Refresh-Token": refreshToken,
                 },
               })
                 .then((response) => {
@@ -160,9 +159,13 @@ export default function MyEventScreen() {
             <Text>post123</Text>
           </TouchableOpacity>
 
-          {/* <TouchableOpacity
+          <TouchableOpacity
             onPress={() => {
-              API.put(`/user/phone?phone=010-1234-1234`, null, {
+              const postData = {
+                title: "로컬 테스트111",
+                content: "공지사항내용111",
+              };
+              API.put(`/admin/notice/7`, postData, {
                 headers: {
                   Authorization: token,
                   "Content-Type": "application/json",
@@ -178,7 +181,7 @@ export default function MyEventScreen() {
             }}
           >
             <Text>put</Text>
-          </TouchableOpacity> */}
+          </TouchableOpacity>
 
           {item ? (
             <>

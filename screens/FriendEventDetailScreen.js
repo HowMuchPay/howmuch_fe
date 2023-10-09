@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Image } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Image, ActivityIndicator } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useIsFocused, useRoute } from "@react-navigation/native";
 import { API } from "../stores/api";
@@ -19,6 +19,7 @@ export default function FriendEventDetailScreen() {
 
   const [data, setData] = useState([]);
   const currentDate = new Date();
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
 
   let selectedEvent;
 
@@ -28,6 +29,7 @@ export default function FriendEventDetailScreen() {
   }, [isFocused]);
 
   const fetchData = async () => {
+    setIsLoading(true);
     try {
       // 데이터를 가져오는 axios 요청을 보냅니다.
       const response = await API.get(`/event/acquaintance/${id}/detail`, {
@@ -41,6 +43,7 @@ export default function FriendEventDetailScreen() {
       // 상태를 업데이트하고 화면을 다시 렌더링합니다.
       console.log("newdata", newData);
       setData(newData);
+      setIsLoading(false);
       if (eventNum === 0) {
         selectedEvent = event0;
       } else if (eventNum === 1) {
@@ -53,52 +56,61 @@ export default function FriendEventDetailScreen() {
         selectedEvent = event4;
       }
     } catch (error) {
+      setIsLoading(false);
       console.error("데이터를 불러오는 중 오류가 발생했습니다.", error);
     }
   };
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.inner}>
-        {data && data.acType !== undefined && (
-          <View style={styles.comingBox}>
-            <View style={styles.comingRelationBox}>
-              <Text style={styles.comingRelation}>{data.acType === 0 ? "가족" : data.acType === 1 ? "친구" : data.acType === 2 ? "동료" : data.acType === 3 ? "친척" : "기타"}</Text>
-            </View>
-            <View style={styles.comingTitleBox}>
-              <Image
-                style={{ width: 24, height: 24 }}
-                source={eventNum === 0 ? event0 : eventNum === 1 ? event1 : eventNum === 2 ? event2 : eventNum === 3 ? event3 : eventNum === 4 ? event4 : null}
-              />
-              <Text style={styles.comingTitle}>{data.acEventDisplayName}</Text>
-              <Text style={styles.comingDate}>
-                {data.eventAt.split("-")[0]}년 {data.eventAt.split("-")[1]}월 {data.eventAt.split("-")[2]}일
-              </Text>
-              <Text style={styles.comingDate}>{data.eventTime === null ? "시간 미정" : data.eventTime}</Text>
+      {isLoading && (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#6D61FF" />
+        </View>
+      )}
 
-              <View style={styles.comingDdayBox}>
-                <Text style={styles.comingDday}>D{data["d-day"] < 0 ? data["d-day"] : "+" + data["d-day"]}</Text>
+      {!isLoading && (
+        <View style={styles.inner}>
+          {data && data.acType !== undefined && (
+            <View style={styles.comingBox}>
+              <View style={styles.comingRelationBox}>
+                <Text style={styles.comingRelation}>{data.acType === 0 ? "가족" : data.acType === 1 ? "친구" : data.acType === 2 ? "동료" : data.acType === 3 ? "친척" : "기타"}</Text>
+              </View>
+              <View style={styles.comingTitleBox}>
+                <Image
+                  style={{ width: 24, height: 24 }}
+                  source={eventNum === 0 ? event0 : eventNum === 1 ? event1 : eventNum === 2 ? event2 : eventNum === 3 ? event3 : eventNum === 4 ? event4 : null}
+                />
+                <Text style={styles.comingTitle}>{data.acEventDisplayName}</Text>
+                <Text style={styles.comingDate}>
+                  {data.eventAt.split("-")[0]}년 {data.eventAt.split("-")[1]}월 {data.eventAt.split("-")[2]}일
+                </Text>
+                <Text style={styles.comingDate}>{data.eventTime === null ? "시간 미정" : data.eventTime}</Text>
+
+                <View style={styles.comingDdayBox}>
+                  <Text style={styles.comingDday}>D{data["d-day"] < 0 ? data["d-day"] : "+" + data["d-day"]}</Text>
+                </View>
+              </View>
+              <View style={styles.comingPayBox}>
+                <View style={styles.comingPayLine}></View>
+                {data.payAmount === 0 ? (
+                  <View style={styles.comingPayTextBox}>
+                    <Text style={styles.comingPayMoneyDes}>아직 얼마나 낼지 못 정했어요</Text>
+                  </View>
+                ) : (
+                  <View style={styles.comingPayTextBox}>
+                    <Text style={styles.comingPayMoney}>{data.payAmount.toLocaleString()}원</Text>
+                    <Text style={styles.comingPayMoneyDes}>{currentDate < new Date(data.eventAt) ? "을 낼 거예요" : "을 냈어요"}</Text>
+                  </View>
+                )}
               </View>
             </View>
-            <View style={styles.comingPayBox}>
-              <View style={styles.comingPayLine}></View>
-              {data.payAmount === 0 ? (
-                <View style={styles.comingPayTextBox}>
-                  <Text style={styles.comingPayMoneyDes}>아직 얼마나 낼지 못 정했어요</Text>
-                </View>
-              ) : (
-                <View style={styles.comingPayTextBox}>
-                  <Text style={styles.comingPayMoney}>{data.payAmount.toLocaleString()}원</Text>
-                  <Text style={styles.comingPayMoneyDes}>{currentDate < new Date(data.eventAt) ? "을 낼 거예요" : "을 냈어요"}</Text>
-                </View>
-              )}
-            </View>
-          </View>
-        )}
-        <TouchableOpacity style={styles.modifyBtn}>
-          <Text style={styles.modifyBtnText}>수정하기</Text>
-        </TouchableOpacity>
-      </View>
+          )}
+          <TouchableOpacity style={styles.modifyBtn}>
+            <Text style={styles.modifyBtnText}>수정하기</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </ScrollView>
   );
 }
@@ -110,6 +122,11 @@ const styles = StyleSheet.create({
   inner: {
     margin: 20,
     paddingTop: 100,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 
   // 이벤트 박스
