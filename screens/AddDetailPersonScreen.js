@@ -1,12 +1,13 @@
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Pressable } from "react-native";
 import React, { useState } from "react";
-import { StatusBar } from "react-native";
+
 import { WithLocalSvg } from "react-native-svg";
 import inputCheckIcon from "../assets/images/input_check_icon.svg";
 import AddPersonModal from "../components/modals/AddPersonModal";
 import { API } from "../stores/api";
 import { useAppStore } from "../stores/store";
 import { useNavigation } from "@react-navigation/native";
+import { StatusBar } from "expo-status-bar";
 
 const AddDetailPersonScreen = ({ route }) => {
   const store = useAppStore();
@@ -64,7 +65,8 @@ const AddDetailPersonScreen = ({ route }) => {
 
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
+      <StatusBar barStyle="auto" />
+
       <View style={styles.inner}>
         <View style={styles.nameInputBox}>
           <Text style={styles.inputTitle}>이름</Text>

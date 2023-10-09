@@ -74,16 +74,24 @@ export default function FriendEventDetailScreen() {
               <Text style={styles.comingDate}>
                 {data.eventAt.split("-")[0]}년 {data.eventAt.split("-")[1]}월 {data.eventAt.split("-")[2]}일
               </Text>
+              <Text style={styles.comingDate}>{data.eventTime === null ? "시간 미정" : data.eventTime}</Text>
+
               <View style={styles.comingDdayBox}>
-                <Text style={styles.comingDday}>D{data["d-day"]}</Text>
+                <Text style={styles.comingDday}>D{data["d-day"] < 0 ? data["d-day"] : "+" + data["d-day"]}</Text>
               </View>
             </View>
             <View style={styles.comingPayBox}>
               <View style={styles.comingPayLine}></View>
-              <View style={styles.comingPayTextBox}>
-                <Text style={styles.comingPayMoney}>{data.payAmount.toLocaleString()}원</Text>
-                <Text style={styles.comingPayMoneyDes}>{currentDate < new Date(data.eventAt) ? "을 낼 거예요" : "을 냈어요"}</Text>
-              </View>
+              {data.payAmount === 0 ? (
+                <View style={styles.comingPayTextBox}>
+                  <Text style={styles.comingPayMoneyDes}>아직 얼마나 낼지 못 정했어요</Text>
+                </View>
+              ) : (
+                <View style={styles.comingPayTextBox}>
+                  <Text style={styles.comingPayMoney}>{data.payAmount.toLocaleString()}원</Text>
+                  <Text style={styles.comingPayMoneyDes}>{currentDate < new Date(data.eventAt) ? "을 낼 거예요" : "을 냈어요"}</Text>
+                </View>
+              )}
             </View>
           </View>
         )}
@@ -142,7 +150,7 @@ const styles = StyleSheet.create({
   comingDate: {
     color: "#8e8e8e",
     fontSize: 17,
-    fontFamily: "font-B",
+    fontFamily: "font-M",
   },
   comingDdayBox: {
     borderRadius: 16,

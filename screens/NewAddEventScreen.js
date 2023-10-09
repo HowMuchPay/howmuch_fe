@@ -1,7 +1,8 @@
-import { View, Text, StyleSheet, TouchableOpacity, StatusBar } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/native";
+import { StatusBar } from "expo-status-bar";
 
 export default function NewAddEventScreen() {
   const [modalVisible, setModalVisible] = useState(false);
@@ -9,7 +10,7 @@ export default function NewAddEventScreen() {
 
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
+      <StatusBar barStyle="auto" />
 
       <View style={styles.inner}>
         <View style={styles.addTextBox}>

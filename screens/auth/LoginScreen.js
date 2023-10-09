@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, Button, TouchableOpacity, StatusBar } from "react-native";
+import { View, Text, StyleSheet, Image, Button, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import * as KakaoLogin from "@react-native-seoul/kakao-login";
@@ -7,6 +7,7 @@ import { login, getProfile } from "@react-native-seoul/kakao-login";
 import { useAppStore } from "../../stores/store";
 import { API } from "../../stores/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { StatusBar } from "expo-status-bar";
 
 const signInWithKakao = async () => {
   const token = await login();
@@ -15,7 +16,10 @@ const signInWithKakao = async () => {
 
 export default function LoginScreen() {
   const [token, setToken] = useAppStore((state) => [state.token, state.setToken]);
+  const [phoneExisted, setPhoneExisted] = useAppStore((state) => [state.phoneExisted, state.setPhoneExisted]);
+
   const [refreshToken, setRefreshToken] = useAppStore((state) => [state.refreshToken, state.setRefreshToken]);
+
   const [errorMsg, setErrorMsg] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
@@ -64,8 +68,10 @@ export default function LoginScreen() {
         if (data["accessToken"]) {
           setToken(data["accessToken"]);
           setRefreshToken(data["refreshToken"]);
+          setPhoneExisted(data["phoneExisted"]);
           console.log("access", data["accessToken"]);
           console.log("refresh", data["refreshToken"]);
+          console.log("phoneExisted", data["phoneExisted"]);
 
           // setRefreshToken(data["refreshToken"]);
           // AsyncStorage.setItem("authToken", data["accessToken"]);
@@ -101,12 +107,18 @@ export default function LoginScreen() {
   };
 
   useEffect(() => {
-    if (token) navigation.navigate("Drawer");
-  }, [token]);
+    if (token) {
+      if (phoneExisted === true) {
+        navigation.navigate("Drawer");
+      } else {
+        navigation.navigate("LoginPhoneNumScreen");
+      }
+    }
+  }, [token, phoneExisted]);
 
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
+      <StatusBar barStyle="auto" />
 
       <Image style={styles.logo} source={require(".././../assets/images/logo1.png")} />
       {/* <TouchableOpacity

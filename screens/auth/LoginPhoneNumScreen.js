@@ -47,6 +47,7 @@ export default function LoginPhoneNumScreen() {
   };
 
   const putPhoneNum = (phoneNumber) => {
+    console.log(phoneNumber);
     API.put(`/user/phone?phone=${phoneNumber}`, null, {
       headers: {
         Authorization: token,
@@ -90,8 +91,7 @@ export default function LoginPhoneNumScreen() {
       <StatusBar style="auto" />
       <Pressable
         onPress={() => {
-          // putPhoneNum(phoneNumber);
-          navigation.navigate("TermsScreen");
+          putPhoneNum(phoneNumber);
         }}
         style={[styles.nextBtn, { opacity: isTouchable ? 1 : 0.5 }]}
         disabled={!isTouchable}

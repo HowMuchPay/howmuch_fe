@@ -158,26 +158,26 @@ export default function CalendarScreen() {
             </Text>
             {selectedEvent.length !== 0 ? (
               selectedEvent.map((event, index) => {
-                // let selectedEvent;
-
-                // if (data.item.eventCategory === 0) {
-                //   selectedEvent = event0;
-                // } else if (data.item.eventCategory === 1) {
-                //   selectedEvent = event1;
-                // } else if (data.item.eventCategory === 2) {
-                //   selectedEvent = event2;
-                // } else if (data.item.eventCategory === 3) {
-                //   selectedEvent = event3;
-                // } else if (data.item.eventCategory === 4) {
-                //   selectedEvent = event4;
-                // }
+                let eventCategory;
+                // console.log("Evet", event);
+                if (event.eventCategory === 0) {
+                  eventCategory = event0;
+                } else if (event.eventCategory === 1) {
+                  eventCategory = event1;
+                } else if (event.eventCategory === 2) {
+                  eventCategory = event2;
+                } else if (event.eventCategory === 3) {
+                  eventCategory = event3;
+                } else if (event.eventCategory === 4) {
+                  eventCategory = event4;
+                }
 
                 return (
                   <View key={index} style={styles.rowFront}>
                     {/* <Image style={{ width: 40, height: 40, marginRight: 15 }} source={selectedEvent} /> */}
                     <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
                       <View style={{ width: 40, height: 40, borderRadius: 50, marginRight: 10, backgroundColor: "#F3F3FF" }}>
-                        {/* <Image style={{ width: 40, height: 40, marginRight: 15 }} source={selectedEvent} /> */}
+                        <Image style={{ width: 40, height: 40, marginRight: 15 }} source={eventCategory} />
                       </View>
                       <Text style={{ fontSize: 14, fontFamily: "font-M", color: "#1f1f1f" }}>{event.eventDisplayName}</Text>
                     </View>

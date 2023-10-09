@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, Image, Button, TouchableOpacity, StatusBar, Pressable } from "react-native";
+import { View, Text, StyleSheet, Image, Button, TouchableOpacity, Pressable } from "react-native";
 import checkIcon from "../../assets/images/check_icon.svg";
 import checkColorIcon from "../../assets/images/check_color_icon.svg";
 import { WithLocalSvg } from "react-native-svg";
 import { API } from "../../stores/api";
 import { useNavigation } from "@react-navigation/native";
 import { useAppStore } from "../../stores/store";
+import { StatusBar } from "expo-status-bar";
 
 export default function RemoveAccountScreen() {
   const [checkState, setCheckState] = useState(false);
@@ -39,7 +40,8 @@ export default function RemoveAccountScreen() {
 
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor="#fff" barStyle="dark-content" />
+      <StatusBar barStyle="auto" />
+
       <View style={styles.inner}>
         <View style={{ flexDirection: "row" }}>
           <Text style={[styles.addText, { color: "#6D61FF" }]}>탈퇴</Text>
@@ -86,12 +88,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
-    paddingTop: 50,
+
     position: "relative",
   },
   inner: {
     margin: 20,
     // backgroundColor: "#fff",
+    paddingTop: 80,
   },
   addText: {
     fontSize: 26,

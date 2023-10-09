@@ -114,7 +114,7 @@ export default function MyEventScreen() {
       keyExtractor={(item, index) => index.toString()} // 간단한 keyExtractor를 사용
       renderItem={({ item }) => (
         <View style={styles.inner}>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => {
               API.get("/calendar/statistics?time=2023-10", {
                 headers: {
@@ -134,22 +134,19 @@ export default function MyEventScreen() {
             }}
           >
             <Text>get</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           <TouchableOpacity
             onPress={() => {
               const postData = {
-                acName: "로컬 테스트",
-                acType: 3,
-                eventCategory: 0,
-                payAmount: 300000,
-                eventAt: "2023-08-30",
+                title: "로컬 테스트",
+                content: "공지사항내용",
               };
-
-              API.post(`/user/reissue`, null, {
+              console.log(postData);
+              API.post("/admin/notice", postData, {
                 headers: {
                   Authorization: token,
-                  "Refresh-Token": refreshToken,
+                  // "Refresh-Token": refreshToken,
                 },
               })
                 .then((response) => {
@@ -160,19 +157,11 @@ export default function MyEventScreen() {
                 });
             }}
           >
-            <Text>post</Text>
+            <Text>post123</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => {
-              const postData = {
-                acName: "로컬 테스트",
-                acType: 3,
-                eventCategory: 0,
-                payAmount: 300000,
-                eventAt: "2023-08-30",
-              };
-
               API.put(`/user/phone?phone=010-1234-1234`, null, {
                 headers: {
                   Authorization: token,
@@ -189,7 +178,7 @@ export default function MyEventScreen() {
             }}
           >
             <Text>put</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           {item ? (
             <>
@@ -513,7 +502,7 @@ const styles = StyleSheet.create({
     margin: 20,
     // backgroundColor:"#f5d5f7",
 
-    paddingTop: 60,
+    paddingTop: 80,
   },
 
   //현재까지 받은 금액

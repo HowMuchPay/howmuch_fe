@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, ScrollView, StatusBar } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, ScrollView } from "react-native";
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import * as Progress from "react-native-progress";
 import CalendarSelectComponent from "../components/CalendarSelectComponent";
@@ -17,6 +17,7 @@ import { asPickerFormat } from "../utils/utils";
 import { BUTTON_HEIGHT, VIEW_WIDTH } from "../utils/values";
 import TimePicker from "../components/TimePicker";
 import WheelPicker from "react-native-wheely";
+import { StatusBar } from "expo-status-bar";
 
 export default function AddMyEventScreen() {
   const [countUp, setCountUp] = useState(0);
@@ -63,7 +64,7 @@ export default function AddMyEventScreen() {
 
   return (
     <View style={[styles.container, changeBackground]}>
-      <StatusBar backgroundColor="#F3F3FF" barStyle="dark-content" />
+      <StatusBar barStyle="auto" />
 
       <View style={styles.inner}>
         <TouchableOpacity onPress={handlePresentModalPress}>

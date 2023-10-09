@@ -361,7 +361,7 @@ const styles = StyleSheet.create({
   },
   inner: {
     margin: 20,
-    paddingTop: 60,
+    paddingTop: 80,
   },
   eventBox: {
     paddingBottom: 40,
