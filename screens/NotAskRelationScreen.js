@@ -107,17 +107,17 @@ const ModalComponent = ({ modalOpenClick, modalVisible, postData }) => {
         payAmount: postData[5] === null ? postData[5] : parseInt(postData[5].replace(/,/g, ""), 10),
         eventAt: postData[0],
         eventName: null,
-        // eventTime: postData[1],
+        eventTime: postData[1],
       };
     } else if (postData.length === 7) {
       eventData = {
         acName: postData[4],
         acType: postData[2],
         eventCategory: postData[3],
-        payAmount: postData[6] === null ? postData[6] : parseInt(postData[5].replace(/,/g, ""), 10),
+        payAmount: postData[6] === null ? postData[6] : parseInt(postData[6].replace(/,/g, ""), 10),
         eventAt: postData[0],
         eventName: postData[5],
-        // eventTime: postData[1],
+        eventTime: postData[1],
       };
     }
     console.log(eventData);

@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
     margin: 20,
     // backgroundColor:"#f5d5f7",
 
-    paddingTop: 60,
+    paddingTop: 80,
   },
 
   //현재까지 받은 금액

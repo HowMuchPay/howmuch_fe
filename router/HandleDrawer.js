@@ -68,10 +68,24 @@ function SideScreen() {
 }
 
 function MenuArea() {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.menuContainer}>
-      <Text style={styles.menuText}>공지사항</Text>
-      <Text style={styles.menuText}>약관 및 정책</Text>
+      <Pressable
+        onPress={() => {
+          navigation.navigate("NoticeListScreen");
+        }}
+      >
+        <Text style={styles.menuText}>공지사항</Text>
+      </Pressable>
+      <Pressable
+        onPress={() => {
+          navigation.navigate("TermsOfServiceDrawerScreen");
+        }}
+      >
+        <Text style={styles.menuText}>약관 및 정책</Text>
+      </Pressable>
       <View>
         <Text style={styles.menuText}>알람설정</Text>
       </View>

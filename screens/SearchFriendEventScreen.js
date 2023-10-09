@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   inner: {
     marginHorizontal: 20,
     // backgroundColor:"#f5d5f7",
-    // paddingTop: 60,
+    paddingTop: 30,
   },
 
   //이름 입력 input

@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image, Button, Pressable, FlatList, Alert, StatusBar } from "react-native";
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image, Button, Pressable, FlatList, Alert } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 
 import Modal from "react-native-modal";
@@ -16,6 +16,7 @@ import trashIcon from "../assets/images/trash_icon.svg";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { TextInput } from "react-native-gesture-handler";
 import lineImg from "../assets/images/line01.png";
+import { StatusBar } from "expo-status-bar";
 
 export default function FriendEventScreen() {
   const store = useAppStore();
@@ -113,7 +114,7 @@ export default function FriendEventScreen() {
       keyExtractor={(item, index) => index.toString()}
       renderItem={({ item }) => (
         <View style={styles.inner}>
-          <StatusBar backgroundColor="#F3F3FF" barStyle="dark-content" />
+          <StatusBar barStyle="auto" />
 
           {item ? (
             <>
@@ -436,7 +437,7 @@ const styles = StyleSheet.create({
     margin: 20,
     // backgroundColor:"#f5d5f7",
 
-    paddingTop: 60,
+    paddingTop: 80,
   },
 
   //현재까지 받은 금액

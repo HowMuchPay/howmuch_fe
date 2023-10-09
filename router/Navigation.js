@@ -33,7 +33,11 @@ import SearchFriendEventScreen from "../screens/SearchFriendEventScreen";
 import Boarding from "../screens/auth/Boarding";
 import LoginPhoneNumScreen from "../screens/auth/LoginPhoneNumScreen";
 import TermsScreen from "../screens/auth/TermsScreen";
-import AgreementScreen01 from "../screens/auth/AgreementScreen01";
+import TermsOfServiceScreen from "../screens/auth/TermsOfServiceScreen";
+import TermsPrivacyPolicyScreen from "../screens/auth/TermsPrivacyPolicyScreen";
+import TermsPrivacyCollectScreen from "../screens/auth/TermsPrivacyCollectScreen";
+import TermsOfServiceDrawerScreen from "../screens/TermsOfServiceDrawerScreen";
+import NoticeListScreen from "../screens/NoticeListScreen";
 
 function HeaderTitle(props) {
   return (
@@ -137,7 +141,7 @@ function TotalPage() {
   return (
     <TopTab.Navigator
       initialRouteName="Calendar"
-      style={{ paddingTop: 50, backgroundColor: "#F3F3FF" }}
+      style={{ paddingTop: 80, backgroundColor: "#F3F3FF" }}
       screenOptions={{
         tabBarPressOpacity: 1, // 탭을 터치했을 때 그림자 효과 없애기
         tabBarPressColor: "transparent", // 탭을 터치했을 때 효과 없애기
@@ -183,18 +187,58 @@ export default function Navigation() {
   };
 
   StatusBar.setBarStyle("dark-content");
-
+  console.log("token", token);
   return (
     <Stack.Navigator initialRouteName={token ? "Drawer" : "Login"} screenOptions={{ headerTransparent: true }}>
-      <Stack.Screen name="Boarding" component={Boarding} options={{ headerShown: false }} />
       {/* <Stack.Screen name="KakaoLogin" component={KakaoLogin} options={{ headerShown: false }} /> */}
-
+      <Stack.Screen name="Drawer" component={HandleDrawer} options={{ headerShown: false }} />
       <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+
+      {/* <Stack.Screen name="Boarding" component={Boarding} options={{ headerShown: false }} />
+
       <Stack.Screen name="LoginPhoneNumScreen" component={LoginPhoneNumScreen} options={{ headerShown: false }} />
       <Stack.Screen name="TermsScreen" component={TermsScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="AgreementScreen01" component={AgreementScreen01} options={{ headerShown: false }} />
+      <Stack.Screen name="TermsOfServiceScreen" component={TermsOfServiceScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="TermsPrivacyPolicyScreen" component={TermsPrivacyPolicyScreen} options={{ headerShown: false }} />
+      <Stack.Screen name="TermsPrivacyCollectScreen" component={TermsPrivacyCollectScreen} options={{ headerShown: false }} /> */}
 
-      <Stack.Screen name="Drawer" component={HandleDrawer} options={{ headerShown: false }} />
+      {/* <Stack.Screen name="Drawer" component={HandleDrawer} options={{ headerShown: false }} /> */}
+
+      <Stack.Screen
+        name="NoticeListScreen"
+        component={NoticeListScreen}
+        options={{
+          title: "공지사항",
+          headerStyle: { backgroundColor: "#fff" },
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            fontFamily: "font-B",
+            fontSize: 17,
+            color: "#1f1f1f",
+          },
+          headerLeft: () => <BackBtn />,
+          headerRight: () => <MyEventPersonPlusButton />,
+          headerBackTitleVisible: false,
+        }}
+      />
+
+      <Stack.Screen
+        name="TermsOfServiceDrawerScreen"
+        component={TermsOfServiceDrawerScreen}
+        options={{
+          title: "",
+          headerStyle: { backgroundColor: "transparent" },
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            fontFamily: "font-B",
+            fontSize: 17,
+            color: "#1f1f1f",
+          },
+          headerLeft: () => <BackBtn />,
+
+          headerBackTitleVisible: false,
+        }}
+      />
 
       <Stack.Screen
         name="MyEvent"

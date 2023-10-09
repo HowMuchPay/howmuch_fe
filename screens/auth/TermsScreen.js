@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { View, Text, StyleSheet, Pressable, Dimensions } from "react-native";
 import React, { useState } from "react";
 import { WithLocalSvg } from "react-native-svg";
 import arrowIcon from "../../assets/images/right_arrow_icon.svg";
@@ -6,15 +6,13 @@ import arrowIcon from "../../assets/images/right_arrow_icon.svg";
 import checkIcon from "../../assets/images/check_icon.svg";
 import checkColorIcon from "../../assets/images/check_color_icon.svg";
 import { useNavigation } from "@react-navigation/native";
+import { useAppStore } from "../../stores/store";
+
+const windowHeight = Dimensions.get("window").height;
 
 export default function TermsScreen() {
-  const [notDecide, setNotDecide] = useState(false);
-
+  const store = useAppStore();
   const navigation = useNavigation();
-  const toggleNotDecide = () => {
-    setNotDecide(!notDecide);
-    // setShowButton(!showButton);
-  };
 
   return (
     <View style={styles.container}>
@@ -27,56 +25,56 @@ export default function TermsScreen() {
 
         <View style={{ marginTop: 50 }}>
           <View style={{ flexDirection: "row", alignItems: "flex-start", marginVertical: 10 }}>
-            <Pressable style={{}} onPress={toggleNotDecide}>
+            <Pressable style={{}} onPress={() => store.setIsTermsAgreeAll(!store.isTermsAgreeAll)}>
               <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
-                {notDecide ? (
+                {store.isTermsAgreeAll ? (
                   <WithLocalSvg width={28} height={28} asset={checkColorIcon} style={{ marginRight: 10 }} />
                 ) : (
                   <WithLocalSvg width={28} height={28} asset={checkIcon} style={{ marginRight: 10 }} />
                 )}
               </View>
             </Pressable>
-            <Pressable style={{ flexDirection: "row", alignItems: "flex-start" }} onPress={() => navigation.navigate("AgreementScreen01", { setNotDecide })}>
+            <Pressable style={{ flexDirection: "row", alignItems: "flex-start" }} onPress={() => navigation.navigate("TermsOfServiceScreen")}>
               <Text style={{ fontFamily: "font-M", fontSize: 16, color: "#1f1f1f", marginTop: 1 }}>[필수] 얼마나 이용약관 전체동의</Text>
               <WithLocalSvg width={15} height={15} asset={arrowIcon} style={{ marginLeft: 20, marginTop: 5 }} />
             </Pressable>
           </View>
 
           <View style={{ flexDirection: "row", alignItems: "flex-start", marginVertical: 10 }}>
-            <Pressable style={{}} onPress={toggleNotDecide}>
+            <Pressable style={{}} onPress={() => store.setIsPrivacyPolicyAgreeAll(!store.isPrivacyPolicyAgreeAll)}>
               <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
-                {notDecide ? (
+                {store.isPrivacyPolicyAgreeAll ? (
                   <WithLocalSvg width={28} height={28} asset={checkColorIcon} style={{ marginRight: 10 }} />
                 ) : (
                   <WithLocalSvg width={28} height={28} asset={checkIcon} style={{ marginRight: 10 }} />
                 )}
               </View>
             </Pressable>
-            <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
+            <Pressable style={{ flexDirection: "row", alignItems: "flex-start" }} onPress={() => navigation.navigate("TermsPrivacyPolicyScreen")}>
               <Text style={{ fontFamily: "font-M", fontSize: 16, color: "#1f1f1f", marginTop: 1 }}>[필수] 개인정보 처리방침 전체동의</Text>
               <WithLocalSvg width={15} height={15} asset={arrowIcon} style={{ marginLeft: 20, marginTop: 5 }} />
-            </View>
+            </Pressable>
           </View>
 
           <View style={{ flexDirection: "row", alignItems: "flex-start", marginVertical: 10 }}>
-            <Pressable style={{}} onPress={toggleNotDecide}>
+            <Pressable style={{}} onPress={() => store.setIsPrivacyCollectAgreeAll(!store.isPrivacyCollectAgreeAll)}>
               <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
-                {notDecide ? (
+                {store.isPrivacyCollectAgreeAll ? (
                   <WithLocalSvg width={28} height={28} asset={checkColorIcon} style={{ marginRight: 10 }} />
                 ) : (
                   <WithLocalSvg width={28} height={28} asset={checkIcon} style={{ marginRight: 10 }} />
                 )}
               </View>
             </Pressable>
-            <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
-              <Text style={{ fontFamily: "font-M", fontSize: 16, color: "#1f1f1f", marginTop: 1 }}>[선택] 개인정보 수집 이용 전체동의</Text>
+            <Pressable style={{ flexDirection: "row", alignItems: "flex-start" }} onPress={() => navigation.navigate("TermsPrivacyCollectScreen")}>
+              <Text style={{ fontFamily: "font-M", fontSize: 16, color: "#1f1f1f", marginTop: 1 }}>[선택] 개인정보 수집 이용에 전체동의</Text>
               <WithLocalSvg width={15} height={15} asset={arrowIcon} style={{ marginLeft: 20, marginTop: 5 }} />
-            </View>
+            </Pressable>
           </View>
 
-          <Pressable style={{ marginVertical: 10 }} onPress={toggleNotDecide}>
+          <Pressable style={{ marginVertical: 10 }} onPress={() => store.setIsMarketingAlertAgree(!store.isMarketingAlertAgree)}>
             <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
-              {notDecide ? (
+              {store.isMarketingAlertAgree ? (
                 <WithLocalSvg width={28} height={28} asset={checkColorIcon} style={{ marginRight: 10 }} />
               ) : (
                 <WithLocalSvg width={28} height={28} asset={checkIcon} style={{ marginRight: 10 }} />
@@ -85,6 +83,53 @@ export default function TermsScreen() {
             </View>
             <Text style={{ fontFamily: "font-R", fontSize: 14, color: "#8e8e8e", marginTop: 5, marginLeft: 38 }}>앱 푸시, 야간(21시 ~ 08시) 푸시 동의</Text>
           </Pressable>
+
+          <View style={{ position: "relative", top: windowHeight - 650 }}>
+            <Pressable
+              style={{ paddingBottom: 40 }}
+              onPress={() => {
+                if (store.isTermsAgreeAll && store.isPrivacyPolicyAgreeAll && store.isPrivacyCollectAgreeAll && store.isMarketingAlertAgree) {
+                  // 모든 상태가 true인 경우, 모두 false로 변경
+                  store.setIsTermsAgreeAll(false);
+                  store.setIsPrivacyPolicyAgreeAll(false);
+                  store.setIsPrivacyCollectAgreeAll(false);
+                  store.setIsMarketingAlertAgree(false);
+                } else {
+                  // 모든 상태가 false인 경우, 모두 true로 변경
+                  store.setIsTermsAgreeAll(true);
+                  store.setIsPrivacyPolicyAgreeAll(true);
+                  store.setIsPrivacyCollectAgreeAll(true);
+                  store.setIsMarketingAlertAgree(true);
+                }
+              }}
+            >
+              <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
+                {store.isTermsAgreeAll && store.isPrivacyPolicyAgreeAll && store.isPrivacyCollectAgreeAll && store.isMarketingAlertAgree ? (
+                  <WithLocalSvg width={28} height={28} asset={checkColorIcon} style={{ marginRight: 10 }} />
+                ) : (
+                  <WithLocalSvg width={28} height={28} asset={checkIcon} style={{ marginRight: 10 }} />
+                )}
+                <Text style={{ fontFamily: "font-M", fontSize: 16, color: "#1f1f1f", marginTop: 1 }}>약관 전체동의</Text>
+              </View>
+            </Pressable>
+
+            <Pressable
+              style={[
+                styles.nextBtn,
+                {
+                  opacity: store.isTermsAgreeAll && store.isPrivacyPolicyAgreeAll ? 1 : 0.5,
+                },
+              ]}
+              onPress={() => {
+                if (store.isTermsAgreeAll && store.isPrivacyPolicyAgreeAll) {
+                  navigation.navigate("Drawer");
+                }
+              }}
+              disabled={!store.isTermsAgreeAll || !store.isPrivacyPolicyAgreeAll}
+            >
+              <Text style={styles.nextBtnText}>확인</Text>
+            </Pressable>
+          </View>
         </View>
       </View>
     </View>
@@ -128,11 +173,10 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginTop: 10,
   },
+  // 다음 버튼
   nextBtn: {
-    position: "absolute",
-    bottom: "5%",
-    marginLeft: 10,
-    width: "95%",
+    width: "100%",
+
     alignItems: "center",
     justifyContent: "center",
     height: 57,

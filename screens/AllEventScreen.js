@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image, Button, Pressable, FlatList, Alert } from "react-native";
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image, Button, Pressable, FlatList, Alert, Dimensions } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 
 import Modal from "react-native-modal";
@@ -7,15 +7,16 @@ import { API } from "../stores/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { WithLocalSvg } from "react-native-svg";
-import event0 from "../assets/images/event_icon_0.svg";
-import event1 from "../assets/images/event_icon_1.svg";
-import event2 from "../assets/images/event_icon_2.svg";
-import event3 from "../assets/images/event_icon_3.svg";
-import event4 from "../assets/images/event_icon_4.svg";
+import event0 from "../assets/images/event_icon_0.png";
+import event1 from "../assets/images/event_icon_1.png";
+import event2 from "../assets/images/event_icon_2.png";
+import event3 from "../assets/images/event_icon_3.png";
+import event4 from "../assets/images/event_icon_4.png";
 import trashIcon from "../assets/images/trash_icon.svg";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { TextInput } from "react-native-gesture-handler";
 import lineImg from "../assets/images/line01.png";
+const windowHeight = Dimensions.get("window").height;
 
 export default function AllEventScreen() {
   const store = useAppStore();
@@ -117,8 +118,8 @@ export default function AllEventScreen() {
             <>
               <View>
                 <PayListBox handleFilter={handleFilter} fetchData={fetchData} handleSearchChange={handleSearchChange} searchText={searchText} />
-                {item && item.allAcEvents && Object.keys(item.allAcEvents).length === 0 ? (
-                  <View style={[styles.payListBox, { height: 460, alignItems: "center", justifyContent: "center" }]}>
+                {item && item.allCombineEvents && Object.keys(item.allCombineEvents).length === 0 ? (
+                  <View style={[styles.payListBox, { height: 600, alignItems: "center", justifyContent: "center" }]}>
                     <Text style={{ fontSize: 16, fontFamily: "font-B", color: "#cccccc" }}>이벤트 목록이 없습니다.</Text>
                   </View>
                 ) : (
@@ -231,9 +232,9 @@ function PayListBox({ handleFilter, fetchData, handleSearchChange, searchText })
             <TextInput style={styles.eventInput} fontSize={15} onChangeText={handleSearchChange} value={searchText} placeholder="이름을 입력해주세요" placeholderTextColor="#ccc" />
             <Image style={{ width: 22, height: 22, position: "absolute", top: 0, left: 0 }} source={require("../assets/images/icon_search_black.png")} />
           </View> */}
-          <TouchableOpacity style={styles.filterSearchIcon} onPress={() => navigation.navigate("SearchMyEventScreen")}>
+          {/* <TouchableOpacity style={styles.filterSearchIcon} onPress={() => navigation.navigate("SearchMyEventScreen")}>
             <Image style={{ width: 24, height: 24 }} source={require("../assets/images/icon_search_black.png")} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           <TouchableOpacity style={styles.filterRefreshIcon} onPress={fetchData}>
             <Image style={{ width: 24, height: 24 }} source={require("../assets/images/icon_rotate_right.png")} />
@@ -371,7 +372,7 @@ function PayList({ data, handleDelete, searchText }) {
                     <View style={styles.rowFront}>
                       <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
                         <View style={{ width: 40, height: 40, borderRadius: 50, marginRight: 10 }}>
-                          <WithLocalSvg width={40} height={40} asset={selectedEvent} style={{ marginRight: 15 }} />
+                          <Image style={{ width: 40, height: 40, marginRight: 15 }} source={selectedEvent} />
                         </View>
                         <View style={{}}>
                           <Text style={{ fontSize: 14, fontFamily: "font-M", color: "#1f1f1f" }}>{data.item.displayName}</Text>
@@ -401,7 +402,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     paddingVertical: 30,
     borderRadius: 20,
-    minHeight: 500,
+    minHeight: windowHeight - 150,
   },
   container: {
     // flex: 1,
@@ -413,7 +414,7 @@ const styles = StyleSheet.create({
     margin: 20,
     // backgroundColor:"#f5d5f7",
 
-    paddingTop: 60,
+    paddingTop: 100,
   },
 
   //현재까지 받은 금액

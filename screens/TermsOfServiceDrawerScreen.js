@@ -2,17 +2,7 @@ import { View, Text, Pressable, StyleSheet } from "react-native";
 import React from "react";
 import { ScrollView } from "react-native-gesture-handler";
 
-export default function AgreementScreen01({ route, navigation }) {
-  const { setNotDecide } = route.params;
-  const handleAgree = () => {
-    // 동의 버튼을 눌렀을 때의 동작을 수행하고 setNotDecide(true) 호출
-    // 예를 들어, 서버에 동의 정보를 보내는 등의 작업을 수행할 수 있습니다.
-
-    // 동의가 완료되면 이전 화면으로 돌아가기
-    setNotDecide(true);
-    navigation.goBack();
-  };
-
+export default function TermsOfServiceDrawerScreen() {
   return (
     <View style={styles.container}>
       <ScrollView style={styles.inner}>
@@ -39,9 +29,6 @@ export default function AgreementScreen01({ route, navigation }) {
         </Text>
         <Text style={styles.text}>6. ‘지인의 경조사’ (또는 ‘지인 경조사 확인’)은 내가 참여한 지인의 경조사에서 경조사비로 얼마를 냈는지 전체 내역을 확인할 수 있는 서비스를 말합니다.  </Text>
       </ScrollView>
-      <Pressable onPress={handleAgree} style={styles.nextBtn}>
-        <Text style={styles.nextBtnText}>동의</Text>
-      </Pressable>
     </View>
   );
 }
@@ -54,7 +41,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   inner: {
-    marginTop: 30,
+    marginTop: 70,
     marginBottom: 50,
   },
   text: {

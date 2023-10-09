@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, TextInput, ScrollView, Pressable, StatusBar } from "react-native";
+import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, TextInput, ScrollView, Pressable } from "react-native";
 import React, { useEffect, useState } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer, useIsFocused, useNavigation } from "@react-navigation/native";
@@ -8,6 +8,7 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 import CircularProgress from "react-native-circular-progress-indicator";
 import { checkAndUpdateToken, useAppStore } from "../stores/store";
 import { API } from "../stores/api";
+import { StatusBar } from "expo-status-bar";
 
 export default function MainScreen({}) {
   const navigation = useNavigation();
@@ -74,7 +75,8 @@ export default function MainScreen({}) {
 
   return (
     <ScrollView style={styles.container}>
-      <StatusBar backgroundColor="#F3F3FF" barStyle="dark-content" />
+      <StatusBar barStyle="auto" />
+
       <View style={styles.inner}>
         <TouchableOpacity
           onPress={() => {
@@ -210,7 +212,11 @@ function ComingEventBox({ data }) {
         if (data.eventDisplayName === null) {
           return null;
         } else {
-          navigation.navigate("ComingEvent", { eventId: data.eventId, eventType: data.eventType });
+          if (data.eventType === "myEvent") {
+            navigation.navigate("MyEventDetailScreen", { id: data.eventId, eventNum: data.eventCategory });
+          } else {
+            navigation.navigate("FriendEventDetailScreen", { id: data.eventId, eventNum: data.eventCategory });
+          }
         }
       }}
     >
@@ -265,6 +271,7 @@ function AddEventBox() {
 const styles = StyleSheet.create({
   container: {
     // flex: 1,
+    paddingTop: 30,
     backgroundColor: "#F3F3FF",
     // minHeight: 740,
     // backgroundColor:"#1d1d1d"
