@@ -40,6 +40,7 @@ import TermsOfServiceDrawerScreen from "../screens/TermsOfServiceDrawerScreen";
 import NoticeListScreen from "../screens/NoticeListScreen";
 import TotalScreen from "../screens/TotalScreen";
 import AddNoticeScreen from "../screens/AddNoticeScreen";
+import NoticeDetailScreen from "../screens/NoticeDetailScreen";
 
 function HeaderTitle(props) {
   return (
@@ -240,6 +241,23 @@ export default function Navigation() {
         component={AddNoticeScreen}
         options={{
           title: "공지사항 등록",
+          headerStyle: { backgroundColor: "transparent" },
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            fontFamily: "font-B",
+            fontSize: 17,
+            color: "#1f1f1f",
+          },
+          headerLeft: () => <BackBtn />,
+
+          headerBackTitleVisible: false,
+        }}
+      />
+      <Stack.Screen
+        name="NoticeDetailScreen"
+        component={NoticeDetailScreen}
+        options={{
+          title: "",
           headerStyle: { backgroundColor: "transparent" },
           headerTitleAlign: "center",
           headerTitleStyle: {

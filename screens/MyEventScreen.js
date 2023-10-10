@@ -139,13 +139,16 @@ export default function MyEventScreen() {
           <TouchableOpacity
             onPress={() => {
               const postData = {
-                title: "로컬 테스트",
-                content: "공지사항내용",
+                acId: null, // acId 필드의 값
+                targetUserPhoneNumber: "010-1234-1234", // targetUserPhoneNumber 필드의 값
+                title: "fcm테스트", // title 필드의 값
+                body: "fcm테스트입니다", // body 필드의 값
               };
-              console.log(postData);
-              API.post(`/admin/notice`, postData, {
+              // console.log(postData);
+              API.post(`/notification/send`, postData, {
                 headers: {
                   Authorization: token,
+                  // "Refresh-Token": refreshToken,
                 },
               })
                 .then((response) => {
