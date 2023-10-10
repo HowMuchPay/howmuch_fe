@@ -40,7 +40,7 @@ export default function NoticeListScreen() {
         <View style={styles.inner}>
           {data &&
             data.map((item, index) => (
-              <Pressable style={styles.listBox}>
+              <Pressable style={styles.listBox} key={index}>
                 <View>
                   <Text style={styles.title}>{item.title}</Text>
                   <Text style={styles.date}>{item.updatedAt}</Text>

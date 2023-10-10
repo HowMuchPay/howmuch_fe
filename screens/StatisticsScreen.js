@@ -53,6 +53,7 @@ export default function StatisticsScreen() {
       const newData = response.data; // 새로운 데이터
 
       // 상태를 업데이트하고 화면을 다시 렌더링합니다.
+      console.log(response);
       console.log("statistic", newData);
       console.log("res", newData.statisticsListResponse);
       setStatisticsData(newData);
