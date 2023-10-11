@@ -17,7 +17,7 @@ const signInWithKakao = async () => {
 export default function LoginScreen() {
   const [token, setToken] = useAppStore((state) => [state.token, state.setToken]);
   const [phoneExisted, setPhoneExisted] = useAppStore((state) => [state.phoneExisted, state.setPhoneExisted]);
-
+  const [phoneNumber, setPhoneNumber] = useAppStore((state) => [state.phoneNumber, state.setPhoneNumber]);
   const [refreshToken, setRefreshToken] = useAppStore((state) => [state.refreshToken, state.setRefreshToken]);
   const [userType, setUserType] = useAppStore((state) => [state.userType, state.setUserType]);
   const [userProfileImg, setUserProfileImg] = useAppStore((state) => [state.userProfileImg, state.setUserProfileImg]);
@@ -70,12 +70,12 @@ export default function LoginScreen() {
         if (data["accessToken"]) {
           setToken(data["accessToken"]);
           setRefreshToken(data["refreshToken"]);
-          setPhoneExisted(data["phoneExisted"]);
+          // setPhoneExisted(data["phoneExisted"]);
+          setPhoneNumber(data["phoneNumber"]);
           setUserType(data["roleType"]);
           setUserProfileImg(kakaoProfile.profileImageUrl);
           console.log("access", data["accessToken"]);
           console.log("refresh", data["refreshToken"]);
-          console.log("phoneExisted", data["phoneExisted"]);
 
           // setRefreshToken(data["refreshToken"]);
           // AsyncStorage.setItem("authToken", data["accessToken"]);
@@ -92,33 +92,33 @@ export default function LoginScreen() {
       });
   };
 
-  const cleanPhoneNumber = (phoneNumber) => {
-    if (phoneNumber) {
-      // 빈 칸 지우기
-      phoneNumber = phoneNumber.replace(/ /g, "");
-      // - 지우기
-      phoneNumber = phoneNumber.replace(/-/g, "");
-      // +82로 시작하면 0으로 바꾸기
-      if (phoneNumber.startsWith("+82")) {
-        phoneNumber = "0" + phoneNumber.slice(3);
-      }
-      // 10으로 시작하면 010으로 바꾸기
-      if (phoneNumber.startsWith("10")) {
-        phoneNumber = "0" + phoneNumber;
-      }
-    }
-    return phoneNumber;
-  };
+  // const cleanPhoneNumber = (phoneNumber) => {
+  //   if (phoneNumber) {
+  //     // 빈 칸 지우기
+  //     phoneNumber = phoneNumber.replace(/ /g, "");
+  //     // - 지우기
+  //     phoneNumber = phoneNumber.replace(/-/g, "");
+  //     // +82로 시작하면 0으로 바꾸기
+  //     if (phoneNumber.startsWith("+82")) {
+  //       phoneNumber = "0" + phoneNumber.slice(3);
+  //     }
+  //     // 10으로 시작하면 010으로 바꾸기
+  //     if (phoneNumber.startsWith("10")) {
+  //       phoneNumber = "0" + phoneNumber;
+  //     }
+  //   }
+  //   return phoneNumber;
+  // };
 
   useEffect(() => {
     if (token) {
-      if (phoneExisted === true) {
+      if (phoneNumber !== "") {
         navigation.navigate("Drawer");
       } else {
         navigation.navigate("LoginPhoneNumScreen");
       }
     }
-  }, [token, phoneExisted]);
+  }, [token, phoneNumber]);
 
   return (
     <View style={styles.container}>

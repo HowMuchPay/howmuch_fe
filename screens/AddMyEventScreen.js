@@ -67,9 +67,9 @@ export default function AddMyEventScreen() {
       <StatusBar barStyle="auto" />
 
       <View style={styles.inner}>
-        <TouchableOpacity onPress={handlePresentModalPress}>
+        {/* <TouchableOpacity onPress={handlePresentModalPress}>
           <Text>modal</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <Progress.Bar progress={progress} width={null} height={4} color={"#6D61FF"} unfilledColor={"#E7E7FF"} borderWidth={0} style={{ marginTop: 50, marginBottom: 75 }} />
         <ComponentBasedOnCount countUp={countUp} handleButtonClick={handleButtonClick} handleAddData={handleAddData} postData={postData} modalOpenClick={modalOpenClick} modalVisible={modalVisible} />
@@ -162,11 +162,11 @@ const ModalComponent = ({ modalOpenClick, modalVisible, postData }) => {
     })
       .then((response) => {
         console.log("성공적으로 POST 요청을 보냈습니다.", response.data);
-        navigation.navigate("MyEvent");
+        navigation.replace("MyEvent");
       })
       .catch((error) => {
         console.error("POST 요청을 보내는 중 오류가 발생했습니다.", error);
-        navigation.navigate("MyEvent");
+        navigation.replace("MyEvent");
       });
 
     // 모달을 닫습니다.

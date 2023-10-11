@@ -29,7 +29,7 @@ export default function RemoveAccountScreen() {
         .then((response) => {
           console.log("탈퇴 성공!");
           clearToken();
-          navigation.navigate("Login");
+          navigation.navigate("Boarding");
         })
         .catch((error) => {
           // 탈퇴 실패 시 처리

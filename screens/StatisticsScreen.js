@@ -86,6 +86,7 @@ export default function StatisticsScreen() {
   // const sliceColors = ["#fbd203", "#ffb300"];
 
   const EventListByDate = ({ eventData }) => {
+    console.log("event", eventData);
     return (
       <View>
         {Object.keys(eventData).map((date) => (
@@ -162,7 +163,14 @@ export default function StatisticsScreen() {
             <View style={styles.moneyBox}>
               <View style={styles.moneyDes}>
                 <Text style={[styles.payTitle, { backgroundColor: "#E7E7FF", color: "#6D61FF" }]}>냈어요</Text>
-                <Text style={styles.payAmount}> - {statisticsData.totalPayment !== undefined && statisticsData.totalPayment.toLocaleString()}원</Text>
+                <Text style={styles.payAmount}>
+                  {" "}
+                  {statisticsData.totalPayment === 0 ? (
+                    <Text style={styles.payAmount}>0원</Text>
+                  ) : (
+                    <Text style={styles.payAmount}> - {statisticsData.totalPayment !== undefined && statisticsData.totalPayment.toLocaleString()}원</Text>
+                  )}
+                </Text>
               </View>
               <View style={styles.moneyDes}>
                 <Text style={[styles.payTitle, { backgroundColor: "#FFEDF4", color: "#E21068" }]}>받았어요</Text>
@@ -176,13 +184,35 @@ export default function StatisticsScreen() {
 
             <Image source={lineImg} style={{ width: "100%", marginVertical: 46 }} />
 
-            <Text style={styles.statisticEvent}>{statisticsData.mostEventCategory}에 가장 많은 비용을 지출했어요</Text>
+            <Text style={styles.statisticEvent}>
+              {statisticsData.mostEventCategory && statisticsData.mostEventCategory.length !== 0 ? (
+                <>
+                  {statisticsData.mostEventCategory
+                    .map((event, index) => {
+                      if (index === statisticsData.mostEventCategory.length - 1) {
+                        return event;
+                      }
+                      return event + ",";
+                    })
+                    .join("")}
+                  <Text>에 가장 많은 비용을 지출했어요</Text>
+                </>
+              ) : (
+                <Text>주고 받은 내역이 없습니다</Text>
+              )}
+            </Text>
           </View>
 
           <View style={styles.eventListInner}>
             <Text style={styles.eventListMonth}>{currentYearMonth.month}월 내역</Text>
             <Image source={lineImg} style={{ width: "100%", marginVertical: 15 }} />
-            {statisticsData.statisticsListResponse !== undefined && <EventListByDate eventData={statisticsData.statisticsListResponse} />}
+            {statisticsData.statisticsListResponse !== undefined && statisticsData.statisticsListResponse !== null ? (
+              <EventListByDate eventData={statisticsData.statisticsListResponse} />
+            ) : (
+              <View style={{ alignItems: "center", marginVertical: 20 }}>
+                <Text style={{ fontFamily: "font-SM", fontSize: 14, color: "#5f5f5f" }}>주고받은 내역이 없습니다.</Text>
+              </View>
+            )}
           </View>
         </ScrollView>
       )}

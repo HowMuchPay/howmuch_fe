@@ -12,8 +12,9 @@ import event4 from "../assets/images/detail_event_icon_4.png";
 import trashIcon from "../assets/images/trash_icon.svg";
 import { API } from "../stores/api";
 import Modal from "react-native-modal";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { useAppStore } from "../stores/store";
+import lineImg from "../assets/images/line01.png";
 
 let eventId;
 let eventNumber;
@@ -25,6 +26,7 @@ function MyEventDetailScreen({ route }) {
 
   const { id, eventNum } = route.params;
   const [isSearching, setIsSearching] = useState(false);
+  const isFocused = useIsFocused();
   eventId = id;
   eventNumber = eventNum;
 
@@ -43,19 +45,19 @@ function MyEventDetailScreen({ route }) {
   }
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    fetchData("asc");
+  }, [isFocused]);
 
-  useEffect(() => {
-    if (route.params?.shouldFetchData) {
-      fetchData();
-    }
-  }, [route.params?.shouldFetchData]);
+  // useEffect(() => {
+  //   if (route.params?.shouldFetchData) {
+  //     fetchData("asc");
+  //   }
+  // }, [route.params?.shouldFetchData]);
 
-  const fetchData = async () => {
+  const fetchData = async (sort) => {
     try {
       // 데이터를 가져오는 axios 요청을 보냅니다.
-      const response = await API.get(`/event/my/${id}/details?sort=asc`, {
+      const response = await API.get(`/event/my/${id}/details?sort=${sort}`, {
         headers: {
           Authorization: token,
           "Content-Type": "application/json",
@@ -187,7 +189,7 @@ function PayFilterBox({ id, fetchData, handleSearchClose }) {
     setModalVisible(number);
   };
 
-  const handleModalClose = () => {
+  const handleModalClose = (sort) => {
     // API.get(`/event/my/filter?myTypes=${groupResult}&eventCategories=${eventResult}`, {
     //   headers: {
     //     Authorization: token,
@@ -203,6 +205,7 @@ function PayFilterBox({ id, fetchData, handleSearchClose }) {
 
     // Modal 닫기
     setModalVisible(null);
+    fetchData(sort);
   };
 
   const handleTextChange = (inputText) => {
@@ -213,7 +216,7 @@ function PayFilterBox({ id, fetchData, handleSearchClose }) {
     <View style={styles.filterContainer}>
       <View style={styles.filterFlex}>
         <TouchableOpacity style={styles.filterSelectBox} onPress={() => handleButtonPress(1)}>
-          <Text style={styles.filterSelectTitle}>전체 내역</Text>
+          <Text style={styles.filterSelectTitle}>내역 정렬</Text>
           <Image style={{ width: 12, height: 12 }} source={require("../assets/images/icon_arrow.png")} />
         </TouchableOpacity>
         <View>
@@ -240,6 +243,29 @@ function PayFilterBox({ id, fetchData, handleSearchClose }) {
               >
                 <Image style={{ width: 37, height: 2 }} source={require("../assets/images/icon_close_bar.png")} />
               </TouchableOpacity>
+              <View style={styles.modalGroupSelect}>
+                <Text style={styles.modalTitle}>금액 정렬</Text>
+                <View style={styles.modalBtnFlex}>
+                  <TouchableOpacity
+                    style={[styles.modalSelectBtn, { backgroundColor: "#F3F3FF" }]}
+                    onPress={() => {
+                      setModalVisible(null);
+                      fetchData("asc");
+                    }}
+                  >
+                    <Text style={[styles.modalBtnTitle, { color: "#1F1F1F" }]}>금액 적은순</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.modalSelectBtn, { backgroundColor: "#F3F3FF" }]}
+                    onPress={() => {
+                      setModalVisible(null);
+                      fetchData("desc");
+                    }}
+                  >
+                    <Text style={[styles.modalBtnTitle, { color: "#1F1F1F" }]}>금액 많은순</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
             </View>
           </Modal>
         </View>
@@ -310,7 +336,8 @@ function PayList({ data, handleDelete }) {
               rightOpenValue={-70}
               disableRightSwipe
             />
-            {index !== 0 ? <View style={{ height: 0.3, backgroundColor: "#ccc", marginVertical: 10 }}></View> : null}
+            <Image source={lineImg} style={{ width: "100%", marginVertical: 10 }} />
+            {/* {index !== 0 ? <View style={{ height: 0.3, backgroundColor: "#ccc", marginVertical: 10 }}></View> : null} */}
           </View>
         );
       }}
