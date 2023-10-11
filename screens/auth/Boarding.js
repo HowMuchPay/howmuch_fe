@@ -1,8 +1,10 @@
 import { StatusBar } from "expo-status-bar";
-import * as React from "react";
+import React, { useEffect, useState } from "react";
+
 import { StyleSheet, Text, View, FlatList, Animated, Image, TouchableOpacity, Pressable } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { useNavigation } from "@react-navigation/native";
+import { useAppStore } from "../../stores/store";
 
 const DATA = [
   {
@@ -26,6 +28,14 @@ export default function Boarding() {
   const scrollX = new Animated.Value(0);
   const animation = React.useRef(null);
   const navigation = useNavigation();
+  const store = useAppStore();
+  const token = store.token;
+
+  useEffect(() => {
+    if (token) {
+      navigation.navigate("Drawer");
+    } else null;
+  }, [token]);
 
   const renderItem = ({ item, index }) => {
     return (

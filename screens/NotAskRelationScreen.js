@@ -129,11 +129,11 @@ const ModalComponent = ({ modalOpenClick, modalVisible, postData }) => {
     })
       .then((response) => {
         console.log("성공적으로 POST 요청을 보냈습니다.", response.data);
-        navigation.navigate("FriendEvent");
+        navigation.replace("FriendEvent");
       })
       .catch((error) => {
         console.error("POST 요청을 보내는 중 오류가 발생했습니다.", error);
-        navigation.navigate("FriendEvent");
+        navigation.replace("FriendEvent");
       });
 
     // 모달을 닫습니다.

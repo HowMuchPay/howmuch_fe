@@ -114,7 +114,7 @@ export default function MyEventScreen() {
       keyExtractor={(item, index) => index.toString()} // 간단한 keyExtractor를 사용
       renderItem={({ item }) => (
         <View style={styles.inner}>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => {
               API.delete("/admin/notice/7", {
                 headers: {
@@ -134,9 +134,9 @@ export default function MyEventScreen() {
             }}
           >
             <Text>get</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => {
               const postData = {
                 acId: null, // acId 필드의 값
@@ -160,9 +160,9 @@ export default function MyEventScreen() {
             }}
           >
             <Text>post123</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
-          <TouchableOpacity
+          {/* <TouchableOpacity
             onPress={() => {
               const postData = {
                 title: "로컬 테스트111",
@@ -184,7 +184,7 @@ export default function MyEventScreen() {
             }}
           >
             <Text>put</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           {item ? (
             <>

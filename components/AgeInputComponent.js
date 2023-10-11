@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import Modal from "react-native-modal";
+import RNPickerSelect from "react-native-picker-select";
 
 export default function AgeInputComponent({ handleButtonClick, handleAddData }) {
   const [textInputValue, setTextInputValue] = useState("");
@@ -63,6 +64,14 @@ export default function AgeInputComponent({ handleButtonClick, handleAddData }) 
           keyboardType="numeric"
           value={textInputValue}
           onChangeText={onChangeText}
+        />
+        <RNPickerSelect
+          onValueChange={(value) => console.log(value)}
+          items={[
+            { label: "Football", value: "football" },
+            { label: "Baseball", value: "baseball" },
+            { label: "Hockey", value: "hockey" },
+          ]}
         />
       </View>
 

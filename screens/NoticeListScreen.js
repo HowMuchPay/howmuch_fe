@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, ScrollView, Image, Pressable, TouchableOpacity 
 import React, { useEffect, useState } from "react";
 import rightArrowIcon from "../assets/images/right_arrow_icon.png";
 import { useAppStore } from "../stores/store";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { API } from "../stores/api";
 
 export default function NoticeListScreen() {
@@ -10,6 +10,7 @@ export default function NoticeListScreen() {
   const token = store.token;
   const isFocused = useIsFocused();
   const [data, setData] = useState(null);
+  const navigation = useNavigation();
 
   useEffect(() => {
     fetchData();
@@ -40,7 +41,7 @@ export default function NoticeListScreen() {
         <View style={styles.inner}>
           {data &&
             data.map((item, index) => (
-              <Pressable style={styles.listBox} key={index}>
+              <Pressable style={styles.listBox} key={index} onPress={() => navigation.navigate("NoticeDetailScreen", { id: item.id })}>
                 <View>
                   <Text style={styles.title}>{item.title}</Text>
                   <Text style={styles.date}>{item.updatedAt}</Text>

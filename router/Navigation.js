@@ -41,6 +41,7 @@ import NoticeListScreen from "../screens/NoticeListScreen";
 import TotalScreen from "../screens/TotalScreen";
 import AddNoticeScreen from "../screens/AddNoticeScreen";
 import NoticeDetailScreen from "../screens/NoticeDetailScreen";
+import NoticeUpdateScreen from "../screens/NoticeUpdateScreen";
 
 function HeaderTitle(props) {
   return (
@@ -63,7 +64,12 @@ function MyEventPlusButton() {
   const [modalVisible, setModalVisible] = useState(false);
   return (
     <View>
-      <TouchableOpacity onPress={() => setModalVisible(true)}>
+      {/* <TouchableOpacity onPress={() => setModalVisible(true)}> */}
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("AddMyEventScreen");
+        }}
+      >
         <Image style={{ width: 24, height: 24 }} source={require("../assets/images/icon_plus_black.png")} />
       </TouchableOpacity>
 
@@ -194,20 +200,17 @@ export default function Navigation() {
   console.log("token", token);
   console.log(userType);
   return (
-    <Stack.Navigator initialRouteName={token ? "Drawer" : "Login"} screenOptions={{ headerTransparent: true }}>
+    <Stack.Navigator initialRouteName={"Boarding"} screenOptions={{ headerTransparent: true }}>
       {/* <Stack.Screen name="KakaoLogin" component={KakaoLogin} options={{ headerShown: false }} /> */}
       <Stack.Screen name="Drawer" component={HandleDrawer} options={{ headerShown: false }} />
       <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
-
-      {/* <Stack.Screen name="Boarding" component={Boarding} options={{ headerShown: false }} />
+      <Stack.Screen name="Boarding" component={Boarding} options={{ headerShown: false }} />
 
       <Stack.Screen name="LoginPhoneNumScreen" component={LoginPhoneNumScreen} options={{ headerShown: false }} />
       <Stack.Screen name="TermsScreen" component={TermsScreen} options={{ headerShown: false }} />
       <Stack.Screen name="TermsOfServiceScreen" component={TermsOfServiceScreen} options={{ headerShown: false }} />
       <Stack.Screen name="TermsPrivacyPolicyScreen" component={TermsPrivacyPolicyScreen} options={{ headerShown: false }} />
-      <Stack.Screen name="TermsPrivacyCollectScreen" component={TermsPrivacyCollectScreen} options={{ headerShown: false }} /> */}
-
-      {/* <Stack.Screen name="Drawer" component={HandleDrawer} options={{ headerShown: false }} /> */}
+      <Stack.Screen name="TermsPrivacyCollectScreen" component={TermsPrivacyCollectScreen} options={{ headerShown: false }} />
 
       <Stack.Screen
         name="NoticeListScreen"
@@ -257,7 +260,34 @@ export default function Navigation() {
         name="NoticeDetailScreen"
         component={NoticeDetailScreen}
         options={{
-          title: "",
+          title: "공지사항",
+          headerStyle: { backgroundColor: "#fff" },
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            fontFamily: "font-B",
+            fontSize: 17,
+            color: "#1f1f1f",
+          },
+          headerLeft: () => <BackBtn />,
+          // headerRight: () => {
+          //   if (userType === "ROLE_ADMIN") {
+          //     return (
+          //       <TouchableOpacity onPress={() => navigation.navigate("AddNoticeScreen")}>
+          //         <Image style={{ width: 24, height: 24 }} source={require("../assets/images/badge_icon.png")} />
+          //       </TouchableOpacity>
+          //     );
+          //   } else {
+          //     return null;
+          //   }
+          // },
+          headerBackTitleVisible: false,
+        }}
+      />
+      <Stack.Screen
+        name="NoticeUpdateScreen"
+        component={NoticeUpdateScreen}
+        options={{
+          title: "공지사항 수정",
           headerStyle: { backgroundColor: "transparent" },
           headerTitleAlign: "center",
           headerTitleStyle: {
@@ -630,7 +660,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    // width: "95%"
+    // width: "95%",
   },
   recommendModalBtn: {
     borderRadius: 10,

@@ -31,17 +31,17 @@ export default function AllEventScreen() {
   };
 
   useEffect(() => {
-    fetchData();
+    fetchData("asc");
   }, [isFocused]);
 
   // useEffect(() => {
   //   fetchData();
   // }, []);
 
-  const fetchData = async () => {
+  const fetchData = async (sort) => {
     try {
       // 데이터를 가져오는 axios 요청을 보냅니다.
-      const response = await API.get("/home/statistics", {
+      const response = await API.get(`/home/statistics?sort=${sort}`, {
         headers: {
           Authorization: token,
           "Content-Type": "application/json",
@@ -92,21 +92,6 @@ export default function AllEventScreen() {
     );
   };
 
-  const handleFilter = (groupNumList, eventNumList) => {
-    API.get(`/event/acquaintance/filter?acTypes=${groupNumList}&eventCategories=${eventNumList}`, {
-      headers: {
-        Authorization: token,
-      },
-    })
-      .then((response) => {
-        console.log("성공적으로 get 요청을 보냈습니다.", response.data.allAcEvents);
-        setData(response.data);
-      })
-      .catch((error) => {
-        console.error("get 요청을 보내는 중 오류가 발생했습니다.", error);
-      });
-  };
-
   return (
     <FlatList // ScrollView를 FlatList로 변경
       style={styles.container}
@@ -117,7 +102,7 @@ export default function AllEventScreen() {
           {item ? (
             <>
               <View>
-                <PayListBox handleFilter={handleFilter} fetchData={fetchData} handleSearchChange={handleSearchChange} searchText={searchText} />
+                <PayListBox fetchData={fetchData} handleSearchChange={handleSearchChange} searchText={searchText} />
                 {item && item.allCombineEvents && Object.keys(item.allCombineEvents).length === 0 ? (
                   <View style={[styles.payListBox, { height: 600, alignItems: "center", justifyContent: "center" }]}>
                     <Text style={{ fontSize: 16, fontFamily: "font-B", color: "#cccccc" }}>이벤트 목록이 없습니다.</Text>
@@ -134,66 +119,24 @@ export default function AllEventScreen() {
   );
 }
 
-function PayListBox({ handleFilter, fetchData, handleSearchChange, searchText }) {
+function PayListBox({ fetchData }) {
   const [modalVisible, setModalVisible] = useState(null);
-  const [groupNumList, setGroupNumList] = useState(null);
-  const [eventNumList, setEventNumList] = useState(null);
-
   const navigation = useNavigation();
 
-  const handleButtonPress = useCallback((number) => {
+  const handleButtonPress = (number) => {
     setModalVisible(number);
-  }, []);
+  };
 
   const handleModalClose = () => {
-    let groupResult;
-    let eventResult;
-
-    if (groupNumList.includes(5)) {
-      groupResult = "0,1,2,3,4";
-    } else if (groupNumList.length === 0) {
-      groupResult = "0,1,2,3,4";
-    } else {
-      groupResult = groupNumList.sort((a, b) => a - b).join(",");
-    }
-
-    if (eventNumList.includes(5)) {
-      eventResult = "0,1,2,3,4";
-    } else if (eventNumList.length === 0) {
-      eventResult = "0,1,2,3,4";
-    } else {
-      eventResult = eventNumList.sort((a, b) => a - b).join(",");
-    }
-
-    handleFilter(groupResult, eventResult);
-
     // Modal 닫기
     setModalVisible(null);
   };
-
-  let groupList = [
-    { id: 5, title: "전체", pressed: false },
-    { id: 0, title: "가족", pressed: false },
-    { id: 1, title: "친구", pressed: false },
-    { id: 2, title: "직장", pressed: false },
-    { id: 3, title: "친척", pressed: false },
-    { id: 4, title: "기타", pressed: false },
-  ];
-
-  let eventList = [
-    { id: 5, title: "전체", pressed: false },
-    { id: 0, title: "결혼", pressed: false },
-    { id: 3, title: "돌잔치", pressed: false },
-    { id: 1, title: "상", pressed: false },
-    { id: 2, title: "생일", pressed: false },
-    { id: 4, title: "기타", pressed: false },
-  ];
 
   return (
     <View style={styles.filterContainer}>
       <View style={styles.filterFlex}>
         <TouchableOpacity style={styles.filterSelectBox} onPress={() => handleButtonPress(1)}>
-          <Text style={styles.filterSelectTitle}>전체 내역</Text>
+          <Text style={styles.filterSelectTitle}>날짜 정렬</Text>
           <Image style={{ width: 12, height: 12 }} source={require("../assets/images/icon_arrow.png")} />
         </TouchableOpacity>
         <View>
@@ -220,9 +163,29 @@ function PayListBox({ handleFilter, fetchData, handleSearchChange, searchText })
               >
                 <Image style={{ width: 37, height: 2 }} source={require("../assets/images/icon_close_bar.png")} />
               </TouchableOpacity>
-
-              <SelectGroupBtnBox title={"그룹별"} btnArr={groupList} setGroupNumList={setGroupNumList} />
-              <SelectEventBtnBox title={"경조사별"} btnArr={eventList} setEventNumList={setEventNumList} />
+              <View style={styles.modalGroupSelect}>
+                <Text style={styles.modalTitle}>금액 정렬</Text>
+                <View style={styles.modalBtnFlex}>
+                  <TouchableOpacity
+                    style={[styles.modalSelectBtn, { backgroundColor: "#F3F3FF" }]}
+                    onPress={() => {
+                      setModalVisible(null);
+                      fetchData("asc");
+                    }}
+                  >
+                    <Text style={[styles.modalBtnTitle, { color: "#1F1F1F" }]}>날짜 오래된순</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[styles.modalSelectBtn, { backgroundColor: "#F3F3FF" }]}
+                    onPress={() => {
+                      setModalVisible(null);
+                      fetchData("desc");
+                    }}
+                  >
+                    <Text style={[styles.modalBtnTitle, { color: "#1F1F1F" }]}>날짜 최신순</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
             </View>
           </Modal>
         </View>
@@ -240,61 +203,6 @@ function PayListBox({ handleFilter, fetchData, handleSearchChange, searchText })
             <Image style={{ width: 24, height: 24 }} source={require("../assets/images/icon_rotate_right.png")} />
           </TouchableOpacity>
         </View>
-      </View>
-    </View>
-  );
-}
-
-function SelectGroupBtnBox(props) {
-  const [buttons, setButtons] = useState(props.btnArr);
-  const [activeIds, setActiveIds] = useState([]);
-
-  const handleGroupButtonPress = (buttonId) => {
-    setButtons((prevButtons) => prevButtons.map((button) => (button.id === buttonId ? { ...button, pressed: !button.pressed } : button)));
-    setActiveIds((prevActiveIds) => (prevActiveIds.includes(buttonId) ? prevActiveIds.filter((id) => id !== buttonId) : [...prevActiveIds, buttonId]));
-  };
-  // console.log("활성화된 ID들:gr", activeIds);
-
-  props.setGroupNumList(activeIds);
-
-  return (
-    <View style={styles.modalGroupSelect}>
-      <Text style={styles.modalTitle}>{props.title}</Text>
-      <View style={styles.modalBtnFlex}>
-        {buttons.map((button, idx) => {
-          return (
-            <TouchableOpacity style={[styles.modalSelectBtn, { backgroundColor: button.pressed ? "#6D61FF" : "#F3F3FF" }]} key={button.id} onPress={() => handleGroupButtonPress(button.id)}>
-              <Text style={[styles.modalBtnTitle, { color: button.pressed ? "#fff" : "#1F1F1F" }]}>{button.title}</Text>
-            </TouchableOpacity>
-          );
-        })}
-      </View>
-    </View>
-  );
-}
-
-function SelectEventBtnBox(props) {
-  const [buttons, setButtons] = useState(props.btnArr);
-  const [activeIds, setActiveIds] = useState([]);
-
-  const handleEventButtonPress = (buttonId) => {
-    setButtons((prevButtons) => prevButtons.map((button) => (button.id === buttonId ? { ...button, pressed: !button.pressed } : button)));
-    setActiveIds((prevActiveIds) => (prevActiveIds.includes(buttonId) ? prevActiveIds.filter((id) => id !== buttonId) : [...prevActiveIds, buttonId]));
-  };
-  // console.log("활성화된 ID들:ev", activeIds);
-
-  props.setEventNumList(activeIds);
-  return (
-    <View style={styles.modalGroupSelect}>
-      <Text style={styles.modalTitle}>{props.title}</Text>
-      <View style={styles.modalBtnFlex}>
-        {buttons.map((button, idx) => {
-          return (
-            <TouchableOpacity style={[styles.modalSelectBtn, { backgroundColor: button.pressed ? "#6D61FF" : "#F3F3FF" }]} key={button.id} onPress={() => handleEventButtonPress(button.id)}>
-              <Text style={[styles.modalBtnTitle, { color: button.pressed ? "#fff" : "#1F1F1F" }]}>{button.title}</Text>
-            </TouchableOpacity>
-          );
-        })}
       </View>
     </View>
   );

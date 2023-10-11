@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, ActivityIndicator } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Calendar, LocaleConfig } from "react-native-calendars";
 import { ScrollView } from "react-native-gesture-handler";
