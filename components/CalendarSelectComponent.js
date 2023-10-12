@@ -6,11 +6,13 @@ import BottomWheelyModal from "./modals/BottomWheelyModal";
 import BottomSheet, { BottomSheetBackdrop, BottomSheetModal, BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
-const CalendarSelectComponent = ({ handleButtonClick }) => {
+const CalendarSelectComponent = ({ handleButtonClick, placeholder }) => {
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [dateChange, setDateChange] = useState(new Date());
+  const [dateChange, setDateChange] = useState(placeholder !== undefined ? new Date(placeholder) : new Date());
   const [showButton, setShowButton] = useState(false);
+
+  console.log(placeholder);
 
   // const formatDate = (rawDate) => {
   //   let date = new Date(rawDate);
@@ -65,7 +67,7 @@ const CalendarSelectComponent = ({ handleButtonClick }) => {
           <TextInput
             pointerEvents="none"
             style={styles.calendarInput}
-            placeholder="날짜를 선택해주세요"
+            placeholder={"날짜를 선택해주세요"}
             // onSubmitEditing={handleButtonClick}
             editable={false}
             // onChangeText={setDateChange}
@@ -77,7 +79,13 @@ const CalendarSelectComponent = ({ handleButtonClick }) => {
         </TouchableOpacity>
       </View>
 
-      {showButton && (
+      {placeholder !== undefined ? (
+        <TouchableOpacity onPress={handleClick} style={styles.nextBtn}>
+          <Text style={styles.nextBtnText}>다음</Text>
+        </TouchableOpacity>
+      ) : null}
+
+      {placeholder === undefined && showButton && (
         <TouchableOpacity onPress={handleClick} style={styles.nextBtn}>
           <Text style={styles.nextBtnText}>다음</Text>
         </TouchableOpacity>

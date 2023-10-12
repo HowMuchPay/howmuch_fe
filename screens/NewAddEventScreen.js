@@ -37,10 +37,22 @@ export default function NewAddEventScreen() {
               <Text style={styles.modalTitle}>경조사비를 추천 받으시겠습니까?</Text>
 
               <View style={styles.modalBtnBox}>
-                <TouchableOpacity style={[styles.modalBtn, { backgroundColor: "#f3f3ff" }]} onPress={() => navigation.navigate("NotAskRelationScreen")}>
+                <TouchableOpacity
+                  style={[styles.modalBtn, { backgroundColor: "#f3f3ff" }]}
+                  onPress={() => {
+                    navigation.navigate("NotAskRelationScreen");
+                    setModalVisible(false);
+                  }}
+                >
                   <Text style={styles.modalBtnText}>아니요</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.modalBtn, { backgroundColor: "#6D61FF" }]} onPress={() => navigation.navigate("AskRelationScreen")}>
+                <TouchableOpacity
+                  style={[styles.modalBtn, { backgroundColor: "#6D61FF" }]}
+                  onPress={() => {
+                    navigation.navigate("AskRelationScreen");
+                    setModalVisible(false);
+                  }}
+                >
                   <Text style={[styles.modalBtnText, { color: "#fff" }]}>네</Text>
                 </TouchableOpacity>
               </View>

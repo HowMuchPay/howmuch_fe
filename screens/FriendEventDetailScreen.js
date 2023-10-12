@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Image, ActivityIndicator } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useIsFocused, useRoute } from "@react-navigation/native";
+import { useIsFocused, useNavigation, useRoute } from "@react-navigation/native";
 import { API } from "../stores/api";
 import { useAppStore } from "../stores/store";
 import event0 from "../assets/images/detail_event_icon_0.png";
@@ -14,6 +14,7 @@ export default function FriendEventDetailScreen() {
   const store = useAppStore();
   const token = store.token;
   const isFocused = useIsFocused();
+  const navigation = useNavigation();
 
   const { id, eventNum } = route.params;
 
@@ -41,7 +42,7 @@ export default function FriendEventDetailScreen() {
       const newData = response.data;
 
       // 상태를 업데이트하고 화면을 다시 렌더링합니다.
-      console.log("newdata", newData);
+      console.log("eventData", newData);
       setData(newData);
       setIsLoading(false);
       if (eventNum === 0) {
@@ -106,7 +107,7 @@ export default function FriendEventDetailScreen() {
               </View>
             </View>
           )}
-          <TouchableOpacity style={styles.modifyBtn}>
+          <TouchableOpacity style={styles.modifyBtn} onPress={() => navigation.navigate("UpdateEventScreen", { eventData: data })}>
             <Text style={styles.modifyBtnText}>수정하기</Text>
           </TouchableOpacity>
         </View>

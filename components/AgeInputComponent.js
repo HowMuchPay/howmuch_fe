@@ -1,11 +1,12 @@
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import Modal from "react-native-modal";
-import RNPickerSelect from "react-native-picker-select";
+import { Picker } from "@react-native-picker/picker";
 
 export default function AgeInputComponent({ handleButtonClick, handleAddData }) {
   const [textInputValue, setTextInputValue] = useState("");
   const [showButton, setShowButton] = useState(false);
+  const [selectedAge, setSelectedAge] = useState("");
 
   const TextButtonClick = (value) => {
     if (value === "미정") {
@@ -19,12 +20,14 @@ export default function AgeInputComponent({ handleButtonClick, handleAddData }) 
   };
 
   const handleConfirmClick = () => {
+    handleButtonClick(selectedAge);
     // console.log("TextInput의 값:", inputValue);
-    if (textInputValue === "미정") {
-      handleButtonClick(null);
-    } else {
-      handleButtonClick(textInputValue);
-    }
+    // if (textInputValue === "미정") {
+    //   handleButtonClick(null);
+    // } else {
+    //   handleButtonClick(textInputValue);
+    // }
+    console.log(selectedAge);
   };
 
   const formatNumber = (num) => {
@@ -57,22 +60,34 @@ export default function AgeInputComponent({ handleButtonClick, handleAddData }) 
         <Text style={styles.addText}>를 알려주세요</Text>
       </View>
       <View style={styles.nameInputBox}>
-        <TextInput
+        {/* <TextInput
           style={styles.nameInput}
           placeholder="나이를 선택해주세요"
           //   onSubmitEditing={handleButtonClick}
           keyboardType="numeric"
           value={textInputValue}
           onChangeText={onChangeText}
-        />
-        <RNPickerSelect
-          onValueChange={(value) => console.log(value)}
-          items={[
-            { label: "Football", value: "football" },
-            { label: "Baseball", value: "baseball" },
-            { label: "Hockey", value: "hockey" },
-          ]}
-        />
+        /> */}
+        <View style={styles.nameInput}>
+          <Picker
+            selectedValue={selectedAge}
+            onValueChange={(itemValue, itemIndex) => {
+              console.log(itemValue);
+              setSelectedAge(itemValue);
+              setShowButton(true);
+            }}
+            style={{ width: "100%", height: "100%", fontFamily: "font-M" }}
+            itemStyle={{ fontFamily: "font-M" }}
+          >
+            <Picker.Item label="나이를 선택해주세요" enabled={false} />
+            <Picker.Item label="20대" value="20" />
+            <Picker.Item label="30대" value="30" />
+            <Picker.Item label="40대" value="40" />
+            <Picker.Item label="50대" value="50" />
+            <Picker.Item label="60대" value="60" />
+            <Picker.Item label="70대 이상" value="60" />
+          </Picker>
+        </View>
       </View>
 
       {showButton && (
@@ -107,6 +122,7 @@ const styles = StyleSheet.create({
     padding: 20,
     height: 64,
     fontFamily: "font-M",
+    justifyContent: "center",
   },
 
   //추천 금액

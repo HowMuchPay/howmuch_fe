@@ -205,7 +205,7 @@ function PayFilterBox({ id, fetchData, handleSearchClose }) {
 
     // Modal 닫기
     setModalVisible(null);
-    fetchData(sort);
+    // fetchData(sort);
   };
 
   const handleTextChange = (inputText) => {

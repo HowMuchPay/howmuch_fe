@@ -397,7 +397,7 @@ function PayList({ data, handleDelete, searchText }) {
                           <Text style={{ fontSize: 13, fontFamily: "font-R", color: "#5f5f5f" }}>{formatDate(data.item.eventAt)}</Text>
                         </View>
                       </View>
-                      <Text style={{ fontSize: 15, color: "#1f1f1f", fontFamily: "font-B" }}>{data.item.payAmount !== 0 ? `+${data.item.payAmount.toLocaleString()}원` : `0원`}</Text>
+                      <Text style={{ fontSize: 15, color: "#1f1f1f", fontFamily: "font-B" }}>{data.item.payAmount !== 0 ? `-${data.item.payAmount.toLocaleString()}원` : `0원`}</Text>
                     </Pressable>
                   );
                 }}

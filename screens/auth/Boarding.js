@@ -33,7 +33,7 @@ export default function Boarding() {
 
   useEffect(() => {
     if (token) {
-      navigation.navigate("Drawer");
+      navigation.replace("Drawer");
     } else null;
   }, [token]);
 
