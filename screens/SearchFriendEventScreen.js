@@ -30,7 +30,7 @@ const SearchFriendEventScreen = () => {
   const fetchData = async () => {
     try {
       // 데이터를 가져오는 axios 요청을 보냅니다.
-      const response = await API.get(`/event/acquaintance/name`, {
+      const response = await API.get(`/event/acquaintance/people`, {
         headers: {
           Authorization: token,
           "Content-Type": "application/json",
@@ -74,7 +74,7 @@ const SearchFriendEventScreen = () => {
       <>
         <Pressable
           onPress={() =>
-            navigation.navigate("SearchMyAllEventScreen", {
+            navigation.navigate("SearchFriendAllEventScreen", {
               name: item,
             })
           }

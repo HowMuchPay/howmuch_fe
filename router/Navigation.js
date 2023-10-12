@@ -42,6 +42,8 @@ import TotalScreen from "../screens/TotalScreen";
 import AddNoticeScreen from "../screens/AddNoticeScreen";
 import NoticeDetailScreen from "../screens/NoticeDetailScreen";
 import NoticeUpdateScreen from "../screens/NoticeUpdateScreen";
+import SearchFriendAllEventScreen from "../screens/SearchFriendAllEventScreen";
+import UpdateEventScreen from "../screens/UpdateEventScreen";
 
 function HeaderTitle(props) {
   return (
@@ -421,6 +423,23 @@ export default function Navigation() {
       />
 
       <Stack.Screen
+        name="UpdateEventScreen"
+        component={UpdateEventScreen}
+        options={{
+          title: "",
+          headerStyle: { backgroundColor: "transparent" },
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            fontFamily: "font-B",
+            fontSize: 17,
+            color: "#1f1f1f",
+          },
+          headerLeft: () => <BackBtn />,
+          headerBackTitleVisible: false,
+        }}
+      />
+
+      <Stack.Screen
         name="ComingEvent"
         component={ComingEventScreen}
         options={{
@@ -509,6 +528,22 @@ export default function Navigation() {
         component={SearchFriendEventScreen}
         options={{
           title: "검색",
+          headerStyle: { backgroundColor: "transparent" },
+          headerTitleAlign: "center",
+          headerTitleStyle: {
+            fontFamily: "font-B",
+            fontSize: 17,
+            color: "#1f1f1f",
+          },
+          headerLeft: () => <BackBtn />,
+          headerBackTitleVisible: false,
+        }}
+      />
+      <Stack.Screen
+        name="SearchFriendAllEventScreen"
+        component={SearchFriendAllEventScreen}
+        options={{
+          title: "",
           headerStyle: { backgroundColor: "transparent" },
           headerTitleAlign: "center",
           headerTitleStyle: {

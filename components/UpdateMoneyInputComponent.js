@@ -1,12 +1,12 @@
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Modal from "react-native-modal";
-import { Picker } from "@react-native-picker/picker";
+import { API } from "../stores/api";
 
-export default function IncomeInputComponent({ handleButtonClick, handleAddData }) {
-  const [textInputValue, setTextInputValue] = useState("");
+export default function UpdateMoneyInputComponent({ handleButtonClick, handleAddData, modalOpenClick, postData, placeholder }) {
+  const [textInputValue, setTextInputValue] = useState(placeholder !== undefined ? placeholder.toLocaleString() : "");
   const [showButton, setShowButton] = useState(false);
-  const [selectedInput, setSelectedInput] = useState("");
+
   const TextButtonClick = (value) => {
     if (value === "미정") {
       setTextInputValue(value);
@@ -19,13 +19,13 @@ export default function IncomeInputComponent({ handleButtonClick, handleAddData 
   };
 
   const handleConfirmClick = () => {
-    handleButtonClick(selectedInput);
     // console.log("TextInput의 값:", inputValue);
-    // if (textInputValue === "미정") {
-    //   handleButtonClick(null);
-    // } else {
-    //   handleButtonClick(textInputValue);
-    // }
+    modalOpenClick();
+    if (textInputValue === "미정") {
+      handleAddData(null);
+    } else {
+      handleAddData(textInputValue);
+    }
   };
 
   const formatNumber = (num) => {
@@ -54,46 +54,40 @@ export default function IncomeInputComponent({ handleButtonClick, handleAddData 
   return (
     <>
       <View style={{ flexDirection: "row" }}>
-        <Text style={[styles.addText, { color: "#6D61FF" }]}>본인의 연수입</Text>
-        <Text style={styles.addText}>은</Text>
+        <Text style={styles.addText}>지불할</Text>
       </View>
-      <Text style={styles.addText}>얼마인가요?</Text>
+      <View style={{ flexDirection: "row" }}>
+        <Text style={[styles.addText, { color: "#6D61FF" }]}>경조사비</Text>
+        <Text style={styles.addText}>를 입력해주세요</Text>
+      </View>
       <View style={styles.nameInputBox}>
-        {/* <TextInput
+        <TextInput
           style={styles.nameInput}
-          placeholder="연수입을 선택해주세요"
+          //   placeholder={"경조사비를 입력해주세요"}
           //   onSubmitEditing={handleButtonClick}
           keyboardType="numeric"
           value={textInputValue}
           onChangeText={onChangeText}
-        /> */}
-        <View style={styles.nameInput}>
-          <Picker
-            selectedValue={selectedInput}
-            onValueChange={(itemValue, itemIndex) => {
-              console.log(itemValue);
-              setSelectedInput(itemValue);
-              setShowButton(true);
-            }}
-            style={{ width: "100%", height: "100%", fontFamily: "font-M" }}
-            itemStyle={{ fontFamily: "font-M" }}
-          >
-            <Picker.Item label="연수입를 선택해주세요" enabled={false} />
-            <Picker.Item label="3,000만원대 이하" value="3000" />
-            <Picker.Item label="4,000만원대" value="4000" />
-            <Picker.Item label="5,000만원대" value="5000" />
-            <Picker.Item label="6,000만원대" value="6000" />
-            <Picker.Item label="7,000만원대" value="7000" />
-            <Picker.Item label="8,000만원대 이상" value="8000" />
-          </Picker>
-        </View>
+        />
+      </View>
+      <View style={styles.moneyBtnFlex}>
+        <TouchableOpacity onPress={() => TextButtonClick("미정")} style={[styles.moneyBtn]}>
+          <Text style={styles.moneyBtnText}>미정</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => TextButtonClick(10000)} style={[styles.moneyBtn]}>
+          <Text style={styles.moneyBtnText}>+1만</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => TextButtonClick(50000)} style={[styles.moneyBtn]}>
+          <Text style={styles.moneyBtnText}>+5만</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => TextButtonClick(100000)} style={[styles.moneyBtn]}>
+          <Text style={styles.moneyBtnText}>+10만</Text>
+        </TouchableOpacity>
       </View>
 
-      {showButton && (
-        <TouchableOpacity style={styles.nextBtn} onPress={handleConfirmClick}>
-          <Text style={styles.nextBtnText}>확인</Text>
-        </TouchableOpacity>
-      )}
+      <TouchableOpacity style={styles.nextBtn} onPress={handleConfirmClick}>
+        <Text style={styles.nextBtnText}>확인</Text>
+      </TouchableOpacity>
     </>
   );
 }
@@ -121,7 +115,6 @@ const styles = StyleSheet.create({
     padding: 20,
     height: 64,
     fontFamily: "font-M",
-    justifyContent: "center",
   },
 
   //추천 금액
@@ -152,7 +145,7 @@ const styles = StyleSheet.create({
 
   // 다음 버튼
   nextBtn: {
-    top: "45%",
+    top: "30%",
     position: "relative",
     width: "100%",
     alignItems: "center",

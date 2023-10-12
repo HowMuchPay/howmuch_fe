@@ -3,9 +3,9 @@ import React, { useState } from "react";
 import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/native";
 
-export default function NameInputComponent({ handleButtonClick, eventType, myType, modalOpenClick, handleAddData, type }) {
+export default function NameInputComponent({ handleButtonClick, eventType, myType, modalOpenClick, handleAddData, type, placeholder }) {
   const [showButton, setShowButton] = useState(false);
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState(placeholder !== undefined ? placeholder : "");
 
   const TextButtonClick = (value) => {
     setShowButton(inputValue.trim() !== "");
@@ -38,7 +38,13 @@ export default function NameInputComponent({ handleButtonClick, eventType, myTyp
         <TextInput style={styles.nameInput} placeholder="이름을 입력해주세요" onSubmitEditing={TextButtonClick} value={inputValue} onChangeText={(text) => setInputValue(text)} />
       </View>
 
-      {showButton && (
+      {placeholder !== undefined ? (
+        <TouchableOpacity onPress={handleConfirmClick} style={styles.nextBtn}>
+          <Text style={styles.nextBtnText}>확인</Text>
+        </TouchableOpacity>
+      ) : null}
+
+      {placeholder === undefined && showButton && (
         // <TouchableOpacity onPress={eventType === "friend" ? handleButtonClick : modalOpenClick} style={styles.nextBtn}>
         <TouchableOpacity onPress={handleConfirmClick} style={styles.nextBtn}>
           <Text style={styles.nextBtnText}>확인</Text>

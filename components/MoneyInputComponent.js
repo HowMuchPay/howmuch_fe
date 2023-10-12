@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 import Modal from "react-native-modal";
 import { API } from "../stores/api";
 
-export default function MoneyInputComponent({ handleButtonClick, handleAddData, modalOpenClick, recommend, postData }) {
-  const [textInputValue, setTextInputValue] = useState("");
+export default function MoneyInputComponent({ handleButtonClick, handleAddData, modalOpenClick, recommend, postData, placeholder }) {
+  const [textInputValue, setTextInputValue] = useState(placeholder !== undefined ? placeholder : "");
   const [showButton, setShowButton] = useState(false);
   const [recommendMoney, setRecommendMoney] = useState(0);
 
