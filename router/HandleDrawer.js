@@ -31,7 +31,8 @@ function SideScreen() {
       if (response.status === 200) {
         clearToken();
 
-        navigation.navigate("Login");
+        navigation.reset({ routes: [{ name: "Login" }] });
+        // navigation.navigate("Login");
       } else {
         console.error("로그아웃 실패: 서버 응답 오류");
       }
@@ -103,7 +104,7 @@ export default function HandleDrawer() {
   const navigation = useNavigation();
   // useEffect(() => {
   //   // 앱이 시작될 때 토큰을 clear 하고 싶은 경우 여기에서 clearToken 함수를 호출합니다.
-  //   clearToken();
+
   // }, []);
 
   // useEffect(() => {

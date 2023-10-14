@@ -26,7 +26,7 @@ export default function FriendEventDetailScreen() {
 
   useEffect(() => {
     fetchData();
-    console.log("event", eventNum);
+    console.log("event", id);
   }, [isFocused]);
 
   const fetchData = async () => {
@@ -82,7 +82,9 @@ export default function FriendEventDetailScreen() {
                   style={{ width: 24, height: 24 }}
                   source={eventNum === 0 ? event0 : eventNum === 1 ? event1 : eventNum === 2 ? event2 : eventNum === 3 ? event3 : eventNum === 4 ? event4 : null}
                 />
-                <Text style={styles.comingTitle}>{data.acEventDisplayName}</Text>
+                <Text style={styles.comingTitle}>
+                  {data.nickname}의 {data.acEventDisplayName}
+                </Text>
                 <Text style={styles.comingDate}>
                   {data.eventAt.split("-")[0]}년 {data.eventAt.split("-")[1]}월 {data.eventAt.split("-")[2]}일
                 </Text>
@@ -107,7 +109,7 @@ export default function FriendEventDetailScreen() {
               </View>
             </View>
           )}
-          <TouchableOpacity style={styles.modifyBtn} onPress={() => navigation.navigate("UpdateEventScreen", { eventData: data })}>
+          <TouchableOpacity style={styles.modifyBtn} onPress={() => navigation.navigate("UpdateEventScreen", { eventData: data, eventId: id })}>
             <Text style={styles.modifyBtnText}>수정하기</Text>
           </TouchableOpacity>
         </View>

@@ -187,10 +187,14 @@ export default function Navigation() {
   const store = useAppStore();
   const userType = store.userType;
   const navigation = useNavigation();
-
+  const clearAll = useAppStore((state) => state.clearAll);
   // useEffect(() => {
   //   if (token) navigation.navigate("Drawer");
   // }, [token]);
+
+  useEffect(() => {
+    // 앱이 시작될 때 토큰을 clear 하고 싶은 경우 여기에서 clearToken 함수를 호출합니다.
+  }, []);
 
   const handleCustomButtonPress = () => {
     // Handle custom button press logic here
@@ -199,8 +203,7 @@ export default function Navigation() {
   };
 
   StatusBar.setBarStyle("dark-content");
-  console.log("token", token);
-  console.log(userType);
+
   return (
     <Stack.Navigator initialRouteName={"Boarding"} screenOptions={{ headerTransparent: true }}>
       {/* <Stack.Screen name="KakaoLogin" component={KakaoLogin} options={{ headerShown: false }} /> */}

@@ -31,27 +31,11 @@ export default function LoginScreen() {
     (async () => {
       setErrorMsg(null);
       const kakaotoken = await signInWithKakao();
-      console.log("kakaotoken", kakaotoken);
 
       const kakaoProfile = await getProfile();
       console.log("kakaoProfile", kakaoProfile);
       console.log("img", kakaoProfile.profileImageUrl);
       let phone_num = kakaoProfile.phoneNumber;
-      // 예를 들어 phone_num가 +82 10-3433-5673 일때 이걸 01034335673 이렇게 만들기
-      if (phone_num) {
-        // phone_num 빈 칸 지우기
-        phone_num = phone_num.replace(/ /g, "");
-        // phone_num에 -가 있으면 지우기
-        phone_num = phone_num.replace(/-/g, "");
-        // if phone_num starts with +82, remove it
-        if (phone_num.startsWith("+82")) {
-          phone_num = phone_num.slice(3);
-        }
-        // 10 로 시작하면 010으로 바꾸기
-        if (phone_num.startsWith("10")) {
-          phone_num = "0" + phone_num;
-        }
-      }
 
       if (kakaotoken && kakaotoken.accessToken) {
         const name = kakaoProfile.nickname;
@@ -62,7 +46,6 @@ export default function LoginScreen() {
           profileImageUrl: kakaoProfile.profileImageUrl,
         };
         const response = await API.post(`/login/kakao`, body);
-
         const data = response.data;
 
         console.log("data", data);
@@ -70,16 +53,25 @@ export default function LoginScreen() {
         if (data["accessToken"]) {
           setToken(data["accessToken"]);
           setRefreshToken(data["refreshToken"]);
-          // setPhoneExisted(data["phoneExisted"]);
           setPhoneNumber(data["phoneNumber"]);
           setUserType(data["roleType"]);
           setUserProfileImg(kakaoProfile.profileImageUrl);
-          console.log("access", data["accessToken"]);
-          console.log("refresh", data["refreshToken"]);
 
-          // setRefreshToken(data["refreshToken"]);
-          // AsyncStorage.setItem("authToken", data["accessToken"]);
-          // AsyncStorage.setItem("refreshToken", data["refreshToken"]);
+          // console.log("access", data["accessToken"]);
+          // console.log("refresh", data["refreshToken"]);
+          console.log("userdata", data);
+
+          if (data["phoneNumber"] == null) {
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "LoginPhoneNumScreen" }],
+            });
+          } else {
+            navigation.reset({
+              index: 0,
+              routes: [{ name: "Drawer" }],
+            });
+          }
         }
       }
     })()
@@ -92,45 +84,23 @@ export default function LoginScreen() {
       });
   };
 
-  // const cleanPhoneNumber = (phoneNumber) => {
-  //   if (phoneNumber) {
-  //     // 빈 칸 지우기
-  //     phoneNumber = phoneNumber.replace(/ /g, "");
-  //     // - 지우기
-  //     phoneNumber = phoneNumber.replace(/-/g, "");
-  //     // +82로 시작하면 0으로 바꾸기
-  //     if (phoneNumber.startsWith("+82")) {
-  //       phoneNumber = "0" + phoneNumber.slice(3);
-  //     }
-  //     // 10으로 시작하면 010으로 바꾸기
-  //     if (phoneNumber.startsWith("10")) {
-  //       phoneNumber = "0" + phoneNumber;
+  // useEffect(() => {
+  //   if (token) {
+  //     console.log("phone", phoneNumber);
+  //     if (phoneNumber == null) {
+  //       navigation.reset({ routes: [{ name: "LoginPhoneNumScreen" }] });
+  //     } else {
+  //       navigation.reset({ routes: [{ name: "Drawer" }] });
   //     }
   //   }
-  //   return phoneNumber;
-  // };
-
-  useEffect(() => {
-    if (token) {
-      if (phoneNumber !== "") {
-        navigation.navigate("Drawer");
-      } else {
-        navigation.navigate("LoginPhoneNumScreen");
-      }
-    }
-  }, [token, phoneNumber]);
+  // }, [token, phoneNumber]);
 
   return (
     <View style={styles.container}>
       <StatusBar barStyle="auto" />
 
       <Image style={styles.logo} source={require(".././../assets/images/logo1.png")} />
-      {/* <TouchableOpacity
-        style={styles.buttonContainer}
-        onPress={() => {
-          navigation.navigate("Drawer");
-        }}
-      > */}
+
       <TouchableOpacity
         style={styles.buttonContainer}
         onPress={() => {
@@ -140,11 +110,6 @@ export default function LoginScreen() {
         <Image style={styles.kakao} source={require(".././../assets/images/kakaotalk.png")} />
         <Text style={styles.kakaoText}>카카오톡으로 시작하기</Text>
       </TouchableOpacity>
-      {/* <View style={styles.joinContainer}>
-        <Text style={styles.joinText}>회원가입</Text>
-        <Text style={styles.joinText}>|</Text>
-        <Text style={styles.joinText}>로그인</Text>
-      </View> */}
     </View>
   );
 }

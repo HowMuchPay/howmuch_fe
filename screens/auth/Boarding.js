@@ -30,10 +30,21 @@ export default function Boarding() {
   const navigation = useNavigation();
   const store = useAppStore();
   const token = store.token;
-
+  const phoneNumber = store.phoneNumber;
   useEffect(() => {
+    console.log("phone", phoneNumber);
     if (token) {
-      navigation.replace("Drawer");
+      navigation.reset({ routes: [{ name: "Drawer" }] });
+      // setTimeout(() => {
+      //   if (phoneNumber == null) {
+      //     // navigation.navigate("Drawer");
+      //     navigation.reset({ routes: [{ name: "LoginPhoneNumScreen" }] });
+      //   } else {
+      //     navigation.reset({ routes: [{ name: "Drawer" }] });
+
+      //     // navigation.replace("LoginPhoneNumScreen");
+      //   }
+      // }, 1500);
     } else null;
   }, [token]);
 
