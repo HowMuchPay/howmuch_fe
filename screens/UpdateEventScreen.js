@@ -20,7 +20,7 @@ export default function UpdateEventScreen({ route }) {
   const [postData, setPostData] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const { eventData } = route.params;
+  const { eventData, eventId } = route.params;
 
   console.log(eventData);
 
@@ -68,7 +68,7 @@ export default function UpdateEventScreen({ route }) {
       <View style={styles.inner}>
         <Progress.Bar progress={progress} width={null} height={4} color={"#6D61FF"} unfilledColor={"#E7E7FF"} borderWidth={0} style={{ marginTop: 50, marginBottom: 75 }} />
         {eventData && <ComponentBasedOnCount {...componentData} />}
-        <ModalComponent modalOpenClick={modalOpenClick} modalVisible={modalVisible} postData={postData} />
+        <ModalComponent modalOpenClick={modalOpenClick} modalVisible={modalVisible} postData={postData} eventId={eventId} />
       </View>
     </View>
   );
@@ -77,7 +77,7 @@ export default function UpdateEventScreen({ route }) {
 const ComponentBasedOnCount = ({ countUp, handleButtonClick, postData, modalOpenClick, handleAddData, modalVisible, handleCountUp, eventData }) => {
   switch (countUp) {
     case 1:
-      return <TimeSelectComponent handleButtonClick={handleButtonClick} />;
+      return <TimeSelectComponent handleButtonClick={handleButtonClick} placeholder={eventData.eventTime} />;
     case 2:
       return <FriendRelationSelectComponent handleButtonClick={handleButtonClick} />;
     case 3:
@@ -96,7 +96,9 @@ const ComponentBasedOnCount = ({ countUp, handleButtonClick, postData, modalOpen
       );
     case 5:
       if (postData[3] === 4) {
-        return <EventNameInputComponent handleButtonClick={handleButtonClick} handleAddData={handleAddData} modalOpenClick={modalOpenClick} type={"friend"} />;
+        return (
+          <EventNameInputComponent handleButtonClick={handleButtonClick} handleAddData={handleAddData} modalOpenClick={modalOpenClick} type={"friend"} placeholder={eventData.acEventDisplayName} />
+        );
       } else {
         handleCountUp();
       }
@@ -107,7 +109,7 @@ const ComponentBasedOnCount = ({ countUp, handleButtonClick, postData, modalOpen
   }
 };
 
-const ModalComponent = ({ modalOpenClick, modalVisible, postData }) => {
+const ModalComponent = ({ modalOpenClick, modalVisible, postData, eventId }) => {
   const store = useAppStore();
   const token = store.token;
   const navigation = useNavigation();
@@ -137,10 +139,11 @@ const ModalComponent = ({ modalOpenClick, modalVisible, postData }) => {
       };
     }
     console.log(eventData);
-
-    API.post("/event/acquaintance", eventData, {
+    console.log("evet", eventId);
+    API.patch(`/event/acquaintance/${eventId}`, eventData, {
       headers: {
         Authorization: token,
+        "Content-Type": "application/json",
       },
     })
       .then((response) => {

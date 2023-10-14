@@ -122,7 +122,7 @@ export default function TermsScreen() {
               ]}
               onPress={() => {
                 if (store.isTermsAgreeAll && store.isPrivacyPolicyAgreeAll) {
-                  navigation.navigate("Drawer");
+                  navigation.reset({ routes: [{ name: "Drawer" }] });
                 }
               }}
               disabled={!store.isTermsAgreeAll || !store.isPrivacyPolicyAgreeAll}

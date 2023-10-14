@@ -8,7 +8,7 @@ import { API } from "../../stores/api";
 import { useNavigation } from "@react-navigation/native";
 
 export default function LoginPhoneNumScreen() {
-  const [phoneNumber, setPhoneNumber] = useState("");
+  // const [phoneNumber, setPhoneNumber] = useState("");
   const [formattedPhoneNumber, setFormattedPhoneNumber] = useState("");
   const [inputBorderColor, setInputBorderColor] = useState("#E7E7FF");
   const [checkIcon, setCheckIcon] = useState(false);
@@ -16,6 +16,7 @@ export default function LoginPhoneNumScreen() {
   const store = useAppStore();
   const token = store.token;
   const navigation = useNavigation();
+  const [phoneNumber, setPhoneNumber] = useAppStore((state) => [state.phoneNumber, state.setPhoneNumber]);
 
   const handleInputChange = (input) => {
     // 숫자만 허용하도록 정규식을 사용하여 유효성을 검사합니다.

@@ -6,7 +6,7 @@ import { WithLocalSvg } from "react-native-svg";
 import checkIcon from "../assets/images/check_icon.svg";
 import checkColorIcon from "../assets/images/check_color_icon.svg";
 
-const TimeSelectComponent = ({ handleButtonClick }) => {
+const TimeSelectComponent = ({ handleButtonClick, placeholder }) => {
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [dateChange, setDateChange] = useState("");
@@ -16,6 +16,7 @@ const TimeSelectComponent = ({ handleButtonClick }) => {
   const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
+    console.log(placeholder);
     if (!notDecide) {
       console.log(dateChange);
     } else {

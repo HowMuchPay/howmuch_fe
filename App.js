@@ -69,8 +69,8 @@ export default function App() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
+      <StatusBar barStyle="auto" />
       <NavigationContainer style={styles.container} onReady={onLayoutRootView}>
-        <StatusBar barStyle="auto" />
         <Navigation />
       </NavigationContainer>
     </GestureHandlerRootView>

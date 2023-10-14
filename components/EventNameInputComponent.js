@@ -1,9 +1,9 @@
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 
-export default function EventNameInputComponent({ handleButtonClick, handleAddData, modalOpenClick, type }) {
+export default function EventNameInputComponent({ handleButtonClick, handleAddData, modalOpenClick, type, placeholder }) {
   const [showButton, setShowButton] = useState(false);
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState(placeholder !== undefined ? placeholder : "");
 
   const TextButtonClick = (value) => {
     setShowButton(inputValue.trim() !== "");
@@ -32,7 +32,13 @@ export default function EventNameInputComponent({ handleButtonClick, handleAddDa
         <TextInput style={styles.nameInput} placeholder="ex)내친구 철수 생일" onSubmitEditing={TextButtonClick} value={inputValue} onChangeText={(text) => setInputValue(text)} />
       </View>
 
-      {showButton && (
+      {placeholder !== undefined ? (
+        <TouchableOpacity onPress={handleConfirmClick} style={styles.nextBtn}>
+          <Text style={styles.nextBtnText}>확인</Text>
+        </TouchableOpacity>
+      ) : null}
+
+      {placeholder === undefined && showButton && (
         // <TouchableOpacity onPress={eventType === "friend" ? handleButtonClick : modalOpenClick} style={styles.nextBtn}>
         <TouchableOpacity onPress={handleConfirmClick} style={styles.nextBtn}>
           <Text style={styles.nextBtnText}>확인</Text>

@@ -10,7 +10,7 @@ export const useAppStore = create(
       token: "",
       refreshToken: "",
       name: "",
-      phoneNumber: "",
+      phoneNumber: null,
       phoneExisted: false,
       expiredTime: null,
       userProfileImg: "",
@@ -19,6 +19,41 @@ export const useAppStore = create(
       isPrivacyPolicyAgreeAll: false,
       isPrivacyCollectAgreeAll: false,
       isMarketingAlertAgree: false,
+      isCoachModalState: true,
+      // resetState: () => {
+      //   set({
+      //     token: "",
+      //     refreshToken: "",
+      //     name: "",
+      //     phoneNumber: "",
+      //     phoneExisted: false,
+      //     expiredTime: null,
+      //     userProfileImg: "",
+      //     userType: "",
+      //     isTermsAgreeAll: false,
+      //     isPrivacyPolicyAgreeAll: false,
+      //     isPrivacyCollectAgreeAll: false,
+      //     isMarketingAlertAgree: false,
+      //   });
+      // },
+      clearAll: () =>
+        set({
+          ...get(),
+          token: "",
+          token: "",
+          refreshToken: "",
+          name: "",
+          phoneNumber: null,
+          phoneExisted: false,
+          expiredTime: null,
+          userProfileImg: "",
+          userType: "",
+          isTermsAgreeAll: false,
+          isPrivacyPolicyAgreeAll: false,
+          isPrivacyCollectAgreeAll: false,
+          isMarketingAlertAgree: false,
+          isCoachModalState: true,
+        }),
       setPhoneNumber: (phoneNumber) => set({ ...get(), phoneNumber: phoneNumber }),
       setPhoneExisted: (phoneExisted) => set({ ...get(), phoneExisted: phoneExisted }),
       setUserProfileImg: (userProfileImg) => set({ ...get(), userProfileImg: userProfileImg }),
@@ -27,6 +62,7 @@ export const useAppStore = create(
       setIsPrivacyPolicyAgreeAll: (isPrivacyPolicyAgreeAll) => set({ ...get(), isPrivacyPolicyAgreeAll: isPrivacyPolicyAgreeAll }),
       setIsPrivacyCollectAgreeAll: (isPrivacyCollectAgreeAll) => set({ ...get(), isPrivacyCollectAgreeAll: isPrivacyCollectAgreeAll }),
       setIsMarketingAlertAgree: (isMarketingAlertAgree) => set({ ...get(), isMarketingAlertAgree: isMarketingAlertAgree }),
+      setIsCoachModalState: (isCoachModalState) => set({ ...get(), isCoachModalState: isCoachModalState }),
       setRefreshToken: (refreshToken) => set({ ...get(), refreshToken: refreshToken }),
       setToken: (token) => set({ ...get(), token: token }),
       setExpiredTime: (time) => set({ ...get(), expiredTime: time }),
@@ -39,6 +75,8 @@ export const useAppStore = create(
     }
   )
 );
+
+export const { resetState } = useAppStore;
 
 export const checkAndUpdateToken = async () => {
   const { expiredTime, refreshToken, setToken, setExpiredTime, setRefreshToken } = useAppStore.getState();

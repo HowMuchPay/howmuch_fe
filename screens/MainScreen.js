@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, TextInput, ScrollView, Pressable } from "react-native";
+import { View, Text, StyleSheet, SafeAreaView, Image, TouchableOpacity, TextInput, ScrollView, Pressable, Dimensions } from "react-native";
 import React, { useEffect, useState } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer, useIsFocused, useNavigation } from "@react-navigation/native";
@@ -9,6 +9,10 @@ import CircularProgress from "react-native-circular-progress-indicator";
 import { checkAndUpdateToken, useAppStore } from "../stores/store";
 import { API } from "../stores/api";
 import { StatusBar } from "expo-status-bar";
+import Modal from "react-native-modal";
+
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
 
 export default function MainScreen({}) {
   const navigation = useNavigation();
@@ -22,12 +26,28 @@ export default function MainScreen({}) {
   const token = store.token;
 
   const [data, setData] = useState(null);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [isCoachModalState, setIsCoachModalState] = useAppStore((state) => [state.isCoachModalState, state.setIsCoachModalState]);
+  const [coachCount, setCoachCount] = useState(0);
 
   const isFocused = useIsFocused();
+
+  const closeModal = () => {
+    setModalVisible(false);
+    setIsCoachModalState(false);
+  };
 
   useEffect(() => {
     fetchData();
   }, [isFocused, token]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (isCoachModalState) {
+        setModalVisible(true);
+      } else return null;
+    }, 2000);
+  }, []);
 
   // useEffect(() => {
   //   (async () => {
@@ -47,6 +67,14 @@ export default function MainScreen({}) {
 
   //   fetchData();
   // }, []);
+
+  const handlePress = () => {
+    if (coachCount === 0) {
+      setCoachCount(1);
+    } else {
+      setCoachCount(0);
+    }
+  };
 
   const fetchData = async () => {
     try {
@@ -116,9 +144,69 @@ export default function MainScreen({}) {
           <AddEventBox />
         </View>
       </View>
+
+      <Modal
+        deviceWidth={windowWidth}
+        isVisible={isModalVisible}
+        // onBackdropPress={toggleModal}
+        animationType="none"
+        useNativeDriverForBackdrop={true}
+        backdropOpacity={0.5}
+        backdropColor="#000"
+        style={{ width: "90%", position: "absolute", paddingTop: 0 }}
+      >
+        <Pressable style={{ flex: 1, width: "100%", height: windowHeight }} onPress={handlePress}>
+          <View style={styles.coachMark}>
+            {coachCount === 0 ? <CoachMark01 /> : <CoachMark02 />}
+
+            <TouchableOpacity onPress={closeModal} style={{ position: "absolute", right: 10 }}>
+              <Image style={{ width: 24, height: 24 }} source={require("../assets/images/close_white_icon.png")} />
+            </TouchableOpacity>
+          </View>
+        </Pressable>
+      </Modal>
     </ScrollView>
   );
 }
+
+const CoachMark01 = () => {
+  return (
+    <>
+      <View style={{ width: "100%" }}>
+        <View style={styles.coachShowBox}></View>
+        <Image style={{ width: 40, height: 35, position: "absolute", top: 290, left: 100 }} source={require("../assets/images/arrow_coach_icon.png")} />
+        <Text style={[styles.coachText, { position: "absolute", top: 330, left: 100 }]}>나의 경조사를 입력하고</Text>
+        <Text style={[styles.coachText, { position: "absolute", top: 355, left: 100 }]}>받은 금액을 확인해 보세요!</Text>
+      </View>
+
+      <View style={{ width: "100%" }}>
+        <View style={styles.coachShowCircle}></View>
+        <Image style={{ width: 40, height: 35, position: "absolute", top: 500, right: 110 }} source={require("../assets/images/arrow_coach_icon2.png")} />
+        <Text style={[styles.coachText, { position: "absolute", top: 540, left: 150 }]}>일정과 디데이를</Text>
+        <Text style={[styles.coachText, { position: "absolute", top: 565, left: 150 }]}>입력하고 확인할 수 있어요</Text>
+      </View>
+    </>
+  );
+};
+
+const CoachMark02 = () => {
+  return (
+    <>
+      <View style={{ width: "100%" }}>
+        <View style={styles.coachShowLargeBox}></View>
+        <Image style={{ width: 40, height: 35, position: "absolute", top: 240, left: 50 }} source={require("../assets/images/arrow_coach_icon3.png")} />
+        <Text style={[styles.coachText, { position: "absolute", top: 200, left: 100 }]}>주고 받은 내역을</Text>
+        <Text style={[styles.coachText, { position: "absolute", top: 225, left: 100 }]}>한눈에 확인할 수 있어요!</Text>
+      </View>
+
+      <View style={{ width: "100%", height: "100%" }}>
+        <View style={styles.coachShowMiddleBox}></View>
+        <Image style={{ width: 40, height: 35, position: "absolute", top: 310, right: 40 }} source={require("../assets/images/arrow_coach_icon4.png")} />
+        <Text style={[styles.coachText, { position: "absolute", top: 300, left: 140 }]}>경조사를 입력해 보세요</Text>
+      </View>
+    </>
+  );
+};
 
 function PayShowBox(props) {
   const navigation = useNavigation();
@@ -274,7 +362,7 @@ const styles = StyleSheet.create({
     paddingTop: 30,
     backgroundColor: "#F3F3FF",
     // minHeight: 740,
-    // backgroundColor:"#1d1d1d"
+    // backgroundColor: "#000",
   },
   inner: {
     margin: 20,
@@ -499,5 +587,70 @@ const styles = StyleSheet.create({
     fontFamily: "font-R",
     fontSize: 13,
     color: "#cccccc",
+  },
+
+  //코치마크
+  coachShowBox: {
+    width: "48%",
+    height: 190,
+    // backgroundColor: "#fff",
+    position: "absolute",
+    top: 100,
+    borderWidth: 2,
+    borderColor: "#fff",
+    borderStyle: "dashed",
+    shadowColor: "#00000025",
+    borderRadius: 20,
+  },
+  coachShowCircle: {
+    width: 70,
+    height: 70,
+    // backgroundColor: "#fff",
+    marginVertical: 70,
+    position: "absolute",
+    right: 35,
+    top: 410,
+    borderWidth: 2,
+    borderColor: "#fff",
+    borderStyle: "dashed",
+    shadowColor: "#00000025",
+    borderRadius: 100,
+    shadowColor: "#00000025",
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.25,
+    elevation: 4,
+  },
+
+  coachShowLargeBox: {
+    width: "100%",
+    height: 190,
+    borderColor: "#fff",
+    borderStyle: "dashed",
+    borderWidth: 2,
+    borderRadius: 20,
+    marginBottom: 15,
+    position: "relative",
+    top: 280,
+  },
+
+  coachShowMiddleBox: {
+    width: "48%",
+    height: 160,
+    borderColor: "#fff",
+    borderStyle: "dashed",
+    borderWidth: 2,
+    borderRadius: 20,
+    position: "absolute",
+    top: 350,
+    right: 0,
+  },
+
+  coachText: {
+    fontSize: 17,
+    fontFamily: "font-M",
+    color: "#fff",
   },
 });

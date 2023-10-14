@@ -14,7 +14,7 @@ export default function RemoveAccountScreen() {
   const store = useAppStore();
   const token = store.token;
   const clearToken = useAppStore((state) => state.clearToken);
-
+  const clearAll = useAppStore((state) => state.clearAll);
   const toggleCheck = () => {
     setCheckState(!checkState);
   };
@@ -29,7 +29,9 @@ export default function RemoveAccountScreen() {
         .then((response) => {
           console.log("탈퇴 성공!");
           clearToken();
-          navigation.navigate("Boarding");
+          // navigation.navigate("Boarding");
+          clearAll();
+          navigation.reset({ routes: [{ name: "Boarding" }] });
         })
         .catch((error) => {
           // 탈퇴 실패 시 처리
