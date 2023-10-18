@@ -473,7 +473,6 @@ function PayList({ data, handleDelete, searchText }) {
                   }}
                   renderHiddenItem={(data, rowMap) => (
                     <View style={styles.rowBack}>
-                      {console.log(data.item.id)}
                       <TouchableOpacity style={[styles.backRightBtn, styles.backRightBtnLeft]} onPress={() => handleDelete(data.item.id)}>
                         <WithLocalSvg width={24} height={24} asset={trashIcon} />
                       </TouchableOpacity>

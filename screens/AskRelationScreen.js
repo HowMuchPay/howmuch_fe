@@ -37,7 +37,7 @@ export default function AskRelationScreen() {
 
   const handleAddData = (data) => {
     setPostData([...postData, data]);
-    console.log(postData);
+    // console.log(postData);
   };
 
   const modalOpenClick = () => {
@@ -116,8 +116,8 @@ const ModalComponent = ({ modalOpenClick, modalVisible, postData }) => {
   let eventData;
   const handlePostData = () => {
     // 여기서 데이터를 준비합니다.
-    console.log("post", postData);
-    console.log("postlength", postData.length);
+    // console.log("post", postData);
+    // console.log("postlength", postData.length);
     if (postData.length === 13) {
       eventData = {
         acName: postData[11],
@@ -139,7 +139,7 @@ const ModalComponent = ({ modalOpenClick, modalVisible, postData }) => {
         // eventTime: postData[1],
       };
     }
-    console.log(eventData);
+    // console.log(eventData);
 
     API.post("/event/acquaintance", eventData, {
       headers: {

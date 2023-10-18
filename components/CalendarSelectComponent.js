@@ -12,8 +12,6 @@ const CalendarSelectComponent = ({ handleButtonClick, placeholder }) => {
   const [dateChange, setDateChange] = useState(placeholder !== undefined ? new Date(placeholder) : new Date());
   const [showButton, setShowButton] = useState(false);
 
-  console.log(placeholder);
-
   // const formatDate = (rawDate) => {
   //   let date = new Date(rawDate);
 

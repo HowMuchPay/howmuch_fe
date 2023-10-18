@@ -20,10 +20,10 @@ export default function ComingEventScreen() {
   const isFocused = useIsFocused();
 
   useEffect(() => {
-    console.log("id", eventId);
-    console.log("event", eventType);
+    // console.log("id", eventId);
+    // console.log("event", eventType);
     fetchData();
-    console.log(token);
+    // console.log(token);
   }, [isFocused]);
 
   const fetchData = async () => {
@@ -44,7 +44,7 @@ export default function ComingEventScreen() {
       const newData = response.data;
 
       // 상태를 업데이트하고 화면을 다시 렌더링합니다.
-      console.log("comingData", newData);
+      // console.log("comingData", newData);
       setData(newData);
     } catch (error) {
       console.error("데이터를 불러오는 중 오류가 발생했습니다.", error);

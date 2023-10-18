@@ -35,7 +35,7 @@ export default function AddMyEventScreen() {
     bottomSheetModalRef.current?.present();
   }, []);
   const handleSheetChanges = useCallback((index) => {
-    console.log("handleSheetChanges", index);
+    // console.log("handleSheetChanges", index);
   }, []);
 
   const handleButtonClick = (data) => {
@@ -52,7 +52,7 @@ export default function AddMyEventScreen() {
 
   const handleAddData = (data) => {
     setPostData([...postData, data]);
-    console.log(postData);
+    // console.log(postData);
   };
 
   const modalOpenClick = () => {
@@ -153,7 +153,7 @@ const ModalComponent = ({ modalOpenClick, modalVisible, postData }) => {
         eventTime: postData[1],
       };
     }
-    console.log(eventData);
+    // console.log(eventData);
 
     API.post("/event/my", eventData, {
       headers: {

@@ -66,7 +66,7 @@ function MyEventDetailScreen({ route }) {
       const newData = response.data; // 새로운 데이터
 
       // 상태를 업데이트하고 화면을 다시 렌더링합니다.
-      console.log(newData);
+      // console.log(newData);
       setData(newData);
     } catch (error) {
       console.error("데이터를 불러오는 중 오류가 발생했습니다.", error);
@@ -149,7 +149,6 @@ function MyEventDetailScreen({ route }) {
       keyExtractor={(item, index) => index.toString()}
       renderItem={({ item }) => (
         <View style={styles.inner}>
-          {console.log("test", item.myEventInfo)}
           <View style={styles.eventBox}>
             <View style={styles.eventTextBox}>
               <Image style={{ width: 22, height: 22, marginBottom: 10 }} source={selectedEvent} />

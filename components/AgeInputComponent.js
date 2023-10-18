@@ -27,7 +27,7 @@ export default function AgeInputComponent({ handleButtonClick, handleAddData }) 
     // } else {
     //   handleButtonClick(textInputValue);
     // }
-    console.log(selectedAge);
+    // console.log(selectedAge);
   };
 
   const formatNumber = (num) => {
@@ -72,7 +72,7 @@ export default function AgeInputComponent({ handleButtonClick, handleAddData }) 
           <Picker
             selectedValue={selectedAge}
             onValueChange={(itemValue, itemIndex) => {
-              console.log(itemValue);
+              // console.log(itemValue);
               setSelectedAge(itemValue);
               setShowButton(true);
             }}

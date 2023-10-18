@@ -14,14 +14,14 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.howmuch"
+      "bundleIdentifier": "com.howmuchpay"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/howmuch_icon.png",
         "backgroundColor": "#6D61FF"
       },
-      "package": "com.howmuch"
+      "package": "com.howmuchpay"
     },
     "web": {
       "favicon": "./assets/favicon.png"
