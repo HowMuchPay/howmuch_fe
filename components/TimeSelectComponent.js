@@ -16,7 +16,6 @@ const TimeSelectComponent = ({ handleButtonClick, placeholder }) => {
   const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
-    console.log(placeholder);
     if (!notDecide) {
       console.log(dateChange);
     } else {
@@ -58,7 +57,7 @@ const TimeSelectComponent = ({ handleButtonClick, placeholder }) => {
 
       const timeWithAmPm = minutes === 0 ? `${amPm} ${formattedHours}시` : `${amPm} ${formattedHours}시 ${minutes}분`;
 
-      console.log(timeWithAmPm);
+      // console.log(timeWithAmPm);
 
       if (Platform.OS == "android") {
         toggleDatePicker();

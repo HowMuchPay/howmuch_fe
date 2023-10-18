@@ -10,7 +10,7 @@ export default function MoneyInputComponent({ handleButtonClick, handleAddData, 
 
   useEffect(() => {
     if (recommend) {
-      console.log(postData);
+      // console.log(postData);
       // console.log(parseFloat(postData[1].replace(/,/g, "")));
       fetchData();
     } else {
@@ -39,7 +39,7 @@ export default function MoneyInputComponent({ handleButtonClick, handleAddData, 
       const newData = response.data; // 새로운 데이터
 
       // 상태를 업데이트하고 화면을 다시 렌더링합니다.
-      console.log(newData);
+      // console.log(newData);
       setRecommendMoney(newData);
     } catch (error) {
       console.error("데이터를 불러오는 중 오류가 발생했습니다.", error);

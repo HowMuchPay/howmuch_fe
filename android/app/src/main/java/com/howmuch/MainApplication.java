@@ -1,4 +1,4 @@
-package com.howmuch;
+package com.howmuchpay;
 
 import android.app.Application;
 import android.content.res.Configuration;

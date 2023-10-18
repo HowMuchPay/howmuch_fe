@@ -1,4 +1,4 @@
-package com.howmuch;
+package com.howmuchpay;
 
 import android.os.Build;
 import android.os.Bundle;

@@ -90,9 +90,7 @@ function MenuArea() {
       >
         <Text style={styles.menuText}>약관 및 정책</Text>
       </Pressable>
-      <View>
-        <Text style={styles.menuText}>알람설정</Text>
-      </View>
+      <View>{/* <Text style={styles.menuText}>알람설정</Text> */}</View>
     </View>
   );
 }
@@ -160,7 +158,7 @@ const styles = StyleSheet.create({
     fontFamily: "font-B",
   },
   menuContainer: {
-    height: 110,
+    height: 90,
     justifyContent: "space-between",
     marginBottom: 120,
   },

@@ -33,8 +33,8 @@ export default function LoginScreen() {
       const kakaotoken = await signInWithKakao();
 
       const kakaoProfile = await getProfile();
-      console.log("kakaoProfile", kakaoProfile);
-      console.log("img", kakaoProfile.profileImageUrl);
+      // console.log("kakaoProfile", kakaoProfile);
+      // console.log("img", kakaoProfile.profileImageUrl);
       let phone_num = kakaoProfile.phoneNumber;
 
       if (kakaotoken && kakaotoken.accessToken) {
@@ -48,8 +48,8 @@ export default function LoginScreen() {
         const response = await API.post(`/login/kakao`, body);
         const data = response.data;
 
-        console.log("data", data);
-        console.log("img", kakaoProfile.profileImageUrl);
+        // console.log("data", data);
+        // console.log("img", kakaoProfile.profileImageUrl);
         if (data["accessToken"]) {
           setToken(data["accessToken"]);
           setRefreshToken(data["refreshToken"]);
