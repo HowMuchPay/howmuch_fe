@@ -51,7 +51,7 @@ export default function App() {
     } catch (e) {
       console.log(e.message);
     }
-  }, []);
+  }, [appIsReady, fontsLoaded]);
 
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady && fontsLoaded) {
