@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     marginBottom: 70,
   },
   buttonContainer: {
-    width: 335,
+    width: "90%",
     height: 56,
     backgroundColor: "#fee500",
     flexDirection: "row",

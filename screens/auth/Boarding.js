@@ -81,7 +81,7 @@ export default function Boarding() {
           { useNativeDriver: true }
         )}
       />
-      <View style={{ position: "absolute", bottom: hp(38), flexDirection: "row" }}>
+      <View style={{ position: "absolute", bottom: 200, flexDirection: "row" }}>
         {DATA.map((item, index) => {
           const opacity = scrollX.interpolate({
             inputRange: [(index - 1) * wp(100), index * wp(100), (index + 1) * wp(100)],
@@ -144,5 +144,6 @@ const styles = StyleSheet.create({
     color: "#fff",
     fontFamily: "font-M",
     fontSize: 16,
+    paddingHorizontal: 100,
   },
 });

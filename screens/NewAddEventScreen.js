@@ -85,14 +85,13 @@ const styles = StyleSheet.create({
     width: "97%",
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
     marginTop: 80,
   },
   addBtn: {
-    paddingTop: 20,
-    paddingBottom: 20,
-    paddingLeft: 41,
-    paddingRight: 41,
+    width: "47%",
+    paddingVertical: 20,
+    // paddingHorizontal: 40,
     alignItems: "center",
     justifyContent: "center",
     borderRadius: 20,
@@ -100,7 +99,7 @@ const styles = StyleSheet.create({
   addBtnText: {
     fontFamily: "font-M",
     fontSize: 14,
-    width: 80,
+    // width: 80,
     textAlign: "center",
   },
   //모달창
