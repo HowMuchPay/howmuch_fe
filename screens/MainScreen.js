@@ -202,7 +202,7 @@ const CoachMark02 = () => {
       <View style={{ width: "100%", height: "100%" }}>
         <View style={styles.coachShowMiddleBox}></View>
         <Image style={{ width: 40, height: 35, position: "absolute", top: 310, right: 40 }} source={require("../assets/images/arrow_coach_icon4.png")} />
-        <Text style={[styles.coachText, { position: "absolute", top: 300, left: 140 }]}>경조사를 입력해 보세요</Text>
+        <Text style={[styles.coachText, { position: "absolute", top: 300, left: 140 }]}>경조사를 등록해 보세요</Text>
       </View>
     </>
   );
@@ -284,7 +284,7 @@ function StatisticsBox({ percentage }) {
             inActiveStrokeColor={"#E7E7FF"}
             activeStrokeWidth={18}
             inActiveStrokeWidth={18}
-            progressValueStyle={{ fontFamily: "font-M", fontSize: 22 }}
+            progressValueStyle={{ fontFamily: "font-M", fontSize: 18 }}
           />
         </View>
       </View>
@@ -351,7 +351,7 @@ function AddEventBox() {
       }}
     >
       <Image style={{ width: 22, height: 22, marginBottom: 10 }} source={require("../assets/images/icon_plus_gray.png")} />
-      <Text style={styles.addEventText}>경조사를 입력하세요</Text>
+      <Text style={styles.addEventText}>경조사를 등록하세요</Text>
     </Pressable>
   );
 }
