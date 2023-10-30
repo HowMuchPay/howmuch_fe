@@ -101,7 +101,7 @@ export default function CalendarScreen() {
       const newData = response.data; // 새로운 데이터
 
       // 상태를 업데이트하고 화면을 다시 렌더링합니다.
-      // console.log(newData);
+      console.log("캘린더", newData);
       setData(newData);
 
       const updatedMarkedDates = {};
@@ -144,7 +144,7 @@ export default function CalendarScreen() {
             ...markedDates,
             [selectedDate]: {
               selected: true,
-              selectedColor: "#6D61FF", // 선택된 날짜의 색상을 빨간색으로 지정
+              selectedColor: "#6D61FF",
               selectedBackground: true, // 선택된 날짜에 배경색 적용
             },
           }}

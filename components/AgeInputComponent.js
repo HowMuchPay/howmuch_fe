@@ -76,16 +76,16 @@ export default function AgeInputComponent({ handleButtonClick, handleAddData }) 
               setSelectedAge(itemValue);
               setShowButton(true);
             }}
-            style={{ width: "100%", height: "100%", fontFamily: "font-M" }}
-            itemStyle={{ fontFamily: "font-M" }}
+            style={{ width: "100%", height: "100%", fontFamily: "font-M", fontSize: 12 }}
+            itemStyle={{ fontFamily: "font-M", fontSize: 14 }}
           >
-            <Picker.Item label="나이를 선택해주세요" enabled={false} />
-            <Picker.Item label="20대" value="20" />
-            <Picker.Item label="30대" value="30" />
-            <Picker.Item label="40대" value="40" />
-            <Picker.Item label="50대" value="50" />
-            <Picker.Item label="60대" value="60" />
-            <Picker.Item label="70대 이상" value="60" />
+            <Picker.Item label="나이를 선택해주세요" enabled={false} style={{ fontSize: 12 }} />
+            <Picker.Item label="20대" value="20" style={{ fontSize: 12 }} />
+            <Picker.Item label="30대" value="30" style={{ fontSize: 12 }} />
+            <Picker.Item label="40대" value="40" style={{ fontSize: 12 }} />
+            <Picker.Item label="50대" value="50" style={{ fontSize: 12 }} />
+            <Picker.Item label="60대" value="60" style={{ fontSize: 12 }} />
+            <Picker.Item label="70대 이상" value="60" style={{ fontSize: 12 }} />
           </Picker>
         </View>
       </View>
