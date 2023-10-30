@@ -78,13 +78,13 @@ export default function IncomeInputComponent({ handleButtonClick, handleAddData 
             style={{ width: "100%", height: "100%", fontFamily: "font-M" }}
             itemStyle={{ fontFamily: "font-M" }}
           >
-            <Picker.Item label="연수입를 선택해주세요" enabled={false} style={{ fontSize: 12 }} />
-            <Picker.Item label="3,000만원대 이하" value="3000" style={{ fontSize: 12 }} />
-            <Picker.Item label="4,000만원대" value="4000" style={{ fontSize: 12 }} />
-            <Picker.Item label="5,000만원대" value="5000" style={{ fontSize: 12 }} />
-            <Picker.Item label="6,000만원대" value="6000" style={{ fontSize: 12 }} />
-            <Picker.Item label="7,000만원대" value="7000" style={{ fontSize: 12 }} />
-            <Picker.Item label="8,000만원대 이상" value="8000" style={{ fontSize: 12 }} />
+            <Picker.Item label="연수입를 선택해주세요" enabled={false} style={{ fontSize: 14 }} />
+            <Picker.Item label="3,000만원대 이하" value="3000" style={{ fontSize: 14 }} />
+            <Picker.Item label="4,000만원대" value="4000" style={{ fontSize: 14 }} />
+            <Picker.Item label="5,000만원대" value="5000" style={{ fontSize: 14 }} />
+            <Picker.Item label="6,000만원대" value="6000" style={{ fontSize: 14 }} />
+            <Picker.Item label="7,000만원대" value="7000" style={{ fontSize: 14 }} />
+            <Picker.Item label="8,000만원대 이상" value="8000" style={{ fontSize: 14 }} />
           </Picker>
         </View>
       </View>

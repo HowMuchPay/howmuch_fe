@@ -212,20 +212,20 @@ function PayShowBox(props) {
   const navigation = useNavigation();
   return (
     <>
-      <View style={styles.payShowBox}>
+      <Pressable style={styles.payShowBox} onPress={props.navigate}>
         <View style={styles.payText}>
           <View style={styles.payTitleBox}>
             <Text style={styles.payTitle}>{props.title}</Text>
           </View>
           <Text style={styles.payMoney}>{props.money}</Text>
-          <TouchableOpacity style={styles.moreBtn} onPress={props.navigate}>
+          <View style={styles.moreBtn} onPress={props.navigate}>
             <Text style={{ fontFamily: "font-M", color: "#8E8E8E" }}>자세히 보기 {">"}</Text>
-          </TouchableOpacity>
+          </View>
         </View>
         <View style={styles.btnIcon}>
           <Image style={{ width: 48, height: 48 }} source={props.iconImg} />
         </View>
-      </View>
+      </Pressable>
     </>
   );
 }
