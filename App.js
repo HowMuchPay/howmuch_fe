@@ -52,19 +52,19 @@ export default function App() {
   useEffect(() => {
     try {
       setTimeout(() => {
-        setAppIsReady(true);
+        // setAppIsReady(true);
         SplashScreen.hide();
       }, 2000); //스플래시 활성화 시간 2초
     } catch (e) {
       console.log(e.message);
     }
-  }, [appIsReady, fontsLoaded]);
+  }, [fontsLoaded]);
 
-  const onLayoutRootView = useCallback(async () => {
-    if (appIsReady && fontsLoaded) {
-      SplashScreen.hide();
-    }
-  }, [appIsReady, fontsLoaded]);
+  // const onLayoutRootView = useCallback(async () => {
+  //   if (appIsReady && fontsLoaded) {
+  //     SplashScreen.hide();
+  //   }
+  // }, [appIsReady, fontsLoaded]);
 
   // if (!appIsReady) {
   //   return (
@@ -77,7 +77,7 @@ export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <StatusBar barStyle="auto" />
-      <NavigationContainer style={styles.container} onReady={onLayoutRootView}>
+      <NavigationContainer style={styles.container}>
         <Navigation />
       </NavigationContainer>
     </GestureHandlerRootView>
