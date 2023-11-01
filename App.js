@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Text, View, StyleSheet, Dimensions, TextInput } from "react-native";
+import { Text, View, StyleSheet, Dimensions } from "react-native";
 import SplashScreen from "react-native-splash-screen";
 import { useFonts } from "expo-font";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -11,13 +11,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
 const windowHeight = Dimensions.get("window").height;
-
-Text.defaultProps = Text.defaultProps || {};
-Text.defaultProps.allowFontScaling = false;
-
-TextInput.defaultProps = TextInput.defaultProps || {};
-TextInput.defaultProps.autoCorrect = false;
-TextInput.defaultProps.allowFontScaling = false;
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
@@ -52,19 +45,19 @@ export default function App() {
   useEffect(() => {
     try {
       setTimeout(() => {
-        // setAppIsReady(true);
+        setAppIsReady(true);
         SplashScreen.hide();
       }, 2000); //스플래시 활성화 시간 2초
     } catch (e) {
       console.log(e.message);
     }
-  }, [fontsLoaded]);
+  }, []);
 
-  // const onLayoutRootView = useCallback(async () => {
-  //   if (appIsReady && fontsLoaded) {
-  //     SplashScreen.hide();
-  //   }
-  // }, [appIsReady, fontsLoaded]);
+  const onLayoutRootView = useCallback(async () => {
+    if (appIsReady && fontsLoaded) {
+      SplashScreen.hide();
+    }
+  }, [appIsReady, fontsLoaded]);
 
   // if (!appIsReady) {
   //   return (
@@ -76,8 +69,8 @@ export default function App() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <StatusBar barStyle="auto" />
-      <NavigationContainer style={styles.container}>
+      <NavigationContainer style={styles.container} onReady={onLayoutRootView}>
+        <StatusBar barStyle="auto" />
         <Navigation />
       </NavigationContainer>
     </GestureHandlerRootView>
@@ -89,5 +82,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    minHeight: windowHeight,
   },
 });
