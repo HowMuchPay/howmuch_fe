@@ -24,13 +24,16 @@ export default function MainScreen({}) {
 
   const store = useAppStore();
   const token = store.token;
-
+  const refreshToken = store.refreshToken;
+  const expiredTime = store.expiredTime;
   const [data, setData] = useState(null);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isCoachModalState, setIsCoachModalState] = useAppStore((state) => [state.isCoachModalState, state.setIsCoachModalState]);
   const [coachCount, setCoachCount] = useState(0);
 
   const isFocused = useIsFocused();
+  const clearToken = useAppStore((state) => state.clearToken);
+  // const navigation = useNavigation();
 
   const closeModal = () => {
     setModalVisible(false);
@@ -39,6 +42,9 @@ export default function MainScreen({}) {
 
   useEffect(() => {
     fetchData();
+    // console.log("token", token);
+    // console.log("refresh", refreshToken);
+    // console.log("expiredTime", expiredTime);
   }, [isFocused, token]);
 
   useEffect(() => {
@@ -92,6 +98,7 @@ export default function MainScreen({}) {
       setData(newData);
     } catch (error) {
       console.error("데이터를 불러오는 중 오류가 발생했습니다.", error);
+
       // if (error.response && error.response.status === 403) {
       //   await checkAndUpdateToken(); // 새로운 토큰을 받아옵니다.
       //   fetchData(); // 토큰을 갱신한 후 다시 데이터를 가져옵니다.

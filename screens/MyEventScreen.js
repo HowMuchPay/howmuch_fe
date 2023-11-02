@@ -16,21 +16,28 @@ import trashIcon from "../assets/images/trash_icon.svg";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { TextInput } from "react-native-gesture-handler";
 import lineImg from "../assets/images/line01.png";
+import { checkAndUpdateToken } from "../stores/updateToken";
 
 export default function MyEventScreen() {
   const store = useAppStore();
   const token = store.token;
-  const refreshToken = store.refreshToken;
   const [data, setData] = useState(null);
   const isFocused = useIsFocused();
 
   const [searchText, setSearchText] = useState("");
+  const refreshToken = useAppStore((state) => state.refreshToken);
+  const setToken = useAppStore((state) => state.setToken);
+  const setRefreshToken = useAppStore((state) => state.setRefreshToken);
+  const setExpiredTime = useAppStore((state) => state.setExpiredTime);
+  const clearToken = useAppStore((state) => state.clearToken);
+  const navigation = useNavigation();
 
   const handleSearchChange = (text) => {
     setSearchText(text);
   };
 
   useEffect(() => {
+    // checkAndUpdateToken(token, refreshToken, setToken, setRefreshToken, setExpiredTime, clearToken, navigation);
     fetchData();
   }, [isFocused]);
 
@@ -138,17 +145,11 @@ export default function MyEventScreen() {
 
           {/* <TouchableOpacity
             onPress={() => {
-              const postData = {
-                acId: null, // acId 필드의 값
-                targetUserPhoneNumber: "010-1234-1234", // targetUserPhoneNumber 필드의 값
-                title: "fcm테스트", // title 필드의 값
-                body: "fcm테스트입니다", // body 필드의 값
-              };
               // console.log(postData);
-              API.post(`/notification/send`, postData, {
+              API.post(`/user/reissue`, null, {
                 headers: {
                   Authorization: token,
-                  // "Refresh-Token": refreshToken,
+                  "Refresh-Token": refreshToken,
                 },
               })
                 .then((response) => {
@@ -159,7 +160,7 @@ export default function MyEventScreen() {
                 });
             }}
           >
-            <Text>post123</Text>
+            <Text>posttest</Text>
           </TouchableOpacity> */}
 
           {/* <TouchableOpacity

@@ -197,8 +197,6 @@ export default function Navigation() {
   }, []);
 
   const handleCustomButtonPress = () => {
-    // Handle custom button press logic here
-    // For example, navigate to Drawer screen
     navigation.navigate("Drawer");
   };
 
