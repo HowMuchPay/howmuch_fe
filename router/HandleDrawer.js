@@ -100,10 +100,6 @@ export default function HandleDrawer() {
   const token = store.token;
   const clearToken = useAppStore((state) => state.clearToken);
   const navigation = useNavigation();
-  // useEffect(() => {
-  //   // 앱이 시작될 때 토큰을 clear 하고 싶은 경우 여기에서 clearToken 함수를 호출합니다.
-
-  // }, []);
 
   // useEffect(() => {
   //   console.log("token", token);

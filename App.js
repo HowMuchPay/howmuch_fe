@@ -51,6 +51,7 @@ export default function App() {
     } catch (e) {
       console.log(e.message);
     }
+    console.log(windowHeight);
   }, []);
 
   const onLayoutRootView = useCallback(async () => {
