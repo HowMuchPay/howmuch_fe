@@ -30,9 +30,9 @@ export const checkAndUpdateToken = async (token, refreshToken, setToken, setRefr
     // 토큰을 갱신한 후에도 API 인터셉터에 새로운 토큰을 설정
     API.defaults.headers.Authorization = newToken;
   } catch (error) {
-    console.error("토큰 갱신 중 오류 발생1:", error);
+    console.error("토큰 갱신 중 오류 발생2:", error);
     clearToken();
-    navigation.reset({ routes: [{ name: "Login" }] });
+    // navigation.reset({ routes: [{ name: "Login" }] });
     throw error;
   }
   // }

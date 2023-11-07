@@ -7,32 +7,14 @@ import { NavigationContainer, useNavigation } from "@react-navigation/native";
 
 import Navigation from "./router/Navigation";
 import { useAppStore } from "./stores/store";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
 const windowHeight = Dimensions.get("window").height;
 
 export default function App() {
   const [appIsReady, setAppIsReady] = useState(false);
-  const setToken = useAppStore((state) => state.setToken);
-
   const store = useAppStore();
-  const token = store.token;
-
-  useEffect(() => {
-    const restoreToken = async () => {
-      try {
-        // const token = await AsyncStorage.getItem("authToken");
-        if (token) {
-          setToken(token);
-        }
-      } catch (error) {
-        console.error("Error restoring token:", error);
-      }
-    };
-
-    restoreToken();
-  }, [setToken]);
 
   let [fontsLoaded] = useFonts({
     "font-L": require("./assets/fonts/Pretendard-Light.ttf"),
@@ -51,14 +33,13 @@ export default function App() {
     } catch (e) {
       console.log(e.message);
     }
-    console.log(windowHeight);
   }, []);
 
-  const onLayoutRootView = useCallback(async () => {
-    if (appIsReady && fontsLoaded) {
-      SplashScreen.hide();
-    }
-  }, [appIsReady, fontsLoaded]);
+  // const onLayoutRootView = useCallback(async () => {
+  //   if (appIsReady) {
+  //     SplashScreen.hide();
+  //   }
+  // }, [appIsReady]);
 
   // if (!appIsReady) {
   //   return (
@@ -70,7 +51,7 @@ export default function App() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <NavigationContainer style={styles.container} onReady={onLayoutRootView}>
+      <NavigationContainer style={styles.container}>
         <StatusBar barStyle="auto" />
         <Navigation />
       </NavigationContainer>
