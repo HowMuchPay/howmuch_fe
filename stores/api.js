@@ -22,18 +22,18 @@ API.interceptors.response.use(
   },
   async (error) => {
     // 토큰이 만료되었다면 토큰을 갱신합니다.
-    if (error.response && error.response.status === 401) {
+    if ((error.response && error.response.status === 401) || (error.response && error.response.status === 403)) {
       if (!isRefreshing) {
         isRefreshing = true;
         try {
           const { token, refreshToken, setToken, setRefreshToken, setExpiredTime, clearToken } = useAppStore.getState();
-          const navigation = useNavigation();
+          // const navigation = useNavigation();
 
-          await checkAndUpdateToken(token, refreshToken, setToken, setRefreshToken, setExpiredTime, clearToken, navigation);
+          await checkAndUpdateToken(token, refreshToken, setToken, setRefreshToken, setExpiredTime, clearToken);
           isRefreshing = false;
           return API.request(error.config);
         } catch (refreshError) {
-          console.error("토큰 갱신 중 오류 발생:", refreshError);
+          console.error("토큰 갱신 중 오류 발생1:", refreshError);
         }
       }
     } else {
